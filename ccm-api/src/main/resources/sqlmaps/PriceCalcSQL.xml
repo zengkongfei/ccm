@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PriceCalcSQL">
+    <typeAlias alias="priceCalc" type="com.ccm.api.model.ratePlan.PriceCalc"/>
+    
+    <insert id="addPriceCalc" parameterClass="priceCalc">
+        INSERT INTO price_calc
+            (priceCalcId, channelCode, chainCode, hotelCode, roomTypeCode, 
+            ratePlanCode, DATE, amount,numberOfUnits,rateDetailId)
+		VALUES (#priceCalcId#, 
+			#channelCode#, 
+			#chainCode#, 
+			#hotelCode#, 
+			#roomTypeCode#, 
+			#ratePlanCode#, 
+			#date#, #amount#,#numberOfUnits#,#rateDetailId#)
+    </insert>
+    
+    <insert id="batchAddPriceCalc" parameterClass="java.util.List">
+        INSERT INTO price_calc
+            (priceCalcId, channelCode, chainCode, hotelCode, roomTypeCode, 
+            ratePlanCode, DATE, amount,numberOfUnits,rateDetailId)
+		VALUES 
+		<iterate conjunction=",">
+			(
+				#list[].priceCalcId#,
+				#list[].channelCode#,
+				#list[].chainCode#,
+				#list[].hotelCode#,
+				#list[].roomTypeCode#, 
+				#list[].ratePlanCode#,
+				#list[].date#,#list[].amount#,#list[].numberOfUnits#,#list[].rateDetailId#
+			)
+		</iterate>	
+    </insert>
+    
+     <select id="searchPriceCalc" resultClass="priceCalc">
+    	SELECT * FROM price_calc 
+		WHERE hotelCode = #hotelCode#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="channelCode">
+				channelCode = #channelCode#
+	        </isNotEmpty>
+			<isNotEqual property="roomTypeCode" compareValue="all" prepend="and">
+				roomTypeCode = #roomTypeCode#
+			</isNotEqual>
+			<isNotEqual property="ratePlanCode" compareValue="all" prepend="and">
+				ratePlanCode = #ratePlanCode#
+			</isNotEqual>
+			<isNotEmpty property="rateDetailId" prepend="and">
+				rateDetailId = #rateDetailId#
+			</isNotEmpty>
+	        <isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="numberOfUnits">
+				numberOfUnits = #numberOfUnits#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="date">
+				date =  #date#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="startDate">
+				date <![CDATA[  >= ]]>   #startDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="endDate">
+				date <![CDATA[  <= ]]> #endDate#
+	        </isNotEmpty>
+        </dynamic>
+        order by channelCode,chainCode,hotelCode,ratePlanCode,roomTypeCode,date
+    </select>
+    
+    <update id="updatePriceCalc" parameterClass="priceCalc">
+        UPDATE price_calc
+			SET  amount = #amount#
+		WHERE 1=1
+			<isNotEmpty prepend="AND" property="channelCode">
+				channelCode = #channelCode#
+	        </isNotEmpty>
+			
+			and chainCode = #chainCode#
+			and hotelCode = #hotelCode#
+			and roomTypeCode = #roomTypeCode#
+			and ratePlanCode = #ratePlanCode#
+			and numberOfUnits = #numberOfUnits#
+			and DATE = #date#
+    </update>
+    
+    <update id="updateChannelCode" parameterClass="priceCalc">
+        UPDATE price_calc
+			SET  channelCode = #channelCode#
+		WHERE chainCode = #chainCode#
+			and hotelCode = #hotelCode#
+			and roomTypeCode = #roomTypeCode#
+			and ratePlanCode = #ratePlanCode#
+    </update>
+    
+    <delete id="deletePriceCalc">
+		DELETE FROM price_calc WHERE priceCalcId = #priceCalcId#
+    </delete>
+    
+    <delete id="deletePriceCalcByChannelRateplanVO" parameterClass="Map">
+    	DELETE FROM price_calc WHERE 
+    			<iterate property="channelCodeList" open="(" close=")" conjunction="or">
+					channelCode = #channelCodeList[]#
+            	</iterate>
+    			and chainCode = #chainCode# 
+    			and hotelCode = #hotelCode#
+				and ratePlanCode = #ratePlanCode#
+				<isNotEmpty prepend="AND" property="startDate">
+					date <![CDATA[  >= ]]>   #startDate#
+		        </isNotEmpty>
+		        <isNotEmpty prepend="AND" property="endDate">
+					date <![CDATA[  <= ]]> #endDate#
+		        </isNotEmpty>
+    </delete>
+    
+    <delete id="deletePriceCalcByPriceList" parameterClass="Map">
+      delete from price_calc
+      where priceCalcId in    
+      <iterate conjunction="," open="(" close=")" property="priceCalcList">
+        #priceCalcList[].priceCalcId#
+      </iterate>
+      and hotelCode = #priceCalcList[0].hotelCode#
+    </delete>
+    
+    <delete id="deletePriceCalcByDetailIdAndRatePlanCode" parameterClass="Map">
+      delete from price_calc
+      where rateDetailId =#rateDetailId# 
+      <isNotEmpty prepend="AND" property="ratePlanCode">
+      	ratePlanCode=#ratePlanCode#
+      </isNotEmpty>
+      <isNotEmpty prepend="AND" property="hotelCode">
+      	hotelCode=#hotelCode#
+      </isNotEmpty>  
+    </delete>
+    
+    <select id="getPriceFromRateDetail" resultClass="priceCalc">
+    <![CDATA[
+    	SELECT t6.roomTypeCode,t5.ratePlanCode,t4.date,t2.numberOfUnits,t1.rateDetailId,
+		CASE WHEN t5.percent >0 THEN ROUND(t5.percent*t2.baseAmount/100,2)
+		     WHEN t5.amount is not null and t5.amount !='' THEN if(t5.amount+t2.baseAmount < 0,0,ROUND(t5.amount+t2.baseAmount,2)) 
+		     ELSE ROUND(t2.baseAmount,2)
+		END AS amount,
+		CASE WHEN t5.percent >0 THEN ROUND(t5.percent*t2.baseAmount/100,2)
+		     WHEN t5.amount is not null and t5.amount !='' THEN if(t5.amount+t2.baseAmount < 0,0,ROUND(t5.amount+t2.baseAmount,2)) 
+		     ELSE ROUND(t2.baseAmount,2)
+		END AS amountAfterTax
+		 FROM rate_detail t1 INNER JOIN rate_amount t2 ON t1.rateDetailId = t2.rateDetailId AND t1.delFlag=0 AND t2.delFlag=0
+		       INNER JOIN (SELECT *FROM room_rate WHERE delFlag=0 $roomTypeIdsql$) t3 ON t1.rateDetailId = t3.rateDetailId 
+		       INNER JOIN (SELECT *FROM DATE WHERE DATE >= #startDate# AND DATE <=#endDate#) t4 ON DATE_FORMAT(t1.effectiveDate,'%Y-%m-%d') <= t4.date AND DATE_FORMAT(t1.expireDate,'%Y-%m-%d') >= t4.date 
+		       AND SUBSTRING(CONCAT(IFNULL(isApplyToSunday,0),IFNULL(isApplyToMonday,0),IFNULL(isApplyToTuesday,0),IFNULL(isApplyToWednesday,0),IFNULL(isApplyToThursday,0),IFNULL(isApplyToFriday,0),IFNULL(isApplyToSaturday,0)),t4.week+1,1) =1
+		       INNER JOIN (SELECT IF(inheritRatePlanId='' OR inheritRatePlanId IS NULL,ratePlanId,inheritRatePlanId) AS inheritRatePlanId,ratePlanId,ratePlanCode,hotelId,amount,percent 
+						FROM rate_plan WHERE delFlag=0 AND hotelId=#hotelId#) t5
+				 ON t1.ratePlanId= t5.inheritRatePlanId
+		       INNER JOIN (SELECT *FROM room_type WHERE delFlag=0 $roomTypeIdsql$) t6 ON t6.roomTypeId = t3.roomTypeId 
+		       INNER JOIN (SELECT *FROM channel_goods WHERE delflag=0 AND channelId=#channelId# $roomTypeIdsql$) t7 ON t7.ratePlanId=t5.ratePlanId AND t7.roomTypeId=t6.roomTypeId
+		]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="roomTypeCode" prepend="and">
+				roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty property="ratePlanCode" prepend="and">
+				ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+	        <isNotEmpty prepend="AND" property="numberOfUnits">
+				numberOfUnits = #numberOfUnits#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="date">
+				date =  #date#
+	        </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    
+    <select id="getRateDetailRoomRateDate" resultClass="priceCalc">
+    <![CDATA[
+    	SELECT t6.roomTypeCode,t5.ratePlanCode,t4.date 
+			FROM rate_detail t1 
+			INNER JOIN (SELECT *FROM room_rate WHERE delFlag=0  $roomTypeIdsql$ ) t3 ON t1.rateDetailId = t3.rateDetailId AND t1.delFlag=0 
+			INNER JOIN (SELECT *FROM DATE WHERE DATE >= #startDate# AND DATE <=#endDate#) t4 ON t1.effectiveDate <= t4.date AND t1.expireDate >= t4.date 
+			AND SUBSTRING(CONCAT(IFNULL(isApplyToSunday,0),IFNULL(isApplyToMonday,0),IFNULL(isApplyToTuesday,0),IFNULL(isApplyToWednesday,0),IFNULL(isApplyToThursday,0),IFNULL(isApplyToFriday,0),IFNULL(isApplyToSaturday,0)),t4.week+1,1) =1
+			INNER JOIN (SELECT IF(inheritRatePlanId='' OR inheritRatePlanId IS NULL,ratePlanId,inheritRatePlanId) AS inheritRatePlanId,ratePlanId,ratePlanCode,hotelId,amount,percent 
+						FROM rate_plan WHERE delFlag=0 AND hotelId=#hotelId# $ratePlanCodesql$) t5
+				 ON t1.ratePlanId= t5.inheritRatePlanId
+			INNER JOIN (SELECT *FROM room_type WHERE delFlag=0  $roomTypeIdsql$) t6 ON t6.roomTypeId = t3.roomTypeId 
+    	]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="roomTypeCode" prepend="and">
+				roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty property="ratePlanCode" prepend="and">
+				ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+	        <isNotEmpty prepend="AND" property="date">
+				date =  #date#
+	        </isNotEmpty>
+        </dynamic>
+    </select>
+</sqlMap>

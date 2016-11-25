@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelEmailMapper">
+	<typeAlias alias="hotelEmailMapper" type="com.ccm.api.model.email.HotelEmailMapper" />
+	
+	<insert id="addHotelEmailMapper" parameterClass="hotelEmailMapper">
+	    INSERT INTO hotelemailmapper
+            (hotelEmailMapperId, chainCode, hotelCode, email, description)
+		VALUES (#hotelEmailMapperId#, 
+		REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+		REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+		#email#, #description#)
+	</insert>
+	
+	<select id="getHotelEmailMapper" resultClass="hotelEmailMapper">
+        select * from hotelemailmapper where hotelEmailMapperId=#hotelEmailMapperId#
+    </select>
+	
+	<select id="searchHotelEmailMapper" resultClass="hotelEmailMapper">
+		select * FROM hotelemailmapper 
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="email">
+              email = #email# 
+           </isNotEmpty>
+        </dynamic>
+	</select>
+	
+	<update id="updateHotelEmailMapper" parameterClass="hotelEmailMapper">
+		UPDATE hotelemailmapper
+			SET chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+				hotelCode = REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+				email = #email#, description = #description#
+		WHERE hotelEmailMapperId = #hotelEmailMapperId#
+    </update>
+</sqlMap>

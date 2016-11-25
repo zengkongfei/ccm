@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SendReqResSQL">
+
+	<typeAlias alias="sendReqRes" type="com.ccm.api.model.log.SendReqResLog" />
+
+	<insert id="addSendReqResLog" parameterClass="sendReqRes">
+    <![CDATA[
+        insert into sendReqRes (sendreqresId,receivereqresId,interfaceId, hotelCode, type,request,response,createdTime,lastModifyTime,originOrderId,originOrderConfirmId,orderId,status,exception) 
+        values (#sendreqresId#,#receivereqresId#,#interfaceId#, 
+        	REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+        	REPLACE(REPLACE(#type#,' ',''),'　',''),
+        	#request#,#response#,#createdTime#,#lastModifyTime#,#originOrderId#,#originOrderConfirmId#,#orderId#,#status#,#exception#);
+     ]]>
+	</insert>
+
+	<delete id="deleteSendReqResLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from sendReqRes where sendreqresId = #sendreqresId#
+    ]]>
+	</delete>
+
+	<update id="updateSendReqResLog" parameterClass="sendReqRes">
+    <![CDATA[
+		update sendReqRes SET
+			status=#status#,
+			lastModifyTime=#lastModifyTime# 
+        where sendreqresId = #sendreqresId#
+    ]]>
+	</update>
+
+	<select id="getSendReqResLog" resultClass="sendReqRes">
+    <![CDATA[
+        select * from sendReqRes 
+        where sendreqresId = #sendreqresId#
+    ]]>
+	</select>
+
+	<select id="getSendReqResLogs" resultClass="sendReqRes">
+    <![CDATA[
+        select * from sendReqRes
+    ]]>
+	</select>
+
+	<select id="searchSendReqResByConf" resultClass="sendReqRes">
+		select * from sendReqRes
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="receivereqresId">
+				receivereqresId = #receivereqresId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				orderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="originOrderId">
+				originOrderId = #originOrderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type = #type# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="interfaceId">
+				interfaceId = #interfaceId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				orderId = #orderId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		</dynamic>
+		order by createdTime,lastModifyTime
+	</select>
+
+
+</sqlMap>

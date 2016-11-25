@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ratePlanTemplateSQL">
+	<typeAlias alias="ratePlanTemplateVo" type="com.ccm.api.model.ratePlan.vo.RatePlanTemplateVO" />
+	<typeAlias alias="ratePlanTemplate" type="com.ccm.api.model.ratePlan.RatePlanTemplate" />
+	<typeAlias alias="ratePlanTemplateI18n" type="com.ccm.api.model.ratePlan.RatePlanTemplateI18n" />
+			
+    <sql id="pageSqlratePlanTemplateSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addRatePlanTemplate" parameterClass="ratePlanTemplate">
+		INSERT INTO rate_plan_template(ratePlanTemplateId,ratePlanTemplateCode,delFlag,createdBy,createdTime) 
+		VALUES(#ratePlanTemplateId#,
+		REPLACE(REPLACE(#ratePlanTemplateCode#,' ',''),'　',''),
+		#delFlag#,#createdBy#,#createdTime#);
+    </insert>
+
+	<insert id="addRatePlanTemplateI18n" parameterClass="ratePlanTemplateI18n">
+		INSERT INTO rate_plan_template_i18n(ratePlanTemplateMId,ratePlanTemplateId,language,
+					ratePlanTemplateName,description,delFlag,createdBy,createdTime)
+		VALUES(#ratePlanTemplateMId#,#ratePlanTemplateId#,#language#,#ratePlanTemplateName#,
+					#description#,#delFlag#,#createdBy#,#createdTime#);
+    </insert>
+    
+    <update id="updateRatePlanTemplate" parameterClass="ratePlanTemplate">
+		update rate_plan_template SET 
+		updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where ratePlanTemplateId = #ratePlanTemplateId#
+    </update>
+    
+    <update id="updateRatePlanTemplateI18n" parameterClass="ratePlanTemplateI18n">
+		update rate_plan_template_i18n SET 
+		language = #language#
+		,ratePlanTemplateName = #ratePlanTemplateName#
+		,description = #description#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where ratePlanTemplateMId = #ratePlanTemplateMId#
+    </update>
+    
+
+	<update id="deleteRatePlanTemplate" parameterClass="ratePlanTemplate">
+		update rate_plan_template r set 
+			r.delFlag = #delFlag# 
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+		where ratePlanTemplateId = #ratePlanTemplateId#
+	</update>
+	
+	<update id="deleteRatePlanTemplateI18n" parameterClass="ratePlanTemplateI18n">
+		update rate_plan_template_i18n r set 
+			r.delFlag = #delFlag# 
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+		where ratePlanTemplateMId = #ratePlanTemplateMId#
+	</update>
+	
+	<update id="deleteRatePlanTemplateI18nByTempId" parameterClass="java.lang.String">
+    <![CDATA[
+        UPDATE rate_plan_template_i18n ri set ri.delFlag = 1  
+         WHERE ratePlanTemplateId = #ratePlanTemplateId#
+    ]]>
+	</update>
+	
+    <select id="getRatePlanTemplateById" resultClass="ratePlanTemplateVo" parameterClass="Map">
+		SELECT * FROM `rate_plan_template` r left join `rate_plan_template_i18n` ri 
+									on r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+									and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`ratePlanTemplateId` = #ratePlanTemplateId#
+    </select>
+    
+    <select id="getRatePlanTemplateByCode" resultClass="ratePlanTemplateVo" parameterClass="Map">
+		SELECT * FROM `rate_plan_template` r left join `rate_plan_template_i18n` ri
+									on r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+									and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`ratePlanTemplateCode` = #ratePlanTemplateCode#
+    </select>
+    
+    <select id="searchRatePlanTemplate" resultClass="ratePlanTemplateVo">
+		SELECT * FROM `rate_plan_template` r,`rate_plan_template_i18n` ri
+		WHERE r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="ratePlanTemplateId">
+				r.ratePlanTemplateId = #ratePlanTemplateId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanTemplateCode">
+				r.ratePlanTemplateCode = #ratePlanTemplateCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanTemplateName">
+				ri.ratePlanTemplateName like CONCAT('%',#ratePlanTemplateName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		order by r.ratePlanTemplateCode
+		<include refid="pageSqlratePlanTemplateSQL"/>
+	</select>
+
+	<select id="searchRatePlanTemplateCount" resultClass="Integer">
+		SELECT count(*) FROM `rate_plan_template` r,`rate_plan_template_i18n` ri
+		WHERE r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="ratePlanTemplateId">
+				r.ratePlanTemplateId = #ratePlanTemplateId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanTemplateCode">
+				r.ratePlanTemplateCode = #ratePlanTemplateCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanTemplateName">
+				ri.ratePlanTemplateName like  CONCAT('%',#ratePlanTemplateName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+    
+    <select id="getAllRatePlanTemplate" resultClass="ratePlanTemplateVo" parameterClass="String">
+		SELECT * FROM `rate_plan_template` r left join `rate_plan_template_i18n` ri
+									on r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+									and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`ratePlanTemplateId` = ri.`ratePlanTemplateId`
+		AND r.`delFlag` = 0
+		order by r.ratePlanTemplateCode
+	</select>
+    
+    <select id="getRatePlanTemplateI18ns" resultClass="ratePlanTemplateI18n" parameterClass="Map">
+		select * from rate_plan_template_i18n ri 
+		        where ri.ratePlanTemplateId =#ratePlanTemplateId#
+		          AND ri.delFlag = 0
+		order by ratePlanTemplateMId
+	</select>
+	
+	<select id="getRatePlanTemplateI18ns2" resultClass="ratePlanTemplateI18n" parameterClass="Map">
+		select ri.* from rate_plan_template_i18n ri, rate_plan_template rpt
+		        where rpt.rateplanTemplateId = ri.rateplanTemplateId 
+		          AND rpt.ratePlanTemplateCode =#ratePlanTemplateCode#
+		          AND ri.delFlag = 0
+		order by ratePlanTemplateMId
+	</select>
+	
+	<select id="getDontUseRatePlanTemplate" resultClass="ratePlanTemplateVo" parameterClass="Map">
+		SELECT * FROM rate_plan_template rpt left join rate_plan_template_i18n rpti 
+						      on rpt.rateplanTemplateId = rpti.rateplanTemplateId 
+						      and rpti.delFlag = 0 and rpti.language = #language#
+		WHERE rpt.delFlag = 0 
+		AND NOT EXISTS (
+		   SELECT 1 FROM rate_plan rp WHERE rp.hotelId = #hotelId# AND rp.delFlag = 0 
+		   			AND rpt.rateplanTemplateCode = rp.ratePlanCode
+		)
+		order by rpt.rateplanTemplateCode asc
+	</select>
+   
+</sqlMap>

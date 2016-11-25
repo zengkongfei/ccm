@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AdsToTBLogSQL">
+	<typeAlias alias="adsToTBLog" type="com.ccm.api.model.rsvtype.AdsToTBLog" />
+	<insert id="addAdsToTBLog" parameterClass="adsToTBLog">
+		insert into adsToTBLog(adsToTBLogId,echoToken,adsType,content,status,createdTime,errMsg) 
+		values(#adsToTBLogId#,#echoToken#,#adsType#,#content#,#status#,#createdTime#,#errMsg#)
+	</insert>
+	
+	<update id="updateAdsToTBLog" parameterClass="adsToTBLog">
+		update adsToTBLog set 
+	        echoToken=#echoToken#,
+	        adsType=#adsType#,
+	        content=#content#,
+	        status=#status#,
+	        errMsg = #errMsg#,
+	        createdTime=#createdTime#
+		where adsToTBLogId=#adsToTBLogId#
+	</update>
+	
+	<select id="getAdsToTBLog" resultClass="adsToTBLog">
+         select * from adsToTBLog where adsToTBLogId = #adsToTBLogId#
+    </select>
+	
+	<select id="getAdsToTBLogFieldValue" resultClass="String" parameterClass="Map">
+	<![CDATA[
+         select $field$ from adsToTBLog where adsToTBLogId = #adsToTBLogId#
+         ]]>
+    </select>
+	
+	<select id="searchAdsToTBLog" resultClass="adsToTBLog">
+         select * from adsToTBLog where 1=1
+         <dynamic prepend="AND">
+           <isNotEmpty prepend="AND" property="echoToken">
+              echoToken   = #echoToken# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="status">
+              status   = #status# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="adsType">
+              adsType   = #adsType# 
+           </isNotEmpty>
+        </dynamic>
+        order by createdTime desc
+    </select>
+</sqlMap>

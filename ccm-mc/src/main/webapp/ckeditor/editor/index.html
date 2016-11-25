@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CKEditor Samples</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="contents.css">
+	<script type="text/javascript" src="../js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+	<div id="Div_Edit_Content"></div>
+	
+	<script type="text/javascript">
+		var conid=location.search.substring(1).split("=");
+		
+		function test(){
+			var pd=window.parent.document;
+			$(pd).ready(function(){
+				var ta=$(pd.getElementById(conid));
+				$("#Div_Edit_Content").html(ta.html());
+			});
+		}
+		
+		if(conid && conid.length>1){
+			conid=conid[1];
+			setTimeout(test,500);
+		}
+		
+	</script>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<StayHistoryRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.chinaonline.net.cn/COL_WS/WS/1.0/StayHistory/">
+	<StayHistoryNotification>
+		<StayInfoList>
+			<HotelReference chainCode="$!obj.chainCode" hotelCode="$!obj.hotelCode">
+				<StayInfo xmlns="http://www.chinaonline.net.cn/COL_WS/WS/1.0/StayInfo/">
+					<StayInfoDetail>
+						<ChannelResID>$!obj.crsno</ChannelResID>
+						<ConfirmationNo>$!obj.masterId</ConfirmationNo>
+						<PmsResID>$!obj.pmsId</PmsResID>
+						<Status>$!obj.sta</Status>
+						<GuestFirstName>$!obj.name</GuestFirstName>
+						<GuestLastName>$!obj.name2</GuestLastName>
+						<Arrival>$!obj.checkInDate</Arrival>
+						<Departure>$!obj.checkOutDate</Departure>
+						<RoomType>$!obj.type</RoomType>
+						<RateCode>$!obj.ratePlanCode</RateCode>
+						<RoomNo>$!obj.roomno</RoomNo>
+						<Channel>$!obj.channel</Channel>
+						<ResDate>$!obj.createdDate</ResDate>
+						<Remark/>
+					</StayInfoDetail>
+				</StayInfo>
+			</HotelReference>
+		</StayInfoList>
+	</StayHistoryNotification>
+</StayHistoryRequest>

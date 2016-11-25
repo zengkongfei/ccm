@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MasterChangesLogSQL">
+
+	<typeAlias alias="masterChangesLog" type="com.ccm.api.model.order.MasterChangesLog" />
+
+	<sql id="pageSqlMasterChangesLogSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+		</isNotEmpty>
+	</sql>
+
+	<insert id="addMasterChangesLog" parameterClass="masterChangesLog">
+		insert into master_changes_log (masterChangesLogId,masterId,user,createdTime,pmsId,lastName,firstName,chineseName,arrivalDate,departureDate,masterCreateTime,masterCancelTime,masterModifyTime,status,restype,rateCode,roomCode,source,ext,ext2)
+		values(#masterChangesLogId#,#masterId#,#user#,#createdTime#,#pmsId#,#lastName#,#firstName#,#chineseName#,#arrivalDate#,#departureDate#,#masterCreateTime#,#masterCancelTime#,#masterModifyTime#,#status#,#restype#,#rateCode#,#roomCode#,#source#,#ext#,#ext2#)
+	</insert>
+
+	<delete id="deleteMasterChangesLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_changes_log where masterChangesLogId = #masterChangesLogId#
+    ]]>
+	</delete>
+
+	<update id="updateMasterChangesLog" parameterClass="masterChangesLog">
+		update master_changes_log set lastModifyTime=#lastModifyTime# where masterChangesLogId=#masterChangesLogId#
+	</update>
+
+	<select id="getMasterChangesLogs" resultClass="masterChangesLog">
+		 <![CDATA[SELECT * FROM master_changes_log]]>
+	</select>
+
+	<select id="getMasterChangesLog" resultClass="masterChangesLog">
+		SELECT * from master_changes_log WHERE masterChangesLogId=#masterChangesLogId#
+    </select>
+
+	<select id="getMasterChangesLogByMasterId" resultClass="masterChangesLog">
+		SELECT * from master_changes_log WHERE masterId=#masterId# order by createdTime desc 
+    </select>
+
+</sqlMap>

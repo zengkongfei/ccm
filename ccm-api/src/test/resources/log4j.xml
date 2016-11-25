@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern"
+                value="%p - %C{1}.%M(%L) | %m%n"/>
+        </layout>
+    </appender>
+    
+    <!-- Perf4J appenders -->
+    <appender name="statsAppender" class="org.apache.log4j.DailyRollingFileAppender">
+	    <param name="datePattern" value="'.'yyyy-MM-dd"/>
+	    <param name="file" value="../logs/ccm-performance.log"/>
+	    <param name="append" value="true"/>
+	    <layout class="org.apache.log4j.PatternLayout">
+	        <param name="ConversionPattern" value="%m%n"/>
+	    </layout>
+	</appender>
+    <!--
+      This AsyncCoalescingStatisticsAppender groups StopWatch log messages
+      into GroupedTimingStatistics messages which it sends on the
+      downstream appenders defined below
+    -->
+    <appender name="CoalescingStatistics"
+              class="org.perf4j.log4j.AsyncCoalescingStatisticsAppender">
+        <param name="TimeSlice" value="10000"/>
+        <param name="CreateRollupStatistics" value="true"/>
+        <!-- These first two appenders are used to create performance graphs -->
+        <appender-ref ref="graphExecutionTimes"/>
+        <appender-ref ref="graphExecutionTPS"/>
+        <!-- This JMX appender is used to expose performance metrics through JMX -->
+        <appender-ref ref="perf4jJmxAppender"/>
+    </appender>
+
+
+    <!--
+      This first GraphingStatisticsAppender graphs Mean execution times for the tags specified
+    -->
+    <appender name="graphExecutionTimes"
+              class="org.perf4j.log4j.GraphingStatisticsAppender">
+        <!-- Possible GraphTypes are Mean, Min, Max, StdDev, Count and TPS -->
+        <param name="GraphType" value="Mean"/>
+        <!-- The tags of the timed execution blocks to graph are specified here -->
+        <param name="TagNamesToGraph" value="search"/>
+    </appender>
+
+    <!--
+      This second GraphingStatisticsAppender graphs transactions per second for the tags specified
+    -->
+    <appender name="graphExecutionTPS"
+              class="org.perf4j.log4j.GraphingStatisticsAppender">
+        <param name="GraphType" value="TPS"/>
+        <param name="TagNamesToGraph" value="search"/>
+    </appender>
+
+    <!--
+      This JMX appender creates an MBean and publishes it to the platform MBean server by
+      default.
+    -->
+    <appender name="perf4jJmxAppender" class="org.perf4j.log4j.JmxAttributeStatisticsAppender">
+        <!--
+          You must specify the tag names whose statistics should be exposed as
+          MBean attributes.
+        -->
+        <param name="TagNamesToExpose" value="search"/>
+    </appender>
+
+    <!-- Loggers -->
+    <logger name="org.perf4j.TimingLogger" additivity="false">
+        <level value="INFO"/>
+        <appender-ref ref="CoalescingStatistics"/>
+        <appender-ref ref="statsAppender"/>
+    </logger>
+
+    <logger name="net.sf.ehcache">
+        <level value="ERROR"/>
+    </logger>
+
+    <!-- Suppress success logging from InteractiveAuthenticationSuccessEvent -->
+    <logger name="org.springframework.security">
+        <level value="ERROR"/>
+    </logger>
+
+    <logger name="org.apache">
+        <level value="WARN"/>
+    </logger>
+
+    <logger name="org.apache.velocity">
+        <level value="FATAL"/>
+    </logger>
+
+    <logger name="org.hibernate">
+        <level value="WARN"/>
+    </logger>
+  
+    <logger name="org.hibernate.SQL">
+        <level value="DEBUG"/>
+    </logger>
+
+    <logger name="org.springframework">
+        <level value="WARN"/>
+    </logger>
+   
+    <logger name="com.ccm.api">
+        <level value="DEBUG"/>
+    </logger>
+    
+    <logger name="com.ibatis">
+        <level value="DEBUG"/>
+    </logger>
+
+    <logger name="java.sql">
+        <level value="DEBUG"/>
+    </logger>
+    
+    <root>
+        <level value="WARN"/>
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</log4j:configuration>

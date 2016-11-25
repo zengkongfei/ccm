@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ChannelHotelMD5InfoSQL">
+    <typeAlias alias="channelHotelMD5Info" type="com.ccm.api.model.channel.ChannelHotelMD5Info"/>
+   
+    <sql id="pageSqlChannelHotelMD5InfoSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+
+    <insert id="addChannelHotelMD5Info" parameterClass="channelHotelMD5Info">
+       INSERT INTO channel_hotel_md5info (channelHotelMD5InfoId, channelId, hotelId,ratePlanId,roomTypeId,hotelMd5,ratePlanMd5, roomTypeMd5, type,
+  		createdBy,createdTime,updatedBy,lastModifyTime,delFlag
+		)VALUES(#channelHotelMD5InfoId#, #channelId#, #hotelId#,#ratePlanId#,#roomTypeId#,#hotelMd5#,#ratePlanMd5#, #roomTypeMd5#, #type#,
+  		#createdBy#,#createdTime#,#updatedBy#,#lastModifyTime#,#delFlag# ) 
+    </insert>
+    
+    <update id="updateChannelHotelMD5Info" parameterClass="channelHotelMD5Info">
+       UPDATE channel_hotel_md5info
+	SET channelId = #channelId#,
+	  hotelId = #hotelId#,
+	  ratePlanId = #ratePlanId#,
+	  roomTypeId = #roomTypeId#,
+	  hotelMd5 = #hotelMd5#,
+	  ratePlanMd5 = #ratePlanMd5#,
+	  roomTypeMd5 = #roomTypeMd5#,
+	  type = #type#,
+	  createdBy = #createdBy#,
+	  createdTime = #createdTime#,
+	  updatedBy = #updatedBy#,
+	  lastModifyTime = #lastModifyTime#,
+	  delFlag = #delFlag#
+	WHERE channelHotelMD5InfoId = #channelHotelMD5InfoId#
+    </update>
+    
+    <select id="getListByChannelId" resultClass="channelHotelMD5Info">
+    	select * from channel_hotel_md5info where channelId = #channelId# and delFlag=0
+    </select>
+    
+    <select id="getChannelHotelMD5Info" resultClass="channelHotelMD5Info">
+    	select * from channel_hotel_md5info WHERE channelHotelMD5InfoId = #channelHotelMD5InfoId# and delFlag=0
+    </select>
+    
+    <!-- 查找 type=1 id的值为 酒店id 
+ 		type=2 id的值为 房价id 
+ 		type=3 id的值为 房型id  
+ 	-->
+    <select id="getChannelHotelMD5InfoByParam" resultClass="channelHotelMD5Info">
+    	select * from channel_hotel_md5info where channelId = #channelId# and delFlag=0
+    	<isEqual property="type" compareValue="1">
+    		and hotelId = #id#
+    	</isEqual>
+    	<isEqual property="type" compareValue="2">
+    		and ratePlanId = #id#
+    	</isEqual>
+    	<isEqual property="type" compareValue="3">
+    		and roomTypeId = #id#
+    	</isEqual>
+    	limit 1
+    </select>
+    
+    
+    
+</sqlMap>

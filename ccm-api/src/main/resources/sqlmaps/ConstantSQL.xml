@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ConstantSQL">
+
+	<typeAlias alias="constant" type="com.ccm.api.model.common.Constant" />
+
+	<update id="updateConstant" parameterClass="constant">
+		update constant SET
+		value = #value#,flag=#flag#,delFlag=#delFlag#,lastModifyTime = #lastModifyTime#,updatedBy=#updatedBy#
+		where id = #id#
+	</update>
+
+	<select id="getConstant" resultClass="constant">
+		select * from constant where id = #id# 
+	</select>
+
+	<select id="getConstantByName" resultClass="constant">
+		select * from constant where name = #name# 
+	</select>
+
+	<select id="getConstantByObj" resultClass="constant">
+		select * from constant
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="id" prepend="AND">
+				id=#id#
+			</isNotEmpty>
+			<isNotEmpty property="name" prepend="AND">
+				name=#name#
+			</isNotEmpty>
+			<isNotEmpty property="flag" prepend="AND">
+				flag=#flag#
+			</isNotEmpty>
+			<isNotEmpty property="delFlag" prepend="AND">
+				delFlag=#delFlag#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getConstantByHotelCode" resultClass="constant">
+		select * from constant where name = "hotelCode" AND flag=0
+		order by createdTime limit 0,5
+	</select>
+
+	<update id="updateFlagConstant" parameterClass="constant">
+		update constant SET
+		value = #value#,flag=#flag#,delFlag=#delFlag#,lastModifyTime = #lastModifyTime#
+		where id = #id# and name=#name#
+	</update>
+	
+</sqlMap>

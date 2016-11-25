@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoleChannelSQL">
+
+	<typeAlias alias="roleChannel" type="com.ccm.api.model.user.RoleChannel" />
+	<typeAlias alias="role" type="com.ccm.api.model.user.Role" />
+	
+	
+
+	<insert id="addRoleChannel" parameterClass="roleChannel">
+    <![CDATA[
+        insert into rolechannel (roleId, channelId,createdBy, createdTime, delFlag) 
+        values (#roleId#, #channelId#, #createdBy#, #createdTime#, #delFlag#)
+    ]]>
+	</insert>
+
+	<delete id="removeRoleChannelByRoleId" parameterClass="String">
+    <![CDATA[
+        delete from rolechannel where roleId=#roleId#
+    ]]>
+	</delete>
+
+	<delete id="removeRoleChannelById" parameterClass="RoleChannel">
+    <![CDATA[
+        delete from rolechannel where roleId=#roleId# and channelId=#channelId#
+    ]]>
+	</delete>
+	
+	<select id="getRoleChannelByRoleId" parameterClass="String" resultClass="roleChannel">
+    <![CDATA[
+        select * from rolechannel where roleId=#roleId# and delflag=0
+    ]]>
+	</select>
+
+	<select id="getChannelIdByRoleId" parameterClass="String" resultClass="String">
+    <![CDATA[
+        select channelId from rolechannel where roleId=#roleId# and delflag=0
+    ]]>
+	</select>
+	
+	<select id="getRoleChannelByRoles"  resultClass="roleChannel">
+        select * from rolechannel where delflag=0 and roleId in
+		<iterate open="(" close=")" conjunction=",">#[]#</iterate>
+	</select>
+	
+</sqlMap>

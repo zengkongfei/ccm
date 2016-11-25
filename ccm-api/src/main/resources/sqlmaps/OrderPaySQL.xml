@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="OrderPaySQL">
+
+	<typeAlias alias="orderPay" type="com.ccm.api.model.order.MasterPay" />
+
+
+	<insert id="addMasterPay" parameterClass="orderPay">
+    <![CDATA[
+		INSERT INTO master_pay
+		(orderPayId,masterId,createdTime,gateway,trancationId,cost,status,bank,paymentTime)
+		VALUES
+		(#orderPayId#,#masterId#,#createdTime#,#gateway#,#trancationId#,#cost#,#status#,#bank#,#paymentTime#)
+    ]]>
+	</insert>
+
+	<delete id="deleteMasterPay" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_pay where orderPayId = #orderPayId# and status=1
+    ]]>
+	</delete>
+
+	<update id="updateMasterPay" parameterClass="orderPay">
+    <![CDATA[
+        update master_pay SET
+        	trancationId = #trancationId#,
+        	cost =#cost#,
+      		status =#status#,
+      		paymentTime =#paymentTime#,
+      		bank = #bank#,
+      		alipayEmail =#alipayEmail#
+      	where orderPayId=#orderPayId#
+    ]]>
+	</update>
+
+	<select id="getMasterPay" resultClass="orderPay">
+    <![CDATA[
+        select * from master_pay where orderPayId=#orderPayId#
+    ]]>
+	</select>
+
+	<select id="getOrderPayByOrderId" resultClass="orderPay">
+    <![CDATA[
+        select * from master_pay where masterId=#masterId# order by createdTime desc
+    ]]>
+	</select>
+
+	<select id="getOrderPayByTranId" resultClass="orderPay">
+    <![CDATA[
+        select * from master_pay where trancationId=#trancationId#
+    ]]>
+	</select>
+
+</sqlMap>

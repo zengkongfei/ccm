@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="TaobaoOrderSQL">
+    
+    <typeAlias alias="tborder" type="com.ccm.api.model.order.TaobaoOrder"/>
+    
+    <sql id="pageSqlTaobaoOrderSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+    <insert id="addTaobaoOrder">
+    	INSERT INTO taobaoorder (taobaoOrderId, tradeId, STATUS, modified, sendStatus, orderId, userId,orderType,createdTime)
+		VALUES(#taobaoOrderId#, #tradeId#, #status#, #modified#, #sendStatus#, #orderId#, #userId#,#orderType#,#createdTime#)
+    </insert>
+    
+    <update id="updateTaobaoOrder">
+    	UPDATE taobaoorder SET
+			STATUS = #status# , 
+			modified = #modified# , 
+			sendStatus = #sendStatus#,
+			owsOrderNos = #owsOrderNos#,
+			errMsg = #errMsg#
+		WHERE
+			tradeId = #tradeId# 
+    </update>
+    
+    <update id="updateTaobaoOrderSendStatus">
+    	UPDATE taobaoorder SET
+			sendStatus = #sendStatus#	
+		WHERE
+			tradeId = #tradeId# 
+    </update>
+    
+    
+    <select id="getTaobaoOrder" resultClass="tborder">
+    	SELECT taobaoOrderId, tradeId, STATUS, modified, sendStatus, orderId, userId,orderType	 
+		FROM taobaoorder 
+		WHERE taobaoOrderId = #taobaoOrderId# 
+    </select>
+    
+    <select id="getMaxModifiedTime" resultClass="java.util.Date">
+    	SELECT MAX(modified) as date
+		FROM taobaoorder 
+    </select>
+    
+    <select id="getTaobaoOrderByTradeId" resultClass="tborder">
+    	SELECT taobaoOrderId, tradeId, STATUS, modified, sendStatus, orderId, userId,orderType
+		FROM taobaoorder 
+		<dynamic prepend="WHERE">
+           <isNotEmpty prepend="AND" property="tradeId">
+              tradeId = #tradeId# 
+           </isNotEmpty>           
+        </dynamic>
+    </select>
+        
+    <select id="searchOrder" resultClass="tborder">
+    	SELECT taobaoOrderId, tradeId, STATUS, modified, sendStatus, orderId, userId,orderType,owsOrderNos,createdTime,errMsg
+		FROM taobaoorder 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="taobaoOrderId">
+              taobaoOrderId = #taobaoOrderId# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tradeId">
+              tradeId = #tradeId# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="orderId">
+              orderId = #orderId#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="sendStatus">
+              sendStatus = #sendStatus#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="status">
+              status = #status#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="userId">
+              userId = #userId#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="orderType">
+              orderType = #orderType#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+        </dynamic>
+        
+        	<isNotEmpty property="sortBy">
+        		order by $sortBy$ $desc$
+        	</isNotEmpty>
+        <include refid="pageSqlTaobaoOrderSQL"/>
+    </select>
+    
+    <select id="searchOrderCount" resultClass="Integer">
+    	SELECT count(1) 
+		FROM taobaoorder 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="taobaoOrderId">
+              taobaoOrderId = #taobaoOrderId# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tradeId">
+              tradeId = #tradeId# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="orderId">
+              orderId = #orderId#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="sendStatus">
+              sendStatus = #sendStatus#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="status">
+              status = #status#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="userId">
+              userId = #userId#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="orderType">
+              orderType = #orderType#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <insert id="addOrderDownloadLog">
+    	INSERT INTO orderdownloadlog (loadLogId, userId, lastLoadTime)
+		VALUES(#loadLogId#, #userId#, #lastLoadTime#)
+    </insert>
+    <update id="updateOrderDownloadLog">
+    	UPDATE orderdownloadlog SET	lastLoadTime = #lastLoadTime#
+		WHERE userId = #userId#
+    </update>
+	<select id="getOrderDownloadLogByUserId" resultClass="com.ccm.api.model.order.OrderDownloadLog">
+		SELECT loadLogId, userId, lastLoadTime	FROM orderdownloadlog WHERE userId=#userId#
+	</select>
+	<select id="getOrderDownloadLogs" resultClass="com.ccm.api.model.order.OrderDownloadLog">
+		SELECT loadLogId, userId, lastLoadTime FROM orderdownloadlog
+	</select>
+	
+	<select id="searchChannelHid" resultClass="com.ccm.api.model.channel.ChannelHotel">
+		SELECT hotelId, channelId, channelHotelCode FROM channel_hotel 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelHotelCode">
+              channelHotelCode = #channelHotelCode# 
+           </isNotEmpty>
+        </dynamic>
+	</select>
+	
+	<select id="searchChannelRoomid" resultClass="com.ccm.api.model.channel.Channelguestroom">
+		SELECT CR.channelid, GR.roomTypeCode as guestroomid, CR.channelroomtypecode FROM channelguestroom CR left join guestroom GR ON CR.guestRoomId = GR.guestRoomId
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelroomtypecode">
+              CR.channelroomtypecode = #channelroomtypecode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="channelid">
+              CR.channelid = #channelid# 
+           </isNotEmpty>
+        </dynamic>
+	</select>
+</sqlMap>

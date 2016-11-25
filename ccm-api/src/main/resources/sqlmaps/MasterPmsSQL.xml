@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MasterPmsSQL">
+  <typeAlias alias="masterPms" type="com.ccm.api.model.order.MasterPms" />
+  <insert id="saveMasterPms2" parameterClass="masterPms">
+		insert into master_pms2
+		(hotelId,masterId,sta,number,createdBy,createdTime,updatedBy,lastModifyTime,arr,channelId)
+		values(#hotelId#,#masterId#,#sta#,#number#,#createdBy#,#createdTime#,#updatedBy#,#lastModifyTime#,#arr#,#channelId#)
+	</insert>
+
+	<delete id="deleteMasterPms2" >
+		delete from master_pms2 where masterId =#masterId#
+	</delete>
+	
+	<select id="getAllMasterPms2" resultClass="masterPms">
+		select * from master_pms2
+	</select>
+   
+</sqlMap>

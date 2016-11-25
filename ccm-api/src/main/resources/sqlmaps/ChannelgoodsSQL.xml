@@ -1,0 +1,723 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Channelgoods">
+
+	<typeAlias alias="channelgoods" type="com.ccm.api.model.channel.ChannelGoods" />
+
+	<typeAlias alias="channelGoodsVO"
+		type="com.ccm.api.model.channel.vo.ChannelGoodsVO" />
+
+	<typeAlias alias="goodsVO" type="com.ccm.api.model.channel.vo.GoodsVO" />
+
+	<insert id="addChannelgoodsList" parameterClass="java.util.List">
+    <![CDATA[
+        insert into
+        channel_goods (channelGoodsId, roomTypeId, channelId, ratePlanId,isActiveImmediately,effectiveDate,expireDate,createdBy,createdTime,delFlag,status,isBind)
+        values
+    ]]>
+		<iterate conjunction=",">
+      <![CDATA[
+          (
+              #list[].channelGoodsId#,
+              #list[].roomTypeId#,
+              #list[].channelId#,
+              #list[].rateplanid#,
+              #list[].isActiveImmediately#,
+              #list[].effectiveDate#,
+              #list[].expireDate#,
+              #list[].createdBy#,
+              #list[].createdTime#,
+              #list[].delFlag#,
+              #list[].status#,
+              #list[].isBind#
+          )
+      ]]>
+		</iterate>
+	</insert>
+
+
+	<insert id="addChannelgoodsOfTB" parameterClass="goodsVO">
+		insert into
+		channel_goods
+		(channelGoodsId, roomTypeId,
+		channelId,createdBy,createdTime,delFlag)
+		values(#channelGoodsId#,#roomTypeId#,#channelId#,#createdBy#,#createdTime#,#delFlag#)
+	</insert>
+
+	<update id="deleteChannelgoods" parameterClass="channelgoods">
+		update channel_goods SET
+		delFlag = #delFlag#,updatedBy =
+		#updatedBy#,lastModifyTime = #lastModifyTime#
+		where
+		ratePlanId=#rateplanid# and delFlag = 0
+		AND channelId = #channelId#
+		<isNotEmpty prepend="AND" property="isBind">
+		isBind=#isBind#
+		</isNotEmpty>
+		AND
+		((
+		<![CDATA[effectiveDate<=#effectiveDate#]]>
+		AND (
+		<![CDATA[expireDate>=#effectiveDate#]]>
+		OR expireDate IS NULL))
+		OR (
+		<![CDATA[effectiveDate<=#expireDate#]]>
+		AND (
+		<![CDATA[expireDate>=#expireDate#]]>
+		OR expireDate IS NULL)))
+	</update>
+
+	<update id="publishChannelGoods" parameterClass="channelGoodsVO">
+		UPDATE
+		channel_goods cg
+		INNER JOIN rate_plan rp ON cg.ratePlanId=rp.ratePlanId
+		SET cg.status=#status#,cg.updatedBy = #updatedBy#,cg.lastModifyTime =
+		#lastModifyTime#
+		WHERE rp.hotelId=#hotelId# AND cg.delFlag = 0 AND
+		rp.delFlag = 0 and cg.status=#srcStatus#
+    </update>
+
+	<update id="publishChannelGoodsByRatePlanId" parameterClass="channelGoodsVO">
+		UPDATE channel_goods cg
+		INNER JOIN rate_plan rp ON
+		cg.ratePlanId=rp.ratePlanId
+		SET cg.status=#status#,cg.updatedBy =
+		#updatedBy#,cg.lastModifyTime = #lastModifyTime#
+		WHERE
+		rp.hotelId=#hotelId# AND cg.delFlag = 0 AND rp.delFlag = 0 and
+		cg.status=#srcStatus#
+		AND cg.ratePlanId = #ratePlanId#
+    </update>
+
+	<update id="updateChannelGoodsIsBind" parameterClass="Map">
+		UPDATE channel_goods cg 
+		  INNER JOIN rate_plan rp ON rp.`ratePlanId` = cg.`ratePlanId` AND rp.hotelId = #hotelId# AND rp.`ratePlanCode` = #ratePlanCode# 
+		  INNER JOIN channel c ON c.`channelId` = cg.`channelId` AND c.delFlag = 0 AND c.`channelCode` = #channelCode# 
+		  INNER JOIN room_type rt ON rt.`roomTypeId` = cg.`roomTypeId` AND rt.`delFlag` = 0 AND rt.`roomTypeCode` = #roomTypeCode# 
+		SET isBind = #isBind# WHERE cg.delFlag = 0 
+	</update>
+	
+	<update id="updateChannelGoods" parameterClass="channelgoods">
+		UPDATE channel_goods set status = #status#,updatedBy = #updatedBy#,lastModifyTime = #lastModifyTime#
+		WHERE channelGoodsId = #channelGoodsId#
+	</update>
+
+	<select id="getChannelGoodss" resultClass="channelgoods">
+		select * from
+		channel_goods g where delFlag = 0
+    </select>
+
+	<select id="getChannelGoods" resultClass="channelgoods"
+		parameterClass="java.lang.String">
+		select g.*,g.shijia_Tag as shijiaTag from channel_goods
+		g where channelGoodsId=#channelGoodsId# and delFlag = 0
+    </select>
+
+	<select id="getChannelgoodsByHotelRateId" resultClass="channelGoodsVO"
+		parameterClass="Map">
+		select rp.hotelId,cg.channelGoodsId,
+		c.channelCode,c.channelId,c.pushRateContent,c.pushRateUrl,c.pushHotel,c.pushRoom,c.isOTA,c.isChannelPushUrl,
+		rp.ratePlanCode,rp.ratePlanId,cg.roomTypeId,cg.isActiveImmediately,cg.createdTime,cg.effectiveDate,cg.expireDate,cg.status,cg.isBind
+		from channel_goods cg
+		inner join rate_plan rp on
+		cg.ratePlanId=rp.ratePlanId
+		inner join channel c on
+		cg.channelId=c.channelId
+		where rp.hotelId=#hotelId# and cg.delFlag = 0
+		and rp.delFlag = 0 and c.delFlag=0
+		<isNotEmpty prepend="AND" property="ratePlanId">
+			rp.`ratePlanId`=#ratePlanId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="roomTypeId">
+			cg.`roomTypeId`=#roomTypeId#
+		</isNotEmpty>
+		GROUP BY cg.rateplanid,cg.channelId,cg.effectiveDate,cg.expireDate
+	</select>
+
+	<select id="getChannelgoodsByBind" resultClass="channelGoodsVO"
+		parameterClass="Map">
+		select rp.hotelId,cg.channelGoodsId,
+		c.channelCode,c.channelId,c.pushRateContent,c.pushRateUrl,c.pushHotel,c.pushRoom,c.isOTA,c.isChannelPushUrl,
+		rp.ratePlanCode,rp.ratePlanId,cg.roomTypeId,cg.isActiveImmediately,cg.createdTime,cg.effectiveDate,cg.expireDate,cg.status,cg.isBind
+		from channel_goods cg
+		inner join rate_plan rp on
+		cg.ratePlanId=rp.ratePlanId
+		inner join channel c on
+		cg.channelId=c.channelId
+		where rp.hotelId=#hotelId# and cg.delFlag = 0
+		and rp.delFlag = 0 and c.delFlag=0
+		<isNotEmpty prepend="AND" property="ratePlanId">
+			rp.`ratePlanId`=#ratePlanId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="roomTypeId">
+			cg.`roomTypeId`=#roomTypeId#
+		</isNotEmpty>
+		GROUP BY cg.rateplanid,cg.channelId,cg.effectiveDate,cg.expireDate,cg.isBind
+	</select>
+	<select id="getChannelgoodsByHotelAndRateId" resultClass="channelGoodsVO"
+		parameterClass="Map">
+		select rp.hotelId,cg.channelGoodsId,
+		c.channelCode,c.channelId,c.pushRateContent,c.pushRateUrl,c.pushHotel,c.pushRoom,c.isOTA,c.isChannelPushUrl,
+		rp.ratePlanCode,rp.ratePlanId,cg.roomTypeId,cg.isActiveImmediately,cg.createdTime,cg.effectiveDate,cg.expireDate,cg.status,cg.isBind
+		from channel_goods cg
+		inner join rate_plan rp on
+		cg.ratePlanId=rp.ratePlanId
+		inner join channel c on
+		cg.channelId=c.channelId
+		where rp.hotelId=#hotelId# and cg.delFlag = 0
+		and rp.delFlag = 0 and c.delFlag=0
+		and cg.`ratePlanId`=#ratePlanId#
+		and cg.`channelId`=#channelId#
+		<isNotEmpty prepend="AND" property="ratePlanId">
+			rp.`ratePlanId`=#ratePlanId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="roomTypeId">
+			cg.`roomTypeId`=#roomTypeId#
+		</isNotEmpty>
+		GROUP BY cg.rateplanid,cg.channelId,cg.effectiveDate,cg.expireDate
+	</select>
+
+	<select id="getChannelgoodsByChannelHotel" resultClass="channelGoodsVO"
+		parameterClass="channelGoodsVO">
+		select
+		cg.channelGoodsId,c.channelCode,c.channelId,rp.ratePlanCode,rp.ratePlanId,rpi.description,
+		rt.roomTypeCode,rti.roomTypeName,cg.roomTypeId,cg.isActiveImmediately,cg.createdTime,cg.effectiveDate,cg.expireDate,cg.status,cg.isBind
+		from channel_goods cg
+		inner join rate_plan rp on
+		cg.ratePlanId=rp.ratePlanId
+		inner join room_type rt on
+		cg.roomTypeId=rt.roomTypeId
+		inner join channel c on
+		cg.channelId=c.channelId
+		left join rate_plan_i18n rpi on rp.ratePlanId
+		= rpi.ratePlanId and rpi.delFlag = 0 and rpi.language=#language#
+		left
+		join room_type_i18n rti on rt.roomTypeId = rti.roomTypeId and
+		rti.delFlag = 0 and rti.language=#language#
+		where rp.hotelId=#hotelId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="channelIds">
+				cg.channelId in
+				<iterate open="(" close=")" conjunction="," property="channelIds">
+					#channelIds[]# 
+		        </iterate>
+			</isNotEmpty>
+		</dynamic>
+		and cg.delFlag = 0 and rp.delFlag = 0 and c.delFlag=0 and rt.delFlag =
+		0
+		GROUP BY cg.rateplanid,cg.channelId,cg.effectiveDate,cg.expireDate,cg.isBind
+	</select>
+
+	<select id="getChannelgoodsByChannelHotelGroupByRoomType"
+		resultClass="channelGoodsVO" parameterClass="channelGoodsVO">
+		SELECT
+		cg.channelGoodsId,
+		c.channelCode,
+		c.channelId,
+		res.roomTypeCode,
+		res.roomTypeName,
+		rp.ratePlanCode,
+		rpi.description,
+		cg.roomTypeId,
+		cg.isActiveImmediately,
+		cg.createdTime,
+		cg.effectiveDate,
+		cg.expireDate,
+		cg.status,
+		cg.isBind
+		FROM
+		channel_goods cg
+		INNER JOIN rate_plan rp
+		ON cg.ratePlanId = rp.ratePlanId
+		INNER JOIN channel c
+		ON cg.channelId = c.channelId
+		INNER JOIN
+		(SELECT DISTINCT
+		rp.`ratePlanId`,
+		rp.`ratePlanCode`,
+		rt.`roomTypeId`,
+		rt.`roomTypeCode`,
+		rti.`roomTypeName`,
+		rd.`rateDetailId`
+		FROM
+		hotel h
+		INNER JOIN rate_plan rp
+		ON h.`hotelId` = rp.`hotelId`
+		INNER JOIN rate_detail rd
+		ON rp.`ratePlanId` = rd.`ratePlanId`
+		INNER JOIN room_rate rr
+		ON rd.`rateDetailId` = rr.`rateDetailId`
+		INNER JOIN room_type rt
+		ON rr.`roomTypeId` = rt.`roomTypeId`
+		LEFT JOIN room_type_i18n rti
+		ON rt.`roomTypeId` = rti.`roomTypeId`
+		AND rti.`language` = #language#
+		AND rti.`delFlag` = 0
+		WHERE h.`hotelId` = #hotelId#
+		AND rd.expireDate >= NOW()
+		AND h.`delFlag` = 0
+		AND rp.`delFlag` = 0
+		AND rd.`delFlag` = 0
+		AND rt.`delFlag` = 0
+		AND IFNULL(rp.`inheritRatePlanId`, '') = '') res
+		ON rp.`ratePlanId` = res.`ratePlanId`
+		OR rp.`inheritRatePlanId` = res.`ratePlanId`
+		LEFT JOIN rate_plan_i18n rpi
+		ON rp.`ratePlanId` = rpi.`ratePlanId`
+		AND rpi.`language` = #language#
+		AND rpi.`delFlag` = 0
+		WHERE cg.`roomTypeId` = res.`roomTypeId`
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="channelIds">
+				cg.channelId in
+				<iterate open="(" close=")" conjunction="," property="channelIds">
+					#channelIds[]# 
+				        </iterate>
+			</isNotEmpty>
+		</dynamic>
+		AND cg.delFlag = 0
+		AND rp.delFlag = 0
+		AND c.delFlag = 0
+		GROUP BY cg.roomTypeId,
+		cg.ratePlanId,
+		cg.channelId,
+		cg.effectiveDate,
+		cg.expireDate
+	</select>
+
+	<select id="getChannelgoodsbyGid" resultClass="channelgoods">
+		SELECT * FROM
+		channel_goods WHERE channelGoodsCode = #gid# and delFlag = 0
+    </select>
+
+	<!-- 根据酒店ID或(房价,房型,渠道,绑定)条件查询渠道绑定信息 -->
+	<select id="getChannelCodeByChannelGoods" resultClass="channelGoodsVO"
+		parameterClass="channelGoodsVO">
+		SELECT
+		c.channelId,c.channelCode,c.channelProfileId,c.validRoomPrice,c.isCancel,
+		cg.channelGoodsId,cg.createdTime,cg.createdBy,cg.lastModifyTime,cg.updatedBy,cg.effectiveDate,cg.expireDate,
+		rt.roomTypeId,rt.roomTypeCode,rti.roomTypeName,rt.pmsCode,
+		rp.ratePlanId,rp.ratePlanCode,rp.hotelId,rpi.description,rpi.ratePlanName,cg.isBind
+		FROM channel c
+		INNER JOIN channel_goods cg ON
+		c.`channelId`=cg.`channelId`
+		INNER JOIN room_type rt ON
+		cg.`roomTypeId`=rt.`roomTypeId`
+		INNER JOIN rate_plan rp ON
+		cg.`ratePlanId`=rp.`ratePlanId`
+		LEFT JOIN room_type_i18n rti ON
+		rti.`roomTypeId`=rt.`roomTypeId` and rti.delFlag = 0 AND
+		rti.language=#language#
+		LEFT JOIN rate_plan_i18n rpi ON
+		rpi.`ratePlanId`=rp.`ratePlanId` AND rpi.delFlag = 0 AND
+		rpi.language=#language#
+		WHERE
+		rt.`hotelId`=rp.`hotelId` AND
+		cg.`delFlag`=0 AND rt.`delFlag`=0 AND rp.`delFlag`=0 AND c.delFlag=0
+		AND c.isEnabled = 1
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				rt.`hotelId`=#hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rt.`roomTypeCode`=#roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanCode">
+				rp.`ratePlanCode`=#ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				c.channelCode=#channelCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				cg.status=#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isBind">
+				cg.isBind=#isBind#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				cg.status in
+				<iterate property="statusList" open="(" close=")"
+					conjunction=",">
+					#statusList[]#
+        		</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelId">
+				cg.channelId=#channelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelIds">
+				cg.channelId in
+				<iterate open="(" close=")" conjunction="," property="channelIds">
+					#channelIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanIds">
+				cg.ratePlanId in
+				<iterate open="(" close=")" conjunction="," property="ratePlanIds">
+					#ratePlanIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createdTime">
+				<![CDATA[
+				c.addTime <= #createdTime# and c.delTime >= #createdTime# 
+				and 
+				cg.effectiveDate<=#createdTime# AND (cg.expireDate>=#createdTime# OR cg.expireDate IS NULL)
+				]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="expireDate">
+				<![CDATA[
+				date(c.addTime) <= #expireDate# and date(c.delTime) >= #expireDate# and 
+				date(cg.effectiveDate)<=#expireDate# AND (date(cg.expireDate)>=#expireDate# OR cg.expireDate IS NULL)
+				]]>
+			</isNotEmpty>
+		</dynamic>
+		order by rp.ratePlanCode,rt.roomTypeCode,c.channelCode
+	</select>
+
+	<!-- 根据酒店ID或(房价,房型,渠道,绑定)条件查询渠道绑定信息 (简化版本,用于pms房量上传) -->
+	<select id="getChannelCodeByChannelGoods2" resultClass="channelGoodsVO"
+		parameterClass="channelGoodsVO">
+		SELECT
+		c.channelId,c.channelCode,rt.roomTypeId,rt.roomTypeCode,rp.ratePlanId,rp.ratePlanCode,cg.status,
+		c.addTime,c.delTime,cg.effectiveDate,cg.expireDate,cg.isBind
+		FROM channel c
+		INNER JOIN channel_goods cg ON c.`channelId`=cg.`channelId`
+		INNER JOIN room_type rt ON cg.`roomTypeId`=rt.`roomTypeId`
+		INNER JOIN
+		rate_plan rp ON cg.`ratePlanId`=rp.`ratePlanId`
+		WHERE
+		rt.`hotelId`=rp.`hotelId` AND cg.`delFlag`=0
+		AND rt.`delFlag`=0 AND rp.`delFlag`=0 AND c.delFlag=0
+		AND c.isEnabled = 1
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				rt.`hotelId`=#hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rt.`roomTypeCode`=#roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanCode">
+				rp.`ratePlanCode`=#ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCodes">
+				rt.`roomTypeCode` IN
+				<iterate property="roomTypeCodes" open="(" close=")"
+					conjunction=",">
+					#roomTypeCodes[]#
+        		</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanCodes">
+				rp.`ratePlanCode` IN
+				<iterate property="ratePlanCodes" open="(" close=")"
+					conjunction=",">
+					#ratePlanCodes[]#
+        		</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				c.channelCode=#channelCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCodes">
+				c.channelCode IN
+				<iterate property="channelCodes" open="(" close=")"
+					conjunction=",">
+					#channelCodes[]#
+        		</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				cg.status=#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isBind">
+				cg.isBind=#isBind#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createdTime">
+				<![CDATA[
+				c.addTime <= #createdTime# and c.delTime >= #createdTime# 
+				and 
+				cg.effectiveDate<=#createdTime# AND (cg.expireDate>=#createdTime# OR cg.expireDate IS NULL)
+				]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="expireDate">
+				<![CDATA[
+				date(c.addTime) <= #expireDate# and date(c.delTime) >= #expireDate# and 
+				date(cg.effectiveDate)<=#expireDate# AND (date(cg.expireDate)>=#expireDate# OR cg.expireDate IS NULL)
+				]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getChannelGoodsByHotelIdChannelIdRatePlanId"
+		resultClass="channelgoods" parameterClass="channelgoods">
+		SELECT cg.* FROM channel_goods cg
+		inner join rate_plan rp on
+		cg.ratePlanId=rp.ratePlanId
+		WHERE rp.hotelId=#hotelId# AND
+		cg.channelId=#channelId# AND cg.ratePlanId=#rateplanid# and cg.delFlag
+		= 0 and rp.delFlag=0
+		<isNotEmpty prepend="AND" property="effectiveDate">
+			<![CDATA[
+			cg.effectiveDate<=#effectiveDate# AND (cg.expireDate>=#effectiveDate# OR cg.expireDate IS NULL)
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="expireDate">
+			<![CDATA[
+			cg.effectiveDate<=#expireDate# AND (cg.expireDate>=#expireDate# OR cg.expireDate IS NULL)
+			]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isBind">
+			<![CDATA[
+			cg.isBind = #isBind#
+			]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="existsChannelGoods" resultClass="String"
+		parameterClass="channelGoodsVO">
+		SELECT channelGoodsId FROM channel_goods
+		WHERE ratePlanId=#ratePlanId#
+		and delFlag = 0
+		AND channelId in
+		<iterate open="(" close=")" conjunction="," property="channelIds">
+			#channelIds[]# 
+         </iterate>
+		AND ((
+		<![CDATA[effectiveDate<=#effectiveDate#]]>
+		AND (
+		<![CDATA[expireDate>=#effectiveDate#]]>
+		OR expireDate IS NULL))
+		OR (
+		<![CDATA[effectiveDate<=#expireDate#]]>
+		AND (
+		<![CDATA[expireDate>=#expireDate#]]>
+		OR expireDate IS NULL)))
+		GROUP BY
+		rateplanid,channelId,effectiveDate,expireDate
+	</select>
+	<!-- b2b使用 -->
+	<select id="searchGoodsByCreteria" resultClass="goodsVO">
+		SELECT
+		cg.*,rp.rpId,rp.ratePlanCode,rpi.ratePlanName,rpi.description,rti18n.babyName,rti18n.roomTypeName,hi.hotelName,reqr.exception
+		FROM channel_goods cg
+		LEFT JOIN rate_plan rp ON cg.ratePlanId =
+		rp.ratePlanId
+		LEFT JOIN rate_plan_i18n rpi ON rpi.ratePlanId =
+		rp.ratePlanId AND rpi.language=#language# AND rpi.delFlag = 0
+		LEFT JOIN
+		room_type rt ON rt.roomTypeId = cg.roomTypeId
+		LEFT JOIN room_type_i18n
+		rti18n ON rti18n.roomTypeId = cg.roomTypeId AND
+		rti18n.language=#language# AND rti18n.delFlag = 0
+		LEFT JOIN hotel h ON
+		cg.hotelId = h.hotelId
+		LEFT JOIN hotel_i18n hi ON hi.hotelId=h.hotelId
+		AND hi.languageCode = #language# AND hi.delFlag = 0
+		left join (select
+		*from receivereqres where type=#type# and
+		interfaceId=#interfaceId#)reqr on cg.channelGoodsId=reqr.extId
+		WHERE
+		cg.delFlag=0 and cg.ratePlanId is not null
+		<dynamic prepend="AND">
+			<isNotNull property="hotelIdList">
+				<isEmpty prepend="AND" property="hotelIdList">
+					1=0
+	        	</isEmpty>
+				<isNotEmpty prepend="AND" property="hotelIdList">
+					h.hotelId in
+					<iterate property="hotelIdList" open="(" close=")"
+						conjunction=",">
+						#hotelIdList[]#
+	        		</iterate>
+				</isNotEmpty>
+			</isNotNull>
+			<isNotEmpty prepend="AND" property="createdBy">
+				h.createdBy =
+				#createdBy#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeId">
+				cg.roomTypeId =
+				#roomTypeId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="rateplanid">
+				cg.rateplanid =
+				#rateplanid#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelGoodsId">
+				cg.channelGoodsId =
+				#channelGoodsId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				h.hotelId = #hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rt.roomTypeCode =
+				#roomTypeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeName">
+				rti18n.roomTypeName
+				like CONCAT('%',#roomTypeName#,'%')
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="babyName">
+				rti18n.babyName like
+				CONCAT('%',#babyName#,'%')
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="tbSyncStatus">
+				cg.tbSyncStatus =
+				#tbSyncStatus#
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+	<!-- b2b使用 -->
+	<select id="getGoodsByChanelGoodsId" resultClass="goodsVO"
+		parameterClass="String">
+		SELECT
+		cg.*,cgi.*,hi.hotelId,hi.hotelName,rt.roomTypeId,rti.roomTypeName FROM
+		channel_goods cg
+		inner join channel_goods_i18n cgi on
+		cg.channelGoodsId=cgi.channelGoodsId
+		left join room_type rt on
+		cg.roomTypeId=rt.roomTypeId
+		left join room_type_i18n rti on
+		rt.roomTypeId=rti.roomTypeId and rti.language=#language# AND
+		rti.delFlag = 0
+		left join hotel h on h.hotelId=rt.hotelId
+		left join
+		hotel_i18n hi on hi.hotelId=h.hotelId and hi.languageCode = #language#
+		AND hi.delFlag = 0
+		WHERE cg.channelGoodsId=#channelGoodsId#
+	</select>
+
+	<select id="searchRateplansByChannelGoods" resultClass="channelGoodsVO"
+		parameterClass="channelGoodsVO">
+		SELECT DISTINCT rp.ratePlanId,rp.ratePlanCode,rpi.description FROM
+		channel_goods cg
+		LEFT JOIN rate_plan rp ON cg.ratePlanId =
+		rp.ratePlanId
+		LEFT JOIN rate_plan_i18n rpi ON rpi.ratePlanId =
+		rp.ratePlanId AND rpi.language=#language# AND rpi.delFlag = 0
+		LEFT JOIN
+		room_type rt ON rt.roomTypeId = cg.roomTypeId
+		LEFT JOIN hotel h ON
+		rt.hotelId = h.hotelId
+		WHERE cg.delFlag=0 AND h.delFlag=0 AND
+		rpi.delFlag=0 AND rt.delFlag=0 AND cg.ratePlanId is not null
+		AND
+		h.hotelId=#hotelId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roomTypeId">
+				rt.roomTypeId =
+				#roomTypeId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rt.roomTypeCode =
+				#roomTypeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelIds">
+				cg.channelId in
+				<iterate open="(" close=")" conjunction="," property="channelIds">
+					#channelIds[]# 
+		        </iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="checkGoodsName" resultClass="String" parameterClass="String">
+		SELECT cgi.title FROM channel_goods_i18n cgi
+		inner join channel_goods
+		cg on cgi.channelGoodsId=cg.channelGoodsId WHERE cgi.title=#title# and
+		cg.delFlag=0
+	</select>
+
+	<select id="getChannelgoodsByChannelIdAndRoomTypeId"
+		resultClass="channelgoods" parameterClass="Map">
+		select * from channel_goods
+		where channelId=#channelId# and roomTypeId=#roomTypeId# and delFlag =
+		0
+		and (channelGoodsCode is not null and channelGoodsCode != '')
+	</select>
+
+	<select id="getChannelgoodsByCodeMap" parameterClass="Map"
+		resultClass="channelgoods">
+		SELECT t1.*,t4.ratePlanCode FROM channel_goods t1 LEFT JOIN hotel t2
+		ON t1.hotelId = t2.hotelId
+		LEFT JOIN room_type t3 ON t3.hotelId =
+		t1.hotelId AND t3.roomTypeId = t1.roomTypeId
+		LEFT JOIN rate_plan t4 ON
+		t4.ratePlanId = t1.ratePlanId and t4.hotelId=t1.hotelId
+		LEFT JOIN
+		(SELECT chainId FROM CHAIN WHERE chainCode = #chainCode#) t5 ON
+		t5.chainId = t2.chainId
+		WHERE (gidAndRpid IS NOT NULL AND gidAndRpid
+		!='') and
+		t2.hotelCode=#hotelCode# and
+		t3.roomTypeCode = #roomTypeCode#
+		<isNotEmpty prepend="AND" property="ratePlanCode">
+			t4.ratePlanCode =
+			#ratePlanCode#
+	        </isNotEmpty>
+	</select>
+
+	<!-- 根据酒店ID或(房价,房型,渠道,绑定)条件查询渠道绑定信息 -->
+	<select id="getChannelGoodsVORoomTypeByChannelGoods2"
+		resultClass="channelGoodsVO" parameterClass="channelGoodsVO">
+		SELECT DISTINCT c.channelId,c.channelCode,
+		rt.roomTypeId,rt.roomTypeCode,rti.roomTypeName,rt.hotelId
+		FROM channel c
+		INNER JOIN channel_goods cg ON c.`channelId`=cg.`channelId`
+		INNER JOIN room_type rt ON cg.`roomTypeId`=rt.`roomTypeId`
+		INNER JOIN rate_plan rp ON cg.`ratePlanId`=rp.`ratePlanId`
+		LEFT JOIN room_type_i18n rti ON rti.`roomTypeId`=rt.`roomTypeId` and rti.delFlag = 0 AND rti.language=#language#
+		LEFT JOIN rate_plan_i18n rpi ON rpi.`ratePlanId`=rp.`ratePlanId` AND rpi.delFlag = 0 AND rpi.language=#language#
+		WHERE rt.`hotelId`=rp.`hotelId` AND cg.`delFlag`=0 AND rt.`delFlag`=0 AND rp.`delFlag`=0 AND c.delFlag=0 AND c.isEnabled = 1
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="ratePlanId">
+				rp.ratePlanId =#ratePlanId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				rt.`hotelId`=#hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelId">
+				cg.channelId=#channelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				cg.status=#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isBind">
+				cg.isBind=#isBind#
+			</isNotEmpty>
+		</dynamic>
+		order by rt.roomTypeCode
+	</select>
+	
+	
+	<!-- 根据酒店ID或(房价,房型,渠道,绑定)条件查询渠道绑定信息 -->
+	<select id="getChannelGoodsVOByChannelGoods"
+		resultClass="channelGoodsVO" parameterClass="channelGoodsVO">
+		SELECT DISTINCT c.channelId,c.channelCode,cg.status,
+		rt.roomTypeId,rt.roomTypeCode,rti.roomTypeName,rp.ratePlanId,rt.hotelId,rp.ratePlanCode,rpi.ratePlanName 
+		FROM channel c
+		INNER JOIN channel_goods cg ON c.`channelId`=cg.`channelId`
+		INNER JOIN room_type rt ON cg.`roomTypeId`=rt.`roomTypeId`
+		INNER JOIN rate_plan rp ON cg.`ratePlanId`=rp.`ratePlanId`
+		LEFT JOIN room_type_i18n rti ON rti.`roomTypeId`=rt.`roomTypeId` and rti.delFlag = 0 AND rti.language=#language#
+		LEFT JOIN rate_plan_i18n rpi ON rpi.`ratePlanId`=rp.`ratePlanId` AND rpi.delFlag = 0 AND rpi.language=#language#
+		WHERE rt.`hotelId`=rp.`hotelId` AND cg.`delFlag`=0 AND rt.`delFlag`=0 AND rp.`delFlag`=0 AND c.delFlag=0 AND c.isEnabled = 1
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="ratePlanId">
+				rp.ratePlanId =#ratePlanId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				rt.`hotelId`=#hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelId">
+				cg.channelId=#channelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				cg.status=#status#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="isBind">
+				cg.isBind=#isBind#
+			</isNotEmpty>
+		</dynamic>
+		order by rt.roomTypeCode
+	</select>
+
+</sqlMap>

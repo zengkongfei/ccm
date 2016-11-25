@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="FeedBackSQL">
+
+	<typeAlias alias="feedBack" type="com.ccm.api.model.hotel.FeedBack" />
+	
+	<sql id="pageSqlFeedBackSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addFeedBack" parameterClass="feedBack">
+		INSERT INTO feed_back(feedBackId, hotelId, companyName, name,mobile,email,message,status, createdTime, createdBy, delFlag)
+		VALUES (#feedBackId#, #hotelId#, #companyName#, #name#,#mobile#,#email#,#message#,#status#, #createdTime#,#createdBy#,#delFlag#)
+	</insert>
+
+	<update id="updateFeedBackDelFlag">
+		update feed_back SET
+		delFlag = #delFlag#,
+		updatedBy = #updatedBy#,
+		lastModifyTime = #lastModifyTime#
+		where feedBackId = #feedBackId#
+    </update>
+
+	<update id="updateStatusByFeedBackId" parameterClass="Map">
+		update feed_back SET status=#status#
+		<dynamic prepend="WHERE">
+			feedBackId in
+			<iterate open="(" close=")" conjunction="," property="feedBackIds">
+				#feedBackIds[]# 
+			</iterate>
+		</dynamic>
+	</update>
+
+	<update id="updateFeedBack" parameterClass="feedBack">
+		UPDATE feed_back
+		<dynamic prepend="SET">
+			<isNotNull property="companyName" prepend=",">
+		        <![CDATA[  
+		        companyName = #companyName#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="name" prepend=",">
+		        <![CDATA[  
+		        name = #name#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="mobile" prepend=",">
+		        <![CDATA[  
+		        mobile = #mobile#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="lastModifyTime" prepend=",">
+		        <![CDATA[  
+		        lastModifyTime = #lastModifyTime#  
+		        ]]>
+			</isNotNull>
+		</dynamic>
+		WHERE feedBackId = #feedBackId#
+	</update>
+
+	<select id="getFeedBack" resultClass="feedBack">
+    <![CDATA[
+        select * from feed_back where feedBackId = #feedBackId# and delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getFeedBacks" resultClass="feedBack">
+    <![CDATA[
+        select * from feed_back where delFlag = 0 
+    ]]>
+	</select>
+
+	<select id="getFeedBackByStatus" resultClass="String">
+    <![CDATA[
+        select feedBackId from feed_back where delFlag = 0 and status=#status# and hotelId=#hotelId# order by createdTime
+    ]]>
+	</select>
+
+	<select id="countFeedBack" resultClass="Integer">
+		SELECT count(*) FROM feed_back WHERE `delFlag` = 0 and hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="feedBackIds">
+			feedBackId in
+			<iterate property="feedBackIds" open="(" close=")" conjunction=",">
+				#feedBackIds[]#
+           	</iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="searchFeedBack" resultClass="feedBack">
+		SELECT * FROM `feed_back` WHERE `delFlag` = 0 and hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="feedBackIds">
+			feedBackId in
+			<iterate property="feedBackIds" open="(" close=")" conjunction=",">
+				#feedBackIds[]#
+           	</iterate>
+		</isNotEmpty>
+		order by createdTime desc
+		<include refid="pageSqlFeedBackSQL"/>
+	</select>
+
+</sqlMap>

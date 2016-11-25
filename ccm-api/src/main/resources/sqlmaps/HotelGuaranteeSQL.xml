@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelGuaranteeSQL">
+	
+	<typeAlias alias="hotelGuarantee" type="com.ccm.api.model.hotel.HotelGuarantee" />
+	<typeAlias alias="hotelGuaranteeI18n" type="com.ccm.api.model.hotel.HotelGuaranteeI18n" />
+	<typeAlias alias="hotelGuaranteeVO" type="com.ccm.api.model.hotel.vo.HotelGuaranteeVO" />
+	<typeAlias alias="guaranteePolicyvo" type="com.ccm.api.model.ratePlan.vo.GuaranteePolicyVO"/>
+		
+    <sql id="pageSqlHotelGuaranteeSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addHotelGuarantee" parameterClass="hotelGuarantee">
+		INSERT INTO hotel_guarantee(hotelGuaranteeId, hotelId, guaranteeId, createdTime, createdBy, delFlag,sortNum)
+		VALUES (#hotelGuaranteeId#, #hotelId#, #guaranteeId#, #createdTime#,#createdBy#,#delFlag#,#sortNum#)
+	</insert>
+	
+	<insert id="addHotelGuaranteeI18n" parameterClass="hotelGuaranteeI18n">
+		INSERT INTO hotel_guarantee_i18n(hotelGuaranteeMId,hotelGuaranteeId, language,policyName,description,
+			createdBy,createdTime,delFlag)
+			 VALUES (#hotelGuaranteeMId#, #hotelGuaranteeId#, #language#,#policyName#,#description#,
+			#createdBy#,#createdTime#,#delFlag#)
+	</insert>
+	
+	<update id="updaetHotelGuarantee" parameterClass="hotelGuarantee">
+		UPDATE hotel_guarantee hg set hg.updatedBy = #updatedBy#,hg.lastModifyTime = #lastModifyTime#,hg.sortNum = #sortNum#
+		WHERE hg.hotelGuaranteeId = #hotelGuaranteeId# 
+	</update>
+	
+	<update id="updateHotelGuaranteeI18n" parameterClass="hotelGuaranteeI18n">
+		update hotel_guarantee_i18n hgi SET
+		hgi.policyName = #policyName#
+		,hgi.description = #description#
+		,hgi.updatedBy = #updatedBy#
+		,hgi.lastModifyTime = #lastModifyTime#
+		where hotelGuaranteeMId = #hotelGuaranteeMId#
+	</update>
+	
+	<update id="deleteHotelGuaranteeById">
+		update hotel_guarantee hg SET hg.delFlag = 1 
+		 where hg.hotelGuaranteeId = #hotelGuaranteeId#
+	</update>
+
+	<update id="deleteHotelGuaranteeByHotelId">
+		update hotel_guarantee hg SET hg.delFlag = 1 
+		where hg.hotelId = #hotelId#
+    </update>
+    
+    <update id="deleteHotelGuaranteeI18nById">
+    	update hotel_guarantee_i18n hgi set hgi.delFlag = 1 
+    	where hgi.hotelGuaranteeId = #hotelGuaranteeId#
+    </update>
+    
+    <!-- Get HotelGuaranteeId And PolicyName -->
+    <select id="getHotelGuaranteeIdAndPolicyName" resultClass="HotelGuaranteeI18n" parameterClass="Map">
+    	SELECT hgi.`hotelGuaranteeId`,hgi.policyName 
+    	FROM hotel_guarantee_i18n hgi 
+		INNER JOIN hotel_guarantee hg 
+		ON hgi.`hotelGuaranteeId`=hg.`hotelGuaranteeId` AND hgi.`delFlag`=0 AND hg.`delFlag`=0 
+			AND hg.hotelId=#hotelId# 
+			AND hgi.`language`=#language#
+		INNER JOIN guarantee_policy gp ON hg.`guaranteeId`=gp.`guaranteeId` AND gp.delFlag=0 
+			AND gp.`guaranteeCode`=#guaranteeCode#
+    </select>
+    
+	<select id="getHotelGuaranteeById" resultClass="hotelGuaranteeVO">
+    <![CDATA[
+        select hg.*,hgi.*,h.hotelCode,gp.guaranteeCode from hotel_guarantee hg
+           left join hotel h on hg.hotelId = h.hotelId AND h.delFlag = 0
+           left join guarantee_policy gp on hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+           left join hotel_guarantee_i18n hgi on hg.hotelGuaranteeId = hgi.hotelGuaranteeId
+           		 and hgi.language = #language# and hgi.delFlag = 0
+        where hg.hotelGuaranteeId = #hotelGuaranteeId# and hg.delFlag = 0
+    ]]>
+	</select>
+	
+	<select id="getHotelGuaranteeI18ns" resultClass="hotelGuaranteeI18n" parameterClass="Map">
+		select * from hotel_guarantee_i18n hgi 
+		        where hgi.hotelGuaranteeId = #hotelGuaranteeId#
+		          AND hgi.`delFlag` = 0
+		order by hotelGuaranteeMId
+	</select>
+	
+	<select id="getHotelGuaranteeByHotelId" resultClass="hotelGuaranteeVO">
+    <![CDATA[
+        select hg.hotelId,h.hotelCode,hgi.*,GROUP_CONCAT(gp.guaranteeId) as guaranteeIds,GROUP_CONCAT(gp.guaranteeCode) as guaranteeCodes 
+          from hotel_guarantee hg
+           left join hotel h on hg.hotelId = h.hotelId AND h.delFlag = 0
+           left join guarantee_policy gp on hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+           left join hotel_guarantee_i18n hgi on hg.hotelGuaranteeId = hgi.hotelGuaranteeId
+                 and hgi.language = #language# and hgi.delFlag = 0
+        where hg.hotelId = #hotelId# and hg.delFlag = 0
+        group by hg.hotelId
+    ]]>
+	</select>
+
+	<select id="getHotelGuaranteeCodeByHotelId" resultClass="hotelGuaranteeVO">
+    <![CDATA[
+		select hg.guaranteeId,gp.guaranteeCode
+		from hotel_guarantee hg
+		inner join guarantee_policy gp on hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+        where hg.hotelId = #hotelId# and hg.delFlag = 0
+        group by gp.guaranteeCode
+    ]]>
+	</select>
+
+	<select id="getHotelGuaranteeByObj" resultClass="hotelGuaranteeVO" >
+        select hg.*,hgi.*,h.hotelCode,gp.guaranteeCode from hotel_guarantee hg
+           left join hotel h on hg.hotelId = h.hotelId AND h.delFlag = 0
+           left join guarantee_policy gp on hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+           left join hotel_guarantee_i18n hgi on hg.hotelGuaranteeId = hgi.hotelGuaranteeId
+                 and hgi.language = #language# and hgi.delFlag = 0
+        where hg.delFlag = 0
+        <isNotEmpty prepend="AND" property="hotelId">
+			hg.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelGuaranteeId">
+			hg.hotelGuaranteeId = #hotelGuaranteeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="guaranteeId">
+			hg.guaranteeId = #guaranteeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="guaranteeIds">
+			hg.guaranteeId in
+			<iterate open="(" close=")" conjunction="," property="guaranteeIdList">
+				#guaranteeIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="searchHotelGuarantee" resultClass="hotelGuaranteeVO" >
+		SELECT hg.*,hgi.*,h.hotelCode,gp.guaranteeCode
+		  FROM hotel_guarantee hg
+		  LEFT JOIN hotel h ON hg.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN guarantee_policy gp ON hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+		  LEFT JOIN hotel_guarantee_i18n hgi on hg.hotelGuaranteeId = hgi.hotelGuaranteeId
+                 and hgi.language = #language# and hgi.delFlag = 0
+		WHERE hg.delFlag = 0  
+		  AND hg.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="guaranteeIds">
+			hg.guaranteeId in
+			<iterate open="(" close=")" conjunction="," property="guaranteeIdList">
+				#guaranteeIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+		ORDER BY hg.sortNum,gp.guaranteeCode
+		 <include refid="pageSqlHotelGuaranteeSQL"/>
+	</select>
+
+	<select id="countHotelGuarantee" resultClass="Integer" >
+		SELECT count(*) FROM hotel_guarantee hg
+		  LEFT JOIN hotel h ON hg.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN guarantee_policy gp ON hg.guaranteeId = gp.guaranteeId AND gp.delFlag = 0
+		  LEFT JOIN hotel_guarantee_i18n hgi on hg.hotelGuaranteeId = hgi.hotelGuaranteeId
+                 and hgi.language = #language# and hgi.delFlag = 0
+		WHERE hg.delFlag = 0 
+		  AND hg.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="guaranteeIds">
+			hg.guaranteeId in
+			<iterate open="(" close=")" conjunction="," property="guaranteeIdList">
+				#guaranteeIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="getDontUseHotelGuarantee" resultClass="guaranteePolicyvo" parameterClass="Map">
+		SELECT * FROM `guarantee_policy` g,`guarantee_policy_i18n` gi 
+				WHERE g.`guaranteeId` = gi.`guaranteeId`
+				  AND g.`delFlag` = 0
+				  AND gi.`delFlag` = 0
+				  AND gi.`language` = #language#
+				  AND NOT EXISTS(
+						SELECT 1 FROM hotel_guarantee hg 
+								WHERE hg.`delFlag` = 0 
+						 	      AND hg.`hotelId` = #hotelId#
+						 	      AND hg.`guaranteeId` = g.`guaranteeId`
+				  )
+	</select>
+	
+	<select id="getUseRateGuarantee" resultClass="rateplan" parameterClass="Map">
+		SELECT r.* FROM rate_plan r,hotel h
+				  WHERE r.`hotelId` = h.`hotelId`
+				    AND h.`hotelId` = #hotelId#
+				    AND r.`delFlag` = 0
+				    AND h.`delFlag` = 0
+				    AND EXISTS(
+						SELECT 1 FROM rate_guarantee_relationship rgr
+								WHERE rgr.`ratePlanId` = r.`ratePlanId`
+					              AND rgr.`guaranteeId` = #guaranteeId#
+					              AND rgr.`delFlag` = 0
+				  	)
+	</select>
+	
+	
+</sqlMap>

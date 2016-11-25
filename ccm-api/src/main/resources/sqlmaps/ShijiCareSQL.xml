@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ShijiCareSQL">
+	<typeAlias alias="shijiCare" type="com.ccm.api.model.shijicare.ShijiCare" />
+	<typeAlias alias="shijiCareVO" type="com.ccm.api.model.shijicare.vo.ShijicareVO" />
+
+
+	<sql id="pageSqlShijiCareSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+		</isNotEmpty>
+	</sql>
+
+	<insert id="addShijiCare" parameterClass="shijiCare">
+		INSERT INTO shijicare (`careId`,`hotelCode`,`createdTime`,
+		`status`,`resultMsg`,briefDescription,fullDescription,delFlag,problemType,assignTo,suite,isSendSms)
+		VALUES
+		(#careId#,#hotelCode#,#createdTime#,#status#,#resultMsg#,#briefDescription#,#fullDescription#,0,#problemType#,#assignTo#,#suite#,#isSendSms#);
+	</insert>
+
+	<select id="getShijicareCount" resultClass="Integer">
+		SELECT count(s.hotelCode) FROM shijicare s  
+		WHERE  1=1
+		<isEqual property="caseStatus" compareValue="1">
+			AND s.`status`='SUCCESS' 
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="2">
+			AND s.`status`='FAIL'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="3">
+			AND s.`status`='SUCCESS' AND s.`closeCode`='1' AND s.`isclose`='1'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="4">
+			<![CDATA[ AND s.`status`='SUCCESS' AND s.`isclose`='1' AND s.`closeCode`!='1' ]]>
+		</isEqual>
+		
+		<isNotEmpty prepend="AND" property="hotelCodeList">
+			s.hotelCode in
+			<iterate open="(" close=")" conjunction="," property="hotelCodeList">
+				#hotelCodeList[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	  s.`createdTime` >= #beginDate#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	  s.`createdTime` <= #endDate#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="problemType">
+           	  s.`problemType` = #problemType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			s.`assignTo`=#status#
+		</isNotEmpty>
+	</select>
+	
+	<select id="getShijicareList" resultClass="shijiCareVO">
+		SELECT s.* FROM shijicare s 
+		WHERE  1=1
+		<isEqual property="caseStatus" compareValue="1">
+			AND s.`status`='SUCCESS' 
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="2">
+			AND s.`status`='FAIL'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="3">
+			AND s.`status`='SUCCESS' AND s.`closeCode`='1' AND s.`isclose`='1'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="4">
+			<![CDATA[ AND s.`status`='SUCCESS' AND s.`isclose`='1' AND s.`closeCode`!='1' ]]>
+		</isEqual>
+		
+		<isNotEmpty prepend="AND" property="hotelCodeList">
+			s.hotelCode in
+			<iterate open="(" close=")" conjunction="," property="hotelCodeList">
+				#hotelCodeList[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	  s.`createdTime` >= #beginDate#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	  s.`createdTime` <= #endDate#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="problemType">
+           	  s.`problemType` = #problemType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			s.`assignTo`=#status#
+		</isNotEmpty>
+		
+		ORDER BY s.`hotelCode`
+			<include refid="pageSqlShijiCareSQL" />
+	</select>
+	
+	<select id="getShijicareExeclList" resultClass="shijiCareVO">
+		<![CDATA[
+		SELECT s.*
+		   FROM shijicare s  
+	 	]]>
+		WHERE  1=1
+		
+		<isEqual property="caseStatus" compareValue="1">
+			AND s.`status`='SUCCESS'  
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="2">
+			AND s.`status`='FAIL'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="3">
+			AND s.`status`='SUCCESS' AND s.`closeCode`='1' AND s.`isclose`='1'
+		</isEqual>
+		<isEqual property="caseStatus" compareValue="4">
+			<![CDATA[ AND s.`status`='SUCCESS' AND s.`isclose`='1' AND s.`closeCode`!='1' ]]>
+		</isEqual>
+		
+		<isNotEmpty prepend="AND" property="hotelCodeList">
+			s.hotelCode in
+			<iterate open="(" close=")" conjunction="," property="hotelCodeList">
+				#hotelCodeList[]# 
+		        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	  s.`createdTime` >= #beginDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	  s.`createdTime` <= #endDate#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="problemType">
+           	  s.`problemType` = #problemType#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+			s.`assignTo`=#status#
+		</isNotEmpty>
+		
+		ORDER BY s.`hotelCode`
+	</select>
+
+	<select id="getSuccessShijiCareList" resultClass="shijiCare">
+		SELECT s.* FROM shijicare s   where s.`status`='SUCCESS' and s.`closeCode`='99' and s.`isclose`='0'
+		<isNotEmpty prepend="AND" property="createdTime">
+           	<![CDATA[
+           	  s.`createdTime` >= #createdTime#
+            ]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="assignTo">
+           	 s.`assignTo` = #assignTo#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isSendSms">
+           	 s.`isSendSms` = #isSendSms#
+		</isNotEmpty>
+		GROUP BY hotelcode
+	</select>
+
+	<update id="closeShijicareBycareId" parameterClass="shijiCare">
+		UPDATE shijicare SET isclose=#isclose# ,closeCode=#closeCode#,closeDesp=#closeDesp#,lastModifyTime = #lastModifyTime# WHERE careId=#careId#
+	</update>
+	
+	<update id="updateShjicareSendSms" parameterClass="shijiCare">
+		UPDATE shijicare SET isSendSms=#isSendSms# ,lastModifyTime = #lastModifyTime# WHERE careId=#careId#
+	</update>
+	
+
+	<select id="shijiCareList" resultClass="shijiCare">
+		SELECT careId,hotelCOde,STATUS,resultMsg,assignTo,isclose FROM shijicare 
+		WHERE delFlag=0 and closeCode='99'
+		<isNotEmpty prepend="AND" property="hotelCode">
+           	 hotelcode = #hotelCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="assignTo">
+           	 `assignTo` = #assignTo#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="status">
+           	 `STATUS` = #status#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="isclose">
+           	 `isclose` = #isclose#
+		</isNotEmpty>
+		
+		ORDER BY hotelcode 
+	</select>
+
+</sqlMap>

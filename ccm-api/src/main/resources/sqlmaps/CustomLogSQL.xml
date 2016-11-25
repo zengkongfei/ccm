@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CustomLogSQL">
+
+	<typeAlias alias="customLog" type="com.ccm.api.model.log.CustomLog" />
+	
+	<sql id="pageSqlCustomLogSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="addCustomLog" parameterClass="customLog">
+    <![CDATA[
+        insert into customLog 
+        (customLogId,customId,hotelCode,name,
+        type,
+        corpIATANo,
+        accessCode,
+        createdTime,delFlag,createdBy,
+        business,mobile,fax,address,email,
+        receivable,originalCreditLimit,minLimit,totalRoomRev,income) 
+        values 
+        (REPLACE(UUID(), '-', ''),#customId#,#hotelCode#,#name#,
+        REPLACE(REPLACE(#type#,' ',''),'　',''),
+        #corpIATANo#,
+        REPLACE(REPLACE(#accessCode#,' ',''),'　',''),
+        now(),#delFlag#,#createdBy#,
+        #business#,#mobile#,#fax#,#address#,#email#,
+        #receivable#,#originalCreditLimit#,#minLimit#,#totalRoomRev#,#income#)
+     ]]>
+	</insert>
+
+	<select id="countCustomLog" resultClass="Integer">
+		SELECT count(*) from customLog
+		WHERE delFlag = 0 AND hotelCode=#hotelCode#
+		<isNotEmpty prepend="AND" property="name">
+			name = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			type = #type# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="corpIATANo">
+			corpIATANo = #corpIATANo# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessCode">
+			accessCode=#accessCode#
+		</isNotEmpty>
+	</select>
+
+	<select id="searchCustomLog" resultClass="customLog">
+		SELECT * from customLog
+		WHERE delFlag = 0 AND hotelCode=#hotelCode#
+		<isNotEmpty prepend="AND" property="name">
+			name = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			type = #type# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="corpIATANo">
+			corpIATANo = #corpIATANo# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessCode">
+			accessCode=#accessCode#
+		</isNotEmpty>
+		<include refid="pageSqlCustomLogSQL"/>
+	</select>
+	
+	<select id="searchCustomLogById" resultClass="customLog">
+		SELECT * from customLog
+		WHERE delFlag = 0 AND customLogId=#customLogId#
+	</select>
+
+</sqlMap>

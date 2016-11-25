@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoomQuotaSQL">
+	<typeAlias alias="roomQuota" type="com.ccm.api.model.roomQuota.RoomQuota" />
+	<typeAlias alias="roomQuotaVO" type="com.ccm.api.model.taobaoVO.RoomQuotaVO" />
+	<typeAlias alias="roomVO" type="com.ccm.api.model.taobaoVO.RoomVO" />
+	<typeAlias alias="roomsInitVO" type="com.ccm.api.model.roomQuota.vo.RoomsInitVO" />
+	
+	<insert id="saveRoomQuota" parameterClass="roomQuota">
+	    <![CDATA[
+	        insert into roomQuota(roomQuotaId,channelId,hotelId,guestRoomId,beginDate,
+	        	endDate,generalPrice,weekPrice,amount) 
+	        values(#roomQuotaId#,#channelId#,#hotelId#,#guestRoomId#,#beginDate#,
+	        	#endDate#,#generalPrice#,#weekPrice#,#amount#);
+	     ]]>
+	</insert>
+	
+	<update id="updateChannelGoodsCode" parameterClass="Map">
+        update channel_goods set channelGoodsCode=REPLACE(REPLACE(#channelGoodsCode#,' ',''),'　','')
+        where guestRoomId=#roomTypeId#
+    </update>
+	
+	<delete id="deleteRoomquota" parameterClass="roomQuota">
+        DELETE FROM roomquota WHERE hotelId = #hotelId# 
+		AND guestRoomId = #guestRoomId#
+	</delete>
+	
+	<select id="queryPriceCalendar" resultClass="Integer">
+		<![CDATA[
+	    	SELECT count(*) FROM rsvtype 
+			WHERE `date` >= #beginDate#
+			AND `date` <= #endDate#
+			AND (available <> #amount# 
+				OR
+				CASE WHEN DAYOFWEEK(`date`) = 6 THEN rate <> #weekPrice#
+				WHEN DAYOFWEEK(`date`) = 7 THEN rate <> #weekPrice#
+				ELSE rate <> #generalPrice#
+				END);
+		]]>
+    </select>
+    
+    <select id="getRoomVO" resultClass="roomVO">
+		<![CDATA[
+	    	SELECT 
+				ch.channelHotelCode AS hid,cr.channelRoomTypeCode AS rid,
+				cg.channelGoodsCode AS gid,cg.guestRoomTitle AS title,
+				(CASE r.bedTypeCode WHEN 0 THEN 'A' WHEN 1 THEN 'B' WHEN 2 THEN 'C' WHEN 3 THEN 'D' 
+					WHEN 4 THEN 'E' WHEN 5 THEN 'F' WHEN 6 THEN 'G' WHEN 7 THEN 'H' 
+					ELSE 'I' END) AS bedType,
+				(CASE rp.breakfastNumber WHEN 0 THEN 'A' WHEN 1 THEN 'B' WHEN 2 THEN 'C' WHEN 3 THEN 'D' 
+					ELSE 'E' END) AS breakfast,
+				cg.guide AS guide,
+				gi18n.guestRoomDesc AS 'desc',
+				p.url AS picPath,
+				hi18n.hotelName AS hName,gi18n.roomTypeName AS rName,
+				cg.guestRoomTitle AS gName,
+				cg.channelGoodsId,
+				cg.refundpolicyinfo AS refundPolicyInfo
+			FROM 
+				channel_hotel ch,channelGuestRoom cr,channel_goods cg,
+				guestRoom r,guestRoom_i18n gi18n,picture p,
+				hotel_i18n hi18n,rate_plan rp
+			WHERE ch.hotelId = hi18n.hotelId
+			AND ch.hotelId = r.hotelId
+			AND r.guestRoomId = cr.guestRoomId
+			AND r.guestRoomId = cg.guestRoomId
+			AND r.guestRoomId = gi18n.guestRoomId
+			AND cg.picId = p.picId
+			AND cg.ratePlanId = rp.ratePlanId
+			AND (r.delFlag IS NULL OR r.delFlag =0)
+			AND ch.hotelId = #hotelId#
+			AND r.guestRoomId = #roomTypeId#
+			AND hi18n.delFlag=0
+			AND hi18n.languageCode = #language#
+		]]>
+    </select>
+
+    <select id="getRoomsInitvos" resultClass="roomsInitVO">
+			SELECT 
+				ch.channelHotelCode AS hid,cr.channelRoomTypeCode AS rid,
+				cg.channelGoodsCode AS gid,
+				ch.hotelId,ch.channelId,cr.guestRoomId,
+				hi18n.hotelName AS hName,gi18n.roomTypeName AS rName,
+				cg.guestRoomTitle AS gName,
+				cg.channelGoodsId AS roomId,
+				gr.roomTypeCode
+			FROM 
+				channel_hotel ch,channelGuestRoom cr,channel_goods cg,
+				guestRoom gr,guestRoom_i18n gi18n,hotel_i18n hi18n
+			WHERE ch.hotelId = hi18n.hotelId
+			AND ch.hotelId = gr.hotelId
+			AND gr.guestRoomId = gi18n.guestRoomId
+			AND gr.guestRoomId = cr.guestRoomId
+			AND gr.guestRoomId = cg.guestRoomId
+			AND (gr.delFlag IS NULL OR gr.delFlag =0)
+			AND ch.channelHotelCode = #hid#
+			AND hi18n.delFlag=0
+			AND hi18n.languageCode = #language#
+			<dynamic prepend="AND">
+				<isEqual property="flag" compareValue="1" prepend="and">
+					(cg.channelGoodsCode = '' OR cg.channelGoodsCode IS NULL)
+				</isEqual>
+				<isEqual property="flag" compareValue="0" prepend="and">
+					(cg.channelGoodsCode IS NOT NULL AND cg.channelGoodsCode <![CDATA[<>]]> '')
+	           	</isEqual>
+	        </dynamic>
+    </select>
+
+    <select id="getRoomsService" resultClass="String">
+    	SELECT cm.codeName
+		FROM guestRoomAmenity ga,codelistmapping cm,DictCode d,channelGuestRoom cr
+		WHERE cm.codeId = d.codeId
+		AND cr.guestRoomId = ga.guestRoomId
+		AND ga.codeNo = d.codeNo
+		AND d.dictId = 7
+		AND cr.channelRoomTypeCode = #roomTypeId#
+    </select>
+    
+    <select id="getRoomTypeCode" resultClass="String">
+    	SELECT roomTypeCode FROM guestroom g
+		WHERE g.guestRoomId = #roomTypeId#
+    </select>
+    
+    <select id="getRoomTypeId" resultClass="String">
+    	SELECT guestRoomId FROM guestroom g
+		WHERE g.roomTypeCode = #roomTypeCode#
+    </select>
+    
+    <select id="getRoomQuotaAmount" resultClass="Integer">
+    	SELECT r.amount FROM roomquota r,guestRoom g
+		WHERE r.guestRoomId = g.guestRoomId
+		AND g.hotelId = #hotelId#
+		AND g.roomTypeCode = #roomTypeCode#
+    </select>
+    
+    <select id="getGidIsNullCount" resultClass="Integer">
+		SELECT COUNT(*) FROM channel_goods c,guestroom g,userrole u
+		WHERE c.guestRoomId = g.guestRoomId
+		AND u.hotelId = g.hotelId
+		AND (g.delFlag IS NULL OR g.delFlag =0)
+		AND (c.channelGoodsCode IS NULL OR c.channelGoodsCode = '')
+		AND u.userId = #userId#
+    </select>
+</sqlMap>

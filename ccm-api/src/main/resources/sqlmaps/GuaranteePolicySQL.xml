@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="GuaranteePolicySQL">
+	<typeAlias alias="guaranteePolicyvo" type="com.ccm.api.model.ratePlan.vo.GuaranteePolicyVO" />
+	<typeAlias alias="guaranteePolicyI18n" type="com.ccm.api.model.ratePlan.GuaranteePolicyI18n" />
+	<typeAlias alias="guaranteePolicy" type="com.ccm.api.model.ratePlan.GuaranteePolicy" />
+	
+    <sql id="pageSqlGuaranteePolicySQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<select id="getGuaranteePolicys" resultClass="guaranteePolicyvo">
+		SELECT * FROM `guarantee_policy` g,`guarantee_policy_i18n` gi
+		WHERE g.`guaranteeId` = gi.`guaranteeId`
+		AND g.`delFlag` = 0
+		AND gi.`delFlag` = 0
+		order by g.guaranteeCode
+    </select>
+
+	<select id="getAllGuaranteePolicys" resultClass="guaranteePolicyvo">
+		SELECT * FROM `guarantee_policy` g,`guarantee_policy_i18n` gi
+		WHERE g.`guaranteeId` = gi.`guaranteeId`
+		AND g.`delFlag` = 0
+		AND gi.`delFlag` = 0
+		AND gi.`language` = #language#
+		order by g.guaranteeCode
+    </select>
+
+	<insert id="addGuaranteePolicy" parameterClass="guaranteePolicy">
+		insert into guarantee_policy (guaranteeId,guaranteeCode,retributionType,
+		guaranteeType,holdTime,createdBy,createdTime,delFlag,validTime)
+		values (#guaranteeId#,
+		REPLACE(REPLACE(#guaranteeCode#,' ',''),' ',''),
+		#retributionType#,
+		#guaranteeType#,#holdTime#,#createdBy#,#createdTime#,#delFlag#,#validTime#)
+    </insert>
+
+	<insert id="addGuaranteePolicyI18n" parameterClass="guaranteePolicyI18n">
+		insert into guarantee_policy_i18n (guaranteeMId,guaranteeId,language,policyName,description,
+		createdBy,createdTime,delFlag)
+		values (#guaranteeMId#,#guaranteeId#,#language#,#policyName#,#description#,
+		#createdBy#,#createdTime#,#delFlag#)
+    </insert>
+
+	<update id="updateGuaranteePolicy" parameterClass="guaranteePolicy">
+		update guarantee_policy SET
+		retributionType = #retributionType#
+		,guaranteeType = #guaranteeType#
+		,holdTime = #holdTime#
+		,validTime = #validTime#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where guaranteeId = #guaranteeId#
+    </update>
+
+	<update id="updateGuaranteePolicyI18n" parameterClass="guaranteePolicyI18n">
+		update guarantee_policy_i18n SET
+		policyName = #policyName#
+		,description = #description#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where guaranteeMId = #guaranteeMId#
+    </update>
+
+	<update id="deleteGuaranteePolicy" parameterClass="guaranteePolicy">
+		update guarantee_policy SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where guaranteeId = #guaranteeId#
+    </update>
+
+	<update id="deleteGuaranteePolicyI18n" parameterClass="guaranteePolicyI18n">
+		update guarantee_policy_i18n SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where guaranteeMId = #guaranteeMId#
+    </update>
+
+	<update id="deleteGuaranteePolicyI18nByGuaranteeId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update guarantee_policy_i18n SET delFlag = 1
+         WHERE guaranteeId = #guaranteeId#
+    ]]>
+	</update>
+
+	<select id="getGuaranteePolicyByCode" resultClass="guaranteePolicyvo">
+		SELECT * FROM `guarantee_policy` g left join `guarantee_policy_i18n` gi
+		on g.`guaranteeId` = gi.`guaranteeId` and gi.`delFlag` = 0 and gi.`language` = #language#
+		WHERE g.`delFlag` = 0
+		AND g.`guaranteeCode` = #guaranteeCode#
+    </select>
+
+	<select id="getGuaranteePolicyById" resultClass="guaranteePolicyvo">
+		SELECT * FROM `guarantee_policy` g left join `guarantee_policy_i18n` gi
+		on g.`guaranteeId` = gi.`guaranteeId` and gi.`delFlag` = 0 and gi.`language` = #language#
+		WHERE g.`delFlag` = 0
+		AND g.`guaranteeId` = #guaranteeId# 
+    </select>
+
+	<select id="searchGuaranteePolicy" resultClass="guaranteePolicyvo">
+		SELECT * FROM `guarantee_policy` g,`guarantee_policy_i18n` gi
+		WHERE g.`guaranteeId` = gi.`guaranteeId`
+		AND g.`delFlag` = 0
+		AND gi.`delFlag` = 0
+		AND gi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="guaranteeCode">
+				g.guaranteeCode = #guaranteeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="guaranteeType">
+				g.guaranteeType = #guaranteeType#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="policyName">
+				gi.policyName like  CONCAT('%',#policyName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		order by g.guaranteeCode
+		 <include refid="pageSqlGuaranteePolicySQL"/>
+	</select>
+
+	<select id="searchGuaranteePolicyCount" resultClass="Integer">
+		SELECT count(*) FROM `guarantee_policy` g,`guarantee_policy_i18n` gi
+		WHERE g.`guaranteeId` = gi.`guaranteeId`
+		AND g.`delFlag` = 0
+		AND gi.`delFlag` = 0
+		AND gi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="guaranteeCode">
+				g.guaranteeCode = #guaranteeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="guaranteeType">
+				g.guaranteeType = #guaranteeType#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="policyName">
+				gi.policyName like  CONCAT('%',#policyName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getGuaranteePolicy" resultClass="guaranteePolicy" parameterClass="String">
+		select * from guarantee_policy
+		where delFlag = 0 and guaranteeId = #guaranteeId#
+	</select>
+
+	<select id="getGuaranteeByCode" resultClass="guaranteePolicy" parameterClass="String">
+		select * from guarantee_policy
+		where delFlag = 0 and guaranteeCode = #guaranteeCode#
+	</select>
+
+	<select id="getGuaranteePolicyI18ns" resultClass="guaranteePolicyI18n" parameterClass="Map">
+		select * from guarantee_policy_i18n gi
+		where gi.guaranteeId =#guaranteeId#
+		AND gi.delFlag = 0
+		order by guaranteeMId
+	</select>
+
+	<select id="getGuaranteePolicyByRatePlanIds" resultClass="guaranteePolicy" parameterClass="Map">
+		SELECT DISTINCT gp.* FROM guarantee_policy gp INNER JOIN rate_guarantee_relationship rgr ON gp.`guaranteeId`=rgr.`guaranteeId` AND rgr.delFlag=0
+		WHERE gp.delFlag=0 AND rgr.`ratePlanId` IN
+		<iterate open="(" close=")" conjunction="," property="ratePlanIds">
+			#ratePlanIds[]# 
+		</iterate>
+	</select>
+
+	<select id="getGuaranteePolicyByRatePlanId" resultClass="guaranteePolicy" parameterClass="String">
+		SELECT DISTINCT gp.* FROM guarantee_policy gp 
+		INNER JOIN rate_guarantee_relationship rgr ON gp.`guaranteeId`=rgr.`guaranteeId` AND rgr.delFlag=0
+		WHERE gp.delFlag=0 AND rgr.`ratePlanId` = #ratePlanIds#
+	</select>
+
+	<select id="getGuaranteePolicyI18nByRatePlanId" resultClass="guaranteePolicyvo" parameterClass="Map">
+		SELECT
+		gp.`guaranteeId`,
+		gp.`guaranteeCode`,
+		gp.`validTime`,
+		gpi.`policyName`,
+		gpi.description
+		FROM
+		guarantee_policy gp JOIN
+		rate_guarantee_relationship rgr
+		ON gp.`guaranteeId` = rgr.`guaranteeId`
+		LEFT JOIN guarantee_policy_i18n gpi
+		ON gp.`guaranteeId` = gpi.`guaranteeId`
+		AND gpi.`delFlag` = 0
+		AND gpi.`language`=#language#
+		WHERE gp.`delFlag` = 0
+		AND rgr.`delFlag` = 0
+		AND rgr.`ratePlanId` = #ratePlanId#
+	</select>
+
+</sqlMap>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OTA_HotelProductNotifRQ Version="1.0" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05 file:///C:/BaiduYunDownload/2014B/OTA2014B_Publication/OpenTravel_2014B_XML/OTA_HotelProductNotifRQ.xsd">
+<POS>
+	<Source>
+		<BookingChannel Type="7">
+			<CompanyName Code="$channelCode" />
+		</BookingChannel>
+	</Source>
+</POS>
+	<HotelProducts HotelCode="$hotelCode" HotelName="$hotelName" ChainCode="$chainCode">
+		#foreach( $hotelProduct in $hotelProducts )
+		<HotelProduct ProductStatusType="$hotelProduct.productStatusType">
+			<RoomTypes>
+				<RoomType RoomTypeCode="$hotelProduct.roomTypeCode" RoomTypeName="$hotelProduct.roomTypeName" />
+			</RoomTypes>
+			<RatePlans>
+				<RatePlan RatePlanCode="$hotelProduct.ratePlanCode" RatePlanName="$hotelProduct.ratePlanName" />
+			</RatePlans>
+			<PolicyInfo>
+				<GuaranteePaymentPolicy>
+					<GuaranteePayment PaymentCode="$hotelProduct.guaranteeJsonArr" /> 
+				</GuaranteePaymentPolicy>
+			</PolicyInfo>
+		</HotelProduct>
+		#end
+	</HotelProducts>
+	<TPA_Extensions>
+		<TPA_Extension HotelCode="$hotelCode">
+			<Extension Name="ContactInfo">
+				<Item Key="Telephone" Value="$telephone" />
+				<Item Key="Address" Value="$address" />
+				<Item Key="Email" Value="$email" />
+				<Item Key="CityName" Value="$city" />
+				<Item Key="Province" Value="$provinceStr" />
+			</Extension>
+		</TPA_Extension>
+	</TPA_Extensions>
+</OTA_HotelProductNotifRQ>

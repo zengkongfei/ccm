@@ -1,0 +1,3334 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?mso-application progid="Word.Document"?>
+<w:wordDocument xmlns:aml="http://schemas.microsoft.com/aml/2001/core" xmlns:dt="uuid:C2F41010-65B3-11d1-A29F-00AA00C14882" xmlns:ve="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.microsoft.com/office/word/2003/wordml" xmlns:wx="http://schemas.microsoft.com/office/word/2003/auxHint" xmlns:wsp="http://schemas.microsoft.com/office/word/2003/wordml/sp2" xmlns:sl="http://schemas.microsoft.com/schemaLibrary/2003/core" w:macrosPresent="no" w:embeddedObjPresent="no" w:ocxPresent="no" xml:space="preserve">
+	<w:ignoreSubtree w:val="http://schemas.microsoft.com/office/word/2003/wordml/sp2"/>
+	<o:DocumentProperties>
+		<o:Author>Edwin</o:Author>
+		<o:LastAuthor>Administrator</o:LastAuthor>
+		<o:Revision>2</o:Revision>
+		<o:TotalTime>0</o:TotalTime>
+		<o:Created>2015-04-02T02:15:00Z</o:Created>
+		<o:LastSaved>2015-04-02T02:15:00Z</o:LastSaved>
+		<o:Pages>2</o:Pages>
+		<o:Words>130</o:Words>
+		<o:Characters>746</o:Characters>
+		<o:Lines>6</o:Lines>
+		<o:Paragraphs>1</o:Paragraphs>
+		<o:CharactersWithSpaces>875</o:CharactersWithSpaces>
+		<o:Version>12</o:Version>
+	</o:DocumentProperties>
+	<w:fonts>
+		<w:defaultFonts w:ascii="Calibri" w:fareast="微软雅黑" w:h-ansi="Calibri" w:cs="Times New Roman"/>
+		<w:font w:name="Times New Roman">
+			<w:panose-1 w:val="02020603050405020304"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Roman"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007841" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="000001FF" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Arial">
+			<w:panose-1 w:val="020B0604020202020204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Swiss"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E0002AFF" w:usb-1="C0007843" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="000001FF" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="宋体">
+			<w:altName w:val="SimSun"/>
+			<w:panose-1 w:val="02010600030101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="auto"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="00000003" w:usb-1="288F0000" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Cambria Math">
+			<w:panose-1 w:val="02040503050406030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Roman"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E00002FF" w:usb-1="420024FF" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0000019F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Cambria">
+			<w:panose-1 w:val="02040503050406030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Roman"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E00002FF" w:usb-1="400004FF" w:usb-2="00000000" w:usb-3="00000000" w:csb-0="0000019F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Calibri">
+			<w:panose-1 w:val="020F0502020204030204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Swiss"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E10002FF" w:usb-1="4000ACFF" w:usb-2="00000009" w:usb-3="00000000" w:csb-0="0000019F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="微软雅黑">
+			<w:panose-1 w:val="020B0503020204020204"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Swiss"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="80000287" w:usb-1="280F3C52" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="0004001F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="Tahoma">
+			<w:panose-1 w:val="020B0604030504040204"/>
+			<w:charset w:val="00"/>
+			<w:family w:val="Swiss"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="E1002EFF" w:usb-1="C000605B" w:usb-2="00000029" w:usb-3="00000000" w:csb-0="000101FF" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@微软雅黑">
+			<w:panose-1 w:val="020B0503020204020204"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="Swiss"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="80000287" w:usb-1="280F3C52" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="0004001F" w:csb-1="00000000"/>
+		</w:font>
+		<w:font w:name="@宋体">
+			<w:panose-1 w:val="02010600030101010101"/>
+			<w:charset w:val="86"/>
+			<w:family w:val="auto"/>
+			<w:pitch w:val="variable"/>
+			<w:sig w:usb-0="00000003" w:usb-1="288F0000" w:usb-2="00000016" w:usb-3="00000000" w:csb-0="00040001" w:csb-1="00000000"/>
+		</w:font>
+	</w:fonts>
+	<w:styles>
+		<w:versionOfBuiltInStylenames w:val="7"/>
+		<w:latentStyles w:defLockedState="off" w:latentStyleCount="267">
+			<w:lsdException w:name="Normal"/>
+			<w:lsdException w:name="heading 1"/>
+			<w:lsdException w:name="heading 2"/>
+			<w:lsdException w:name="heading 3"/>
+			<w:lsdException w:name="heading 4"/>
+			<w:lsdException w:name="heading 5"/>
+			<w:lsdException w:name="heading 6"/>
+			<w:lsdException w:name="heading 7"/>
+			<w:lsdException w:name="heading 8"/>
+			<w:lsdException w:name="heading 9"/>
+			<w:lsdException w:name="toc 1"/>
+			<w:lsdException w:name="toc 2"/>
+			<w:lsdException w:name="toc 3"/>
+			<w:lsdException w:name="toc 4"/>
+			<w:lsdException w:name="toc 5"/>
+			<w:lsdException w:name="toc 6"/>
+			<w:lsdException w:name="toc 7"/>
+			<w:lsdException w:name="toc 8"/>
+			<w:lsdException w:name="toc 9"/>
+			<w:lsdException w:name="caption"/>
+			<w:lsdException w:name="Title"/>
+			<w:lsdException w:name="Default Paragraph Font"/>
+			<w:lsdException w:name="Subtitle"/>
+			<w:lsdException w:name="Strong"/>
+			<w:lsdException w:name="Emphasis"/>
+			<w:lsdException w:name="Table Grid"/>
+			<w:lsdException w:name="Placeholder Text"/>
+			<w:lsdException w:name="No Spacing"/>
+			<w:lsdException w:name="Light Shading"/>
+			<w:lsdException w:name="Light List"/>
+			<w:lsdException w:name="Light Grid"/>
+			<w:lsdException w:name="Medium Shading 1"/>
+			<w:lsdException w:name="Medium Shading 2"/>
+			<w:lsdException w:name="Medium List 1"/>
+			<w:lsdException w:name="Medium List 2"/>
+			<w:lsdException w:name="Medium Grid 1"/>
+			<w:lsdException w:name="Medium Grid 2"/>
+			<w:lsdException w:name="Medium Grid 3"/>
+			<w:lsdException w:name="Dark List"/>
+			<w:lsdException w:name="Colorful Shading"/>
+			<w:lsdException w:name="Colorful List"/>
+			<w:lsdException w:name="Colorful Grid"/>
+			<w:lsdException w:name="Light Shading Accent 1"/>
+			<w:lsdException w:name="Light List Accent 1"/>
+			<w:lsdException w:name="Light Grid Accent 1"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 1"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 1"/>
+			<w:lsdException w:name="Medium List 1 Accent 1"/>
+			<w:lsdException w:name="Revision"/>
+			<w:lsdException w:name="List Paragraph"/>
+			<w:lsdException w:name="Quote"/>
+			<w:lsdException w:name="Intense Quote"/>
+			<w:lsdException w:name="Medium List 2 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 1"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 1"/>
+			<w:lsdException w:name="Dark List Accent 1"/>
+			<w:lsdException w:name="Colorful Shading Accent 1"/>
+			<w:lsdException w:name="Colorful List Accent 1"/>
+			<w:lsdException w:name="Colorful Grid Accent 1"/>
+			<w:lsdException w:name="Light Shading Accent 2"/>
+			<w:lsdException w:name="Light List Accent 2"/>
+			<w:lsdException w:name="Light Grid Accent 2"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 2"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 2"/>
+			<w:lsdException w:name="Medium List 1 Accent 2"/>
+			<w:lsdException w:name="Medium List 2 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 2"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 2"/>
+			<w:lsdException w:name="Dark List Accent 2"/>
+			<w:lsdException w:name="Colorful Shading Accent 2"/>
+			<w:lsdException w:name="Colorful List Accent 2"/>
+			<w:lsdException w:name="Colorful Grid Accent 2"/>
+			<w:lsdException w:name="Light Shading Accent 3"/>
+			<w:lsdException w:name="Light List Accent 3"/>
+			<w:lsdException w:name="Light Grid Accent 3"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 3"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 3"/>
+			<w:lsdException w:name="Medium List 1 Accent 3"/>
+			<w:lsdException w:name="Medium List 2 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 3"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 3"/>
+			<w:lsdException w:name="Dark List Accent 3"/>
+			<w:lsdException w:name="Colorful Shading Accent 3"/>
+			<w:lsdException w:name="Colorful List Accent 3"/>
+			<w:lsdException w:name="Colorful Grid Accent 3"/>
+			<w:lsdException w:name="Light Shading Accent 4"/>
+			<w:lsdException w:name="Light List Accent 4"/>
+			<w:lsdException w:name="Light Grid Accent 4"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 4"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 4"/>
+			<w:lsdException w:name="Medium List 1 Accent 4"/>
+			<w:lsdException w:name="Medium List 2 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 4"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 4"/>
+			<w:lsdException w:name="Dark List Accent 4"/>
+			<w:lsdException w:name="Colorful Shading Accent 4"/>
+			<w:lsdException w:name="Colorful List Accent 4"/>
+			<w:lsdException w:name="Colorful Grid Accent 4"/>
+			<w:lsdException w:name="Light Shading Accent 5"/>
+			<w:lsdException w:name="Light List Accent 5"/>
+			<w:lsdException w:name="Light Grid Accent 5"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 5"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 5"/>
+			<w:lsdException w:name="Medium List 1 Accent 5"/>
+			<w:lsdException w:name="Medium List 2 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 5"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 5"/>
+			<w:lsdException w:name="Dark List Accent 5"/>
+			<w:lsdException w:name="Colorful Shading Accent 5"/>
+			<w:lsdException w:name="Colorful List Accent 5"/>
+			<w:lsdException w:name="Colorful Grid Accent 5"/>
+			<w:lsdException w:name="Light Shading Accent 6"/>
+			<w:lsdException w:name="Light List Accent 6"/>
+			<w:lsdException w:name="Light Grid Accent 6"/>
+			<w:lsdException w:name="Medium Shading 1 Accent 6"/>
+			<w:lsdException w:name="Medium Shading 2 Accent 6"/>
+			<w:lsdException w:name="Medium List 1 Accent 6"/>
+			<w:lsdException w:name="Medium List 2 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 1 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 2 Accent 6"/>
+			<w:lsdException w:name="Medium Grid 3 Accent 6"/>
+			<w:lsdException w:name="Dark List Accent 6"/>
+			<w:lsdException w:name="Colorful Shading Accent 6"/>
+			<w:lsdException w:name="Colorful List Accent 6"/>
+			<w:lsdException w:name="Colorful Grid Accent 6"/>
+			<w:lsdException w:name="Subtle Emphasis"/>
+			<w:lsdException w:name="Intense Emphasis"/>
+			<w:lsdException w:name="Subtle Reference"/>
+			<w:lsdException w:name="Intense Reference"/>
+			<w:lsdException w:name="Book Title"/>
+			<w:lsdException w:name="Bibliography"/>
+			<w:lsdException w:name="TOC Heading"/>
+		</w:latentStyles>
+		<w:style w:type="paragraph" w:default="on" w:styleId="a">
+			<w:name w:val="Normal"/>
+			<wx:uiName wx:val="正文"/>
+			<w:rsid w:val="00323B43"/>
+			<w:pPr>
+				<w:adjustRightInd w:val="off"/>
+				<w:snapToGrid w:val="off"/>
+				<w:spacing w:after="200"/>
+			</w:pPr>
+			<w:rPr>
+				<w:rFonts w:ascii="Tahoma" w:h-ansi="Tahoma"/>
+				<wx:font wx:val="Tahoma"/>
+				<w:sz w:val="22"/>
+				<w:sz-cs w:val="22"/>
+				<w:lang w:val="EN-US" w:fareast="ZH-CN" w:bidi="AR-SA"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:default="on" w:styleId="a0">
+			<w:name w:val="Default Paragraph Font"/>
+			<wx:uiName wx:val="默认段落字体"/>
+		</w:style>
+		<w:style w:type="table" w:default="on" w:styleId="a1">
+			<w:name w:val="Normal Table"/>
+			<wx:uiName wx:val="普通表格"/>
+			<w:rPr>
+				<wx:font wx:val="Calibri"/>
+				<w:lang w:val="EN-US" w:fareast="ZH-CN" w:bidi="AR-SA"/>
+			</w:rPr>
+			<w:tblPr>
+				<w:tblInd w:w="0" w:type="dxa"/>
+				<w:tblCellMar>
+					<w:top w:w="0" w:type="dxa"/>
+					<w:left w:w="108" w:type="dxa"/>
+					<w:bottom w:w="0" w:type="dxa"/>
+					<w:right w:w="108" w:type="dxa"/>
+				</w:tblCellMar>
+			</w:tblPr>
+		</w:style>
+		<w:style w:type="list" w:default="on" w:styleId="a2">
+			<w:name w:val="No List"/>
+			<wx:uiName wx:val="无列表"/>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a3">
+			<w:name w:val="header"/>
+			<wx:uiName wx:val="页眉"/>
+			<w:basedOn w:val="a"/>
+			<w:link w:val="Char"/>
+			<w:rsid w:val="00D46C56"/>
+			<w:pPr>
+				<w:pBdr>
+					<w:bottom w:val="single" w:sz="6" wx:bdrwidth="15" w:space="1" w:color="auto"/>
+				</w:pBdr>
+				<w:tabs>
+					<w:tab w:val="center" w:pos="4153"/>
+					<w:tab w:val="right" w:pos="8306"/>
+				</w:tabs>
+				<w:jc w:val="center"/>
+			</w:pPr>
+			<w:rPr>
+				<wx:font wx:val="Tahoma"/>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="Char">
+			<w:name w:val="页眉 Char"/>
+			<w:basedOn w:val="a0"/>
+			<w:link w:val="a3"/>
+			<w:rsid w:val="00D46C56"/>
+			<w:rPr>
+				<w:rFonts w:ascii="Tahoma" w:h-ansi="Tahoma"/>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="paragraph" w:styleId="a4">
+			<w:name w:val="footer"/>
+			<wx:uiName wx:val="页脚"/>
+			<w:basedOn w:val="a"/>
+			<w:link w:val="Char0"/>
+			<w:rsid w:val="00D46C56"/>
+			<w:pPr>
+				<w:tabs>
+					<w:tab w:val="center" w:pos="4153"/>
+					<w:tab w:val="right" w:pos="8306"/>
+				</w:tabs>
+			</w:pPr>
+			<w:rPr>
+				<wx:font wx:val="Tahoma"/>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="Char0">
+			<w:name w:val="页脚 Char"/>
+			<w:basedOn w:val="a0"/>
+			<w:link w:val="a4"/>
+			<w:rsid w:val="00D46C56"/>
+			<w:rPr>
+				<w:rFonts w:ascii="Tahoma" w:h-ansi="Tahoma"/>
+				<w:sz w:val="18"/>
+				<w:sz-cs w:val="18"/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="a5">
+			<w:name w:val="Strong"/>
+			<wx:uiName wx:val="要点"/>
+			<w:basedOn w:val="a0"/>
+			<w:rsid w:val="00F16A7B"/>
+			<w:rPr>
+				<w:b/>
+				<w:b-cs/>
+			</w:rPr>
+		</w:style>
+		<w:style w:type="character" w:styleId="apple-converted-space">
+			<w:name w:val="apple-converted-space"/>
+			<w:basedOn w:val="a0"/>
+			<w:rsid w:val="00F16A7B"/>
+		</w:style>
+		<w:style w:type="character" w:styleId="nowp">
+			<w:name w:val="nowp"/>
+			<w:basedOn w:val="a0"/>
+			<w:rsid w:val="00F16A7B"/>
+		</w:style>
+		<w:style w:type="table" w:styleId="a6">
+			<w:name w:val="Table Grid"/>
+			<wx:uiName wx:val="网格型"/>
+			<w:basedOn w:val="a1"/>
+			<w:rsid w:val="008843D3"/>
+			<w:rPr>
+				<wx:font wx:val="Calibri"/>
+			</w:rPr>
+			<w:tblPr>
+				<w:tblInd w:w="0" w:type="dxa"/>
+				<w:tblBorders>
+					<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+					<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="auto"/>
+				</w:tblBorders>
+				<w:tblCellMar>
+					<w:top w:w="0" w:type="dxa"/>
+					<w:left w:w="108" w:type="dxa"/>
+					<w:bottom w:w="0" w:type="dxa"/>
+					<w:right w:w="108" w:type="dxa"/>
+				</w:tblCellMar>
+			</w:tblPr>
+		</w:style>
+	</w:styles>
+	<w:divs>
+		<w:div w:id="170877534">
+			<w:bodyDiv w:val="on"/>
+			<w:marLeft w:val="0"/>
+			<w:marRight w:val="0"/>
+			<w:marTop w:val="0"/>
+			<w:marBottom w:val="0"/>
+			<w:divBdr>
+				<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+			</w:divBdr>
+		</w:div>
+		<w:div w:id="347100681">
+			<w:bodyDiv w:val="on"/>
+			<w:marLeft w:val="0"/>
+			<w:marRight w:val="0"/>
+			<w:marTop w:val="0"/>
+			<w:marBottom w:val="0"/>
+			<w:divBdr>
+				<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+			</w:divBdr>
+			<w:divsChild>
+				<w:div w:id="478807018">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+					</w:divBdr>
+				</w:div>
+				<w:div w:id="979311228">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+					</w:divBdr>
+				</w:div>
+				<w:div w:id="1471628447">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:left w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:bottom w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:right w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+					</w:divBdr>
+				</w:div>
+			</w:divsChild>
+		</w:div>
+		<w:div w:id="381640508">
+			<w:bodyDiv w:val="on"/>
+			<w:marLeft w:val="0"/>
+			<w:marRight w:val="0"/>
+			<w:marTop w:val="0"/>
+			<w:marBottom w:val="0"/>
+			<w:divBdr>
+				<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+			</w:divBdr>
+		</w:div>
+		<w:div w:id="410197162">
+			<w:bodyDiv w:val="on"/>
+			<w:marLeft w:val="0"/>
+			<w:marRight w:val="0"/>
+			<w:marTop w:val="0"/>
+			<w:marBottom w:val="0"/>
+			<w:divBdr>
+				<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+			</w:divBdr>
+		</w:div>
+		<w:div w:id="1888057173">
+			<w:bodyDiv w:val="on"/>
+			<w:marLeft w:val="0"/>
+			<w:marRight w:val="0"/>
+			<w:marTop w:val="0"/>
+			<w:marBottom w:val="0"/>
+			<w:divBdr>
+				<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+				<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+			</w:divBdr>
+			<w:divsChild>
+				<w:div w:id="731119639">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+					</w:divBdr>
+				</w:div>
+				<w:div w:id="1310286336">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:left w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:bottom w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+						<w:right w:val="single" w:sz="6" wx:bdrwidth="15" w:space="0" w:color="DDDDDD"/>
+					</w:divBdr>
+				</w:div>
+				<w:div w:id="1336764985">
+					<w:marLeft w:val="0"/>
+					<w:marRight w:val="0"/>
+					<w:marTop w:val="0"/>
+					<w:marBottom w:val="0"/>
+					<w:divBdr>
+						<w:top w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:left w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:bottom w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+						<w:right w:val="none" w:sz="0" wx:bdrwidth="0" w:space="0" w:color="auto"/>
+					</w:divBdr>
+				</w:div>
+			</w:divsChild>
+		</w:div>
+	</w:divs>
+	<w:shapeDefaults>
+		<o:shapedefaults v:ext="edit" spidmax="6146"/>
+		<o:shapelayout v:ext="edit">
+			<o:idmap v:ext="edit" data="1"/>
+		</o:shapelayout>
+	</w:shapeDefaults>
+	<w:docPr>
+		<w:view w:val="print"/>
+		<w:zoom w:percent="100"/>
+		<w:doNotEmbedSystemFonts/>
+		<w:bordersDontSurroundHeader/>
+		<w:bordersDontSurroundFooter/>
+		<w:proofState w:spelling="clean"/>
+		<w:defaultTabStop w:val="720"/>
+		<w:punctuationKerning/>
+		<w:characterSpacingControl w:val="DontCompress"/>
+		<w:optimizeForBrowser/>
+		<w:validateAgainstSchema/>
+		<w:saveInvalidXML w:val="off"/>
+		<w:ignoreMixedContent w:val="off"/>
+		<w:alwaysShowPlaceholderText w:val="off"/>
+		<w:hdrShapeDefaults>
+			<o:shapedefaults v:ext="edit" spidmax="6146"/>
+		</w:hdrShapeDefaults>
+		<w:footnotePr>
+			<w:footnote w:type="separator">
+				<w:p wsp:rsidR="001D0F13" wsp:rsidRDefault="001D0F13" wsp:rsidP="00D46C56">
+					<w:pPr>
+						<w:spacing w:after="0"/>
+					</w:pPr>
+					<w:r>
+						<w:separator/>
+					</w:r>
+				</w:p>
+			</w:footnote>
+			<w:footnote w:type="continuation-separator">
+				<w:p wsp:rsidR="001D0F13" wsp:rsidRDefault="001D0F13" wsp:rsidP="00D46C56">
+					<w:pPr>
+						<w:spacing w:after="0"/>
+					</w:pPr>
+					<w:r>
+						<w:continuationSeparator/>
+					</w:r>
+				</w:p>
+			</w:footnote>
+		</w:footnotePr>
+		<w:endnotePr>
+			<w:endnote w:type="separator">
+				<w:p wsp:rsidR="001D0F13" wsp:rsidRDefault="001D0F13" wsp:rsidP="00D46C56">
+					<w:pPr>
+						<w:spacing w:after="0"/>
+					</w:pPr>
+					<w:r>
+						<w:separator/>
+					</w:r>
+				</w:p>
+			</w:endnote>
+			<w:endnote w:type="continuation-separator">
+				<w:p wsp:rsidR="001D0F13" wsp:rsidRDefault="001D0F13" wsp:rsidP="00D46C56">
+					<w:pPr>
+						<w:spacing w:after="0"/>
+					</w:pPr>
+					<w:r>
+						<w:continuationSeparator/>
+					</w:r>
+				</w:p>
+			</w:endnote>
+		</w:endnotePr>
+		<w:compat>
+			<w:breakWrappedTables/>
+			<w:snapToGridInCell/>
+			<w:wrapTextWithPunct/>
+			<w:useAsianBreakRules/>
+			<w:dontGrowAutofit/>
+			<w:useFELayout/>
+		</w:compat>
+		<wsp:rsids>
+			<wsp:rsidRoot wsp:val="00D31D50"/>
+			<wsp:rsid wsp:val="00007E3D"/>
+			<wsp:rsid wsp:val="00011CBE"/>
+			<wsp:rsid wsp:val="0001531E"/>
+			<wsp:rsid wsp:val="000334C1"/>
+			<wsp:rsid wsp:val="00042157"/>
+			<wsp:rsid wsp:val="00063EC9"/>
+			<wsp:rsid wsp:val="0007257C"/>
+			<wsp:rsid wsp:val="00075286"/>
+			<wsp:rsid wsp:val="000C7C0B"/>
+			<wsp:rsid wsp:val="000F5F54"/>
+			<wsp:rsid wsp:val="00100B3A"/>
+			<wsp:rsid wsp:val="00133433"/>
+			<wsp:rsid wsp:val="00143FD5"/>
+			<wsp:rsid wsp:val="0014502E"/>
+			<wsp:rsid wsp:val="00151CD0"/>
+			<wsp:rsid wsp:val="00152098"/>
+			<wsp:rsid wsp:val="0018616F"/>
+			<wsp:rsid wsp:val="001B198D"/>
+			<wsp:rsid wsp:val="001D0F13"/>
+			<wsp:rsid wsp:val="001E3875"/>
+			<wsp:rsid wsp:val="001E666D"/>
+			<wsp:rsid wsp:val="001E6C48"/>
+			<wsp:rsid wsp:val="001F33EF"/>
+			<wsp:rsid wsp:val="001F5BA4"/>
+			<wsp:rsid wsp:val="00201C48"/>
+			<wsp:rsid wsp:val="002037B8"/>
+			<wsp:rsid wsp:val="002234C9"/>
+			<wsp:rsid wsp:val="002251C8"/>
+			<wsp:rsid wsp:val="002945A5"/>
+			<wsp:rsid wsp:val="00294A40"/>
+			<wsp:rsid wsp:val="002A780F"/>
+			<wsp:rsid wsp:val="002D4CD4"/>
+			<wsp:rsid wsp:val="00300D4F"/>
+			<wsp:rsid wsp:val="00302738"/>
+			<wsp:rsid wsp:val="00323B43"/>
+			<wsp:rsid wsp:val="00331194"/>
+			<wsp:rsid wsp:val="00357499"/>
+			<wsp:rsid wsp:val="00383140"/>
+			<wsp:rsid wsp:val="003A49AD"/>
+			<wsp:rsid wsp:val="003B4B4D"/>
+			<wsp:rsid wsp:val="003B7127"/>
+			<wsp:rsid wsp:val="003D37D8"/>
+			<wsp:rsid wsp:val="003E59EB"/>
+			<wsp:rsid wsp:val="00400820"/>
+			<wsp:rsid wsp:val="0040488D"/>
+			<wsp:rsid wsp:val="00405C15"/>
+			<wsp:rsid wsp:val="00426133"/>
+			<wsp:rsid wsp:val="004358AB"/>
+			<wsp:rsid wsp:val="0043767D"/>
+			<wsp:rsid wsp:val="0046428E"/>
+			<wsp:rsid wsp:val="004715F1"/>
+			<wsp:rsid wsp:val="0047234D"/>
+			<wsp:rsid wsp:val="00483E8A"/>
+			<wsp:rsid wsp:val="00497034"/>
+			<wsp:rsid wsp:val="004A4DF4"/>
+			<wsp:rsid wsp:val="004A7D94"/>
+			<wsp:rsid wsp:val="004B67BD"/>
+			<wsp:rsid wsp:val="004B6B05"/>
+			<wsp:rsid wsp:val="004C10C9"/>
+			<wsp:rsid wsp:val="004C2F77"/>
+			<wsp:rsid wsp:val="004D03ED"/>
+			<wsp:rsid wsp:val="004D38BF"/>
+			<wsp:rsid wsp:val="005133C7"/>
+			<wsp:rsid wsp:val="005252F2"/>
+			<wsp:rsid wsp:val="00555761"/>
+			<wsp:rsid wsp:val="005561B9"/>
+			<wsp:rsid wsp:val="00584323"/>
+			<wsp:rsid wsp:val="00587BCA"/>
+			<wsp:rsid wsp:val="005D55EC"/>
+			<wsp:rsid wsp:val="005D7974"/>
+			<wsp:rsid wsp:val="005F1AEF"/>
+			<wsp:rsid wsp:val="005F6B79"/>
+			<wsp:rsid wsp:val="00604E51"/>
+			<wsp:rsid wsp:val="00617BCB"/>
+			<wsp:rsid wsp:val="006668D7"/>
+			<wsp:rsid wsp:val="00680200"/>
+			<wsp:rsid wsp:val="0068543D"/>
+			<wsp:rsid wsp:val="00690693"/>
+			<wsp:rsid wsp:val="00690CF8"/>
+			<wsp:rsid wsp:val="00691E0C"/>
+			<wsp:rsid wsp:val="006A0426"/>
+			<wsp:rsid wsp:val="006C58ED"/>
+			<wsp:rsid wsp:val="006E6E23"/>
+			<wsp:rsid wsp:val="00732754"/>
+			<wsp:rsid wsp:val="00734EFB"/>
+			<wsp:rsid wsp:val="00750450"/>
+			<wsp:rsid wsp:val="0077698B"/>
+			<wsp:rsid wsp:val="007940F0"/>
+			<wsp:rsid wsp:val="007A7D2B"/>
+			<wsp:rsid wsp:val="007E232C"/>
+			<wsp:rsid wsp:val="00812B52"/>
+			<wsp:rsid wsp:val="00823257"/>
+			<wsp:rsid wsp:val="0082792C"/>
+			<wsp:rsid wsp:val="00830B3A"/>
+			<wsp:rsid wsp:val="008835F4"/>
+			<wsp:rsid wsp:val="00883F7F"/>
+			<wsp:rsid wsp:val="008843D3"/>
+			<wsp:rsid wsp:val="008A0EA4"/>
+			<wsp:rsid wsp:val="008B6A4F"/>
+			<wsp:rsid wsp:val="008B7726"/>
+			<wsp:rsid wsp:val="008C4580"/>
+			<wsp:rsid wsp:val="008C5FDD"/>
+			<wsp:rsid wsp:val="008D2B7F"/>
+			<wsp:rsid wsp:val="008F03F6"/>
+			<wsp:rsid wsp:val="008F4D0E"/>
+			<wsp:rsid wsp:val="008F70A5"/>
+			<wsp:rsid wsp:val="00901257"/>
+			<wsp:rsid wsp:val="009265BC"/>
+			<wsp:rsid wsp:val="0098192E"/>
+			<wsp:rsid wsp:val="00994250"/>
+			<wsp:rsid wsp:val="009942AF"/>
+			<wsp:rsid wsp:val="009945E4"/>
+			<wsp:rsid wsp:val="00996319"/>
+			<wsp:rsid wsp:val="009A2A64"/>
+			<wsp:rsid wsp:val="009A64D3"/>
+			<wsp:rsid wsp:val="009B08EB"/>
+			<wsp:rsid wsp:val="009B3541"/>
+			<wsp:rsid wsp:val="009F1CF0"/>
+			<wsp:rsid wsp:val="009F7299"/>
+			<wsp:rsid wsp:val="00A27A90"/>
+			<wsp:rsid wsp:val="00A40389"/>
+			<wsp:rsid wsp:val="00A72612"/>
+			<wsp:rsid wsp:val="00A75234"/>
+			<wsp:rsid wsp:val="00A83441"/>
+			<wsp:rsid wsp:val="00A97CF9"/>
+			<wsp:rsid wsp:val="00AA1A0A"/>
+			<wsp:rsid wsp:val="00AB471D"/>
+			<wsp:rsid wsp:val="00AE2D90"/>
+			<wsp:rsid wsp:val="00AF1BF4"/>
+			<wsp:rsid wsp:val="00AF2CA2"/>
+			<wsp:rsid wsp:val="00AF5CB3"/>
+			<wsp:rsid wsp:val="00B1125E"/>
+			<wsp:rsid wsp:val="00B4553D"/>
+			<wsp:rsid wsp:val="00B547C6"/>
+			<wsp:rsid wsp:val="00B667A5"/>
+			<wsp:rsid wsp:val="00B7795C"/>
+			<wsp:rsid wsp:val="00B95ED6"/>
+			<wsp:rsid wsp:val="00BB6E10"/>
+			<wsp:rsid wsp:val="00BC39D6"/>
+			<wsp:rsid wsp:val="00BD4723"/>
+			<wsp:rsid wsp:val="00BF26E7"/>
+			<wsp:rsid wsp:val="00C012C9"/>
+			<wsp:rsid wsp:val="00C1401B"/>
+			<wsp:rsid wsp:val="00C14CC0"/>
+			<wsp:rsid wsp:val="00C317B9"/>
+			<wsp:rsid wsp:val="00C35482"/>
+			<wsp:rsid wsp:val="00C42E3C"/>
+			<wsp:rsid wsp:val="00C47379"/>
+			<wsp:rsid wsp:val="00C500B8"/>
+			<wsp:rsid wsp:val="00C57717"/>
+			<wsp:rsid wsp:val="00C6091A"/>
+			<wsp:rsid wsp:val="00C61CB8"/>
+			<wsp:rsid wsp:val="00C62545"/>
+			<wsp:rsid wsp:val="00C95937"/>
+			<wsp:rsid wsp:val="00CA3877"/>
+			<wsp:rsid wsp:val="00CA7CC2"/>
+			<wsp:rsid wsp:val="00CB42D7"/>
+			<wsp:rsid wsp:val="00CD2255"/>
+			<wsp:rsid wsp:val="00CD4B20"/>
+			<wsp:rsid wsp:val="00D01495"/>
+			<wsp:rsid wsp:val="00D05BB3"/>
+			<wsp:rsid wsp:val="00D3053A"/>
+			<wsp:rsid wsp:val="00D31D50"/>
+			<wsp:rsid wsp:val="00D46C56"/>
+			<wsp:rsid wsp:val="00D47A32"/>
+			<wsp:rsid wsp:val="00D635E2"/>
+			<wsp:rsid wsp:val="00DA14D7"/>
+			<wsp:rsid wsp:val="00DA2E25"/>
+			<wsp:rsid wsp:val="00DB2C8C"/>
+			<wsp:rsid wsp:val="00DB4166"/>
+			<wsp:rsid wsp:val="00DF49EB"/>
+			<wsp:rsid wsp:val="00E35494"/>
+			<wsp:rsid wsp:val="00E355BD"/>
+			<wsp:rsid wsp:val="00E571AE"/>
+			<wsp:rsid wsp:val="00E57512"/>
+			<wsp:rsid wsp:val="00E76552"/>
+			<wsp:rsid wsp:val="00E84619"/>
+			<wsp:rsid wsp:val="00E9161B"/>
+			<wsp:rsid wsp:val="00E95FF6"/>
+			<wsp:rsid wsp:val="00EC5CF0"/>
+			<wsp:rsid wsp:val="00ED0C87"/>
+			<wsp:rsid wsp:val="00ED0D75"/>
+			<wsp:rsid wsp:val="00ED63AF"/>
+			<wsp:rsid wsp:val="00EF71CB"/>
+			<wsp:rsid wsp:val="00F123E4"/>
+			<wsp:rsid wsp:val="00F16A7B"/>
+			<wsp:rsid wsp:val="00F26135"/>
+			<wsp:rsid wsp:val="00F40A0E"/>
+			<wsp:rsid wsp:val="00F57D9F"/>
+			<wsp:rsid wsp:val="00F76A98"/>
+			<wsp:rsid wsp:val="00F84FD7"/>
+			<wsp:rsid wsp:val="00F868F9"/>
+			<wsp:rsid wsp:val="00FA0319"/>
+			<wsp:rsid wsp:val="00FA119B"/>
+			<wsp:rsid wsp:val="00FB38EE"/>
+			<wsp:rsid wsp:val="00FC1EA9"/>
+			<wsp:rsid wsp:val="00FF3C35"/>
+		</wsp:rsids>
+	</w:docPr>
+	<w:body>
+		<w:p wsp:rsidR="004358AB" wsp:rsidRDefault="00F16A7B" wsp:rsidP="00D31D50">
+			<w:pPr>
+				<w:spacing w:line="220" w:line-rule="at-least"/>
+				<w:rPr>
+					<w:rStyle w:val="a5"/>
+					<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" w:hint="fareast"/>
+					<wx:font wx:val="Arial"/>
+					<w:color w:val="555555"/>
+					<w:sz w:val="32"/>
+					<w:sz-cs w:val="32"/>
+					<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+				</w:rPr>
+			</w:pPr>
+			<w:r>
+				<w:rPr>
+					<w:rFonts w:hint="fareast"/>
+				</w:rPr>
+				<w:t>      </w:t>
+			</w:r>
+			<w:r wsp:rsidR="00FF3C35">
+				<w:rPr>
+					<w:rFonts w:hint="fareast"/>
+				</w:rPr>
+				<w:t>                             </w:t>
+			</w:r>
+			<aml:annotation aml:id="0" w:type="Word.Bookmark.Start" w:name="OLE_LINK1"/>
+			<w:r wsp:rsidR="00405C15" wsp:rsidRPr="00E57512">
+				<w:rPr>
+					<w:rFonts w:hint="fareast"/>
+					<wx:font wx:val="微软雅黑"/>
+					<w:sz w:val="32"/>
+					<w:sz-cs w:val="32"/>
+				</w:rPr>
+				<w:t>订单确认函</w:t>
+			</w:r>
+			<w:r wsp:rsidR="00555761" wsp:rsidRPr="00A97CF9">
+				<w:rPr>
+					<w:rStyle w:val="a5"/>
+					<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial"/>
+					<wx:font wx:val="Arial"/>
+					<w:color w:val="000000"/>
+					<w:sz w:val="32"/>
+					<w:sz-cs w:val="32"/>
+					<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+				</w:rPr>
+				<w:t>${masterId?if_exists}</w:t>
+			</w:r>
+			<aml:annotation aml:id="0" w:type="Word.Bookmark.End"/>
+		</w:p>
+		
+		<w:tbl>
+			<w:tblPr>
+				<w:tblW w:w="9639" w:type="dxa"/>
+				<w:tblInd w:w="-459" w:type="dxa"/>
+				<w:tblBorders>
+					<w:top w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+					<w:left w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+					<w:bottom w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+					<w:right w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+					<w:insideH w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+					<w:insideV w:val="single" w:sz="4" wx:bdrwidth="10" w:space="0" w:color="FFFFFF"/>
+				</w:tblBorders>
+				<w:tblLook w:val="04A0"/>
+			</w:tblPr>
+			<w:tblGrid>
+				<w:gridCol w:w="993"/>
+				<w:gridCol w:w="708"/>
+				<w:gridCol w:w="3402"/>
+				<w:gridCol w:w="1276"/>
+				<w:gridCol w:w="3260"/>
+			</w:tblGrid>
+			
+			<!-- 订单号：订单状态：begin -->
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="993" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="008843D3" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>订单号:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="4110" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C35482" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${masterId?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1276" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00BB6E10" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>订单状态:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3260" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="003E59EB" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${sta?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!-- 订单号：订单状态：end   -->
+		
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="993" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="008843D3" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>酒店:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="4110" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C35482" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${hotelName?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1276" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00BB6E10" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>日期:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3260" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="003E59EB" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${changed?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="993" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="0007257C" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>致:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="4110" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="008843D3" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${name4?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1276" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00B7795C" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>电话:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3260" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008843D3" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="005561B9" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${telephone?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="993" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00143FD5" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>自:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="4110" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00B547C6" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>预订部</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1276" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00CA3877" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>传真:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3260" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00690693" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${fax?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="993" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="008C5FDD" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>渠道:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="4110" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="008C5FDD" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${channel?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1276" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="004D38BF" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="000000"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>酒店邮箱:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="3260" w:type="dxa"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="008C5FDD" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="002D4CD4" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${email?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="002251C8" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="9639" w:type="dxa"/>
+						<w:gridSpan w:val="5"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="002251C8" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="009942AF" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:ind w:first-line-chars="50" w:first-line="105"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>感谢您在${hotelName?if_exists}预订房间，并且确认以下预订信息。</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>		
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00994250" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>客人姓名:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00F40A0E" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${name4?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			<!-- Mobile Start -->
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>		
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00994250" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>手机:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00F40A0E" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${mobile?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!-- Mobile End -->
+			
+			<!-- Eamil Start -->
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>		
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00994250" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>邮箱:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00F40A0E" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${masterEmail?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!--Email End -->
+			
+			<!--Address Start -->
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>		
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00994250" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>地址:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00732754" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00F40A0E" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${addressLine?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!--Address End -->
+			
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00BF26E7" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>入住日期:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00F84FD7" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${arr?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00357499" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>退房日期:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C6091A" wsp:rsidP="00E9161B">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${dep?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00DB4166" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>房型:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="004A4DF4" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${roomTypeName?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="007940F0" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>产品:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C47379" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${ratePlanDesc?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			<!-- Payment Start -->
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="007940F0" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>担保方式:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C47379" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${payment?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!-- Payment End -->
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="006E6E23" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>人数:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00400820" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${gstno?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			
+			<!-- Number of Units Start -->
+				<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="006E6E23" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>房间数:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00400820" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${numberOfUnits?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<!-- Number of Units End -->
+			
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="000C7C0B" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>日房价:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00151CD0" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${mrListString?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="005D7974" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>套餐:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="0018616F" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial" w:hint="fareast"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${mpListString?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F76A98" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00690CF8" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>税费:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00587BCA" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00EF71CB" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${ndynamicMpListString?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C42E3C" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>总房价:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00300D4F" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${charge?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C317B9" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>特殊需求:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00BC39D6" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${srqs?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="004C10C9" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="宋体"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>备注:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00294A40" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${ref?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00152098" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>——</w:t>
+						</w:r>
+						<w:r wsp:rsidR="001E6C48" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>入住时间描述:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00100B3A" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${checkInTimeDesc?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="005133C7" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>——</w:t>
+						</w:r>
+						<w:r wsp:rsidR="00D05BB3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>退房时间描述:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00CD4B20" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${checkOutTimeDesc?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="1701" w:type="dxa"/>
+						<w:gridSpan w:val="2"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00042157" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rStyle w:val="a5"/>
+								<w:rFonts w:ascii="Cambria" w:fareast="宋体" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>——</w:t>
+						</w:r>
+						<w:r wsp:rsidR="003B4B4D" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>取消政策描述:</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="7938" w:type="dxa"/>
+						<w:gridSpan w:val="3"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F123E4" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00ED63AF" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Arial" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${cancelPolicyDesc?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="9639" w:type="dxa"/>
+						<w:gridSpan w:val="5"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00B4553D" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>地址:</w:t>
+						</w:r>
+						<w:r wsp:rsidR="004715F1" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${address?if_exists}</w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> | </w:t>
+						</w:r>
+						<w:r wsp:rsidR="008F70A5" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>电话:</w:t>
+						</w:r>
+						<w:r wsp:rsidR="0068543D" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${telephone?if_exists}</w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="apple-converted-space"/>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>|</w:t>
+						</w:r>
+						<w:r wsp:rsidR="009A64D3" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="apple-converted-space"/>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="9639" w:type="dxa"/>
+						<w:gridSpan w:val="5"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="002945A5" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>传真:</w:t>
+						</w:r>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="0014502E" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${fax?if_exists}</w:t>
+						</w:r>
+						<w:r wsp:rsidR="0014502E" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="apple-converted-space"/>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="0014502E" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>|</w:t>
+						</w:r>
+						<w:r wsp:rsidR="0014502E" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rStyle w:val="apple-converted-space"/>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="00F868F9" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="微软雅黑"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>邮编:</w:t>
+						</w:r>
+						<w:r wsp:rsidR="00F868F9" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t> </w:t>
+						</w:r>
+						<w:r wsp:rsidR="0014502E" wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>${postCode?if_exists}</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+			<w:tr wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidTr="00B95ED6">
+				<w:trPr>
+					<w:trHeight w:val="454"/>
+				</w:trPr>
+				<w:tc>
+					<w:tcPr>
+						<w:tcW w:w="9639" w:type="dxa"/>
+						<w:gridSpan w:val="5"/>
+					</w:tcPr>
+					<w:p wsp:rsidR="00F57D9F" wsp:rsidRPr="00C61CB8" wsp:rsidRDefault="00C500B8" wsp:rsidP="00F76A98">
+						<w:pPr>
+							<w:spacing w:after="0" w:line="220" w:line-rule="at-least"/>
+							<w:jc w:val="both"/>
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+						</w:pPr>
+						<w:r wsp:rsidRPr="00C61CB8">
+							<w:rPr>
+								<w:rFonts w:ascii="Cambria" w:h-ansi="Cambria" w:cs="Arial"/>
+								<wx:font wx:val="Cambria"/>
+								<w:color w:val="555555"/>
+								<w:sz w:val="21"/>
+								<w:sz-cs w:val="21"/>
+								<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+							</w:rPr>
+							<w:t>Powered by CHINAonline</w:t>
+						</w:r>
+					</w:p>
+				</w:tc>
+			</w:tr>
+		</w:tbl>
+		<w:p wsp:rsidR="00C95937" wsp:rsidRPr="00750450" wsp:rsidRDefault="00C95937" wsp:rsidP="00D31D50">
+			<w:pPr>
+				<w:spacing w:line="220" w:line-rule="at-least"/>
+				<w:rPr>
+					<w:rStyle w:val="a5"/>
+					<w:rFonts w:ascii="Arial" w:h-ansi="Arial" w:cs="Arial" w:hint="fareast"/>
+					<wx:font wx:val="Arial"/>
+					<w:color w:val="555555"/>
+					<w:sz w:val="21"/>
+					<w:sz-cs w:val="21"/>
+					<w:shd w:val="clear" w:color="auto" w:fill="FFFFFF"/>
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p wsp:rsidR="009F7299" wsp:rsidRPr="00750450" wsp:rsidRDefault="009F7299" wsp:rsidP="00D31D50">
+			<w:pPr>
+				<w:spacing w:line="220" w:line-rule="at-least"/>
+				<w:rPr>
+					<w:rFonts w:hint="fareast"/>
+					<w:sz w:val="21"/>
+					<w:sz-cs w:val="21"/>
+				</w:rPr>
+			</w:pPr>
+		</w:p>
+		<w:p wsp:rsidR="00F16A7B" wsp:rsidRDefault="00F16A7B" wsp:rsidP="00D31D50">
+			<w:pPr>
+				<w:spacing w:line="220" w:line-rule="at-least"/>
+			</w:pPr>
+		</w:p>
+		<w:sectPr wsp:rsidR="00F16A7B" wsp:rsidSect="00DB2C8C">
+			<w:pgSz w:w="11906" w:h="16838"/>
+			<w:pgMar w:top="1440" w:right="1800" w:bottom="1440" w:left="1800" w:header="708" w:footer="708" w:gutter="0"/>
+			<w:cols w:space="708"/>
+			<w:docGrid w:line-pitch="360"/>
+		</w:sectPr>
+	</w:body>
+</w:wordDocument>

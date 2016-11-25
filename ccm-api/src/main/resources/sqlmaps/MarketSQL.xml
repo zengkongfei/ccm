@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MarketSQL">
+    <typeAlias alias="marketvo" type="com.ccm.api.model.sell.vo.MarketVO"/>
+    <typeAlias alias="market" type="com.ccm.api.model.sell.Market"/>
+    <typeAlias alias="marketI18n" type="com.ccm.api.model.sell.MarketI18n"/>
+    
+    <sql id="pageSqlMarketSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="addMarket" parameterClass="market">
+        insert into market (marketId,marketCode,effectiveDate,expireDate,
+        	createdBy,createdTime,delFlag) 
+        values (#marketId#,
+        	REPLACE(REPLACE(#marketCode#,' ',''),'　',''),
+        	#effectiveDate#,#expireDate#,
+        	#createdBy#,#createdTime#,#delFlag#)
+    </insert>
+    
+    <insert id="addMarketI18n" parameterClass="marketI18n">
+        insert into market_i18n (marketMId,marketId,language,description,
+        	createdBy,createdTime,delFlag) 
+        values (#marketMId#,#marketId#,#language#,#description#,
+        	#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+    
+    <update id="updateMarket" parameterClass="market">
+        update market SET
+			effectiveDate = #effectiveDate#
+			,expireDate = #expireDate#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where marketId = #marketId#
+    </update>
+    
+    <update id="updateMarketI18n" parameterClass="marketI18n">
+        update market_i18n SET
+			description = #description#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where marketMId = #marketMId#
+    </update>
+    
+    <update id="deleteMarket" parameterClass="market">
+        update market SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where marketId = #marketId#
+    </update>
+    
+    <update id="deleteMarketI18n" parameterClass="marketI18n">
+        update market_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where marketMId = #marketMId#
+    </update>
+    
+    <update id="deleteMarketI18nByMarketId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update market_i18n SET delFlag = 1
+         WHERE marketId = #marketId#
+    ]]>
+	</update>
+    
+  	<select id="getMarketByCode" resultClass="marketvo">
+  		SELECT * FROM `market` m,`market_i18n` mi
+		WHERE m.`marketId` = mi.`marketId`
+		AND m.`delFlag` = 0
+		AND mi.`delFlag` = 0
+		AND m.`marketCode` = #marketCode#
+		AND mi.`language` = #language#
+    </select>
+    
+    <select id="getMarketById" resultClass="marketvo">
+  		SELECT * FROM `market` m,`market_i18n` mi
+		WHERE m.`marketId` = mi.`marketId`
+		AND m.`delFlag` = 0
+		AND mi.`delFlag` = 0
+		AND m.`marketId` = #marketId#
+		AND mi.`language` = #language#
+    </select>
+
+    <select id="searchMarket" resultClass="marketvo">
+    	SELECT * FROM `market` m,`market_i18n` mi
+		WHERE m.`marketId` = mi.`marketId`
+		AND m.`delFlag` = 0
+		AND mi.`delFlag` = 0
+		AND mi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="marketCode">
+				marketCode = #marketCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="effectiveDate">
+				effectiveDate <![CDATA[>=]]> #effectiveDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="expireDate">
+				expireDate <![CDATA[<=]]> #expireDate#
+	        </isNotEmpty>
+        </dynamic>
+        <include refid="pageSqlMarketSQL"/>
+    </select>
+
+    <select id="searchMarketCount" resultClass="Integer"> 
+    	SELECT count(*) FROM `market` m,`market_i18n` mi
+		WHERE m.`marketId` = mi.`marketId`
+		AND m.`delFlag` = 0
+		AND mi.`delFlag` = 0
+		AND mi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="marketCode">
+				marketCode = #marketCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="effectiveDate">
+				effectiveDate <![CDATA[>=]]> #effectiveDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="expireDate">
+				expireDate <![CDATA[<=]]> #expireDate#
+	        </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <select id="getMarketI18ns" resultClass="marketI18n" parameterClass="Map">
+		select * from market_i18n mi
+		        where mi.marketId =#marketId#
+		          AND mi.delFlag = 0
+		order by marketMId
+	</select>
+    
+</sqlMap>

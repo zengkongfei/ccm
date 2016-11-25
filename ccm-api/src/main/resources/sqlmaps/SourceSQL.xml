@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SourceSQL">
+    <typeAlias alias="sourcevo" type="com.ccm.api.model.sell.vo.SourceVO"/>
+    <typeAlias alias="source" type="com.ccm.api.model.sell.Source"/>
+    <typeAlias alias="sourceI18n" type="com.ccm.api.model.sell.SourceI18n"/>
+   
+    <sql id="pageSqlSourceSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+
+    <insert id="addSource" parameterClass="source">
+        insert into source (sourceId,sourceCode,effectiveDate,expireDate,
+        	createdBy,createdTime,delFlag) 
+        values (#sourceId#,
+        	REPLACE(REPLACE(#sourceCode#,' ',''),'　',''),
+        	#effectiveDate#,#expireDate#,
+        	#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+    
+    <insert id="addSourceI18n" parameterClass="sourceI18n">
+        insert into source_i18n (sourceMId,sourceId,language,description,
+        	createdBy,createdTime,delFlag) 
+        values (#sourceMId#,#sourceId#,#language#,#description#,
+        	#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+    
+    <update id="updateSource" parameterClass="source">
+        update source SET
+			effectiveDate = #effectiveDate#
+			,expireDate = #expireDate#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where sourceId = #sourceId#
+    </update>
+    
+    <update id="updateSourceI18n" parameterClass="sourceI18n">
+        update source_i18n SET
+			description = #description#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where sourceMId = #sourceMId#
+    </update>
+    
+    <update id="deleteSource" parameterClass="source">
+        update source SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where sourceId = #sourceId#
+    </update>
+    
+    <update id="deleteSourceI18n" parameterClass="sourceI18n">
+        update source_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where sourceMId = #sourceMId#
+    </update>
+    
+    <update id="deleteSourceI18nBySourceId" parameterClass="java.lang.String">
+    <![CDATA[
+    	UPDATE source_i18n SET delFlag = 1
+         WHERE sourceId = #sourceId#
+    ]]>
+	</update>
+    
+  	<select id="getSourceByCode" resultClass="sourcevo">
+  		SELECT * FROM `source` s,`source_i18n` si
+		WHERE s.`sourceId` = si.`sourceId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND s.`sourceCode` = #sourceCode#
+		AND si.`language` = #language#
+    </select>
+    
+    <select id="getSourceById" resultClass="sourcevo">
+		SELECT * FROM `source` s,`source_i18n` si
+		WHERE s.`sourceId` = si.`sourceId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND s.`sourceId` = #sourceId#
+		AND si.`language` = #language#
+    </select>
+
+    <select id="searchSource" resultClass="sourcevo">
+    	SELECT * FROM `source` s,`source_i18n` si
+		WHERE s.`sourceId` = si.`sourceId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND si.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="sourceCode">
+				sourceCode = #sourceCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="effectiveDate">
+				effectiveDate <![CDATA[>=]]> #effectiveDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="expireDate">
+				expireDate <![CDATA[<=]]> #expireDate#
+	        </isNotEmpty>
+        </dynamic>
+         <include refid="pageSqlSourceSQL"/>
+    </select>
+
+    <select id="searchSourceCount" resultClass="Integer"> 
+    	SELECT count(*) FROM `source` s,`source_i18n` si
+		WHERE s.`sourceId` = si.`sourceId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND si.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="sourceCode">
+				sourceCode = #sourceCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="effectiveDate">
+				effectiveDate <![CDATA[>=]]> #effectiveDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="expireDate">
+				expireDate <![CDATA[<=]]> #expireDate#
+	        </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <select id="getSourceI18ns" resultClass="sourceI18n" parameterClass="Map">
+		select * from source_i18n si
+		        where si.sourceId =#sourceId#
+		          AND si.delFlag = 0
+		order by sourceMId
+	</select>
+</sqlMap>

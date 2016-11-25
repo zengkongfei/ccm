@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelMCSQL">
+    <typeAlias alias="hotelvo" type="com.ccm.api.model.hotel.vo.HotelVO"/>
+    <typeAlias alias="hotel" type="com.ccm.api.model.hotel.Hotel"/>
+    <typeAlias alias="hotelI18n" type="com.ccm.api.model.hotel.HotelI18n"/>
+    <typeAlias alias="city" type="com.ccm.api.model.city.City"/>
+    
+    
+    <insert id="addHotelMC" parameterClass="hotel">
+        insert into hotel (hotelId,hotelCode,chainId,brandId,whenBuilt,hotelStatusCode,
+        	isDaylightSaving,longitude,latitude,altitude,createdBy,createdTime,delFlag,
+        	level,star,domestic,countryCode,privinceCode,city,cityName,tbShopName,areaCode,storeys,rooms,beds,
+        	postCode,bizId,houseOverbook,pmsType,position_type,email,
+        	telephone,fax,isNegotiate,isDirectPms,isUpdateIdent,homePage,reservationPage,checkInTime,
+        	checkOutTime,effectiveDate,expireDate,currencyCode,dateFormat,paymentMethod,
+        	smsUserId,smsPassword,partner,checkCode,sellerEmail,merchantid,merchant_tid,securekey,displayMode,logoPicId,
+        	isAddressRequired,isMobileRequired,isEmailRequird,maxResCount,orderRemind,messRemind,
+        	isSupportChinese,isSupportEnglish,isSupportJapanese,specialist,hotelPushUrl,officialWebsite,isCreditOnlineHotel,isDisplacementInterface,defGuaranteeId,defCancelId,remindEmail,remindEfax,isPMSHeartBeat,effectiveTime,expireTime,
+        	isMasterListener,allotNotificationEmail,pmsAccount) 
+        values (#hotelId#,
+        	REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+        	#chainId#,#brandId#,#whenBuilt#,#hotelStatusCode#,
+        	#isDaylightSaving#,#longitude#,#latitude#,#altitude#,#createdBy#,#createdTime#,#delFlag#,
+        	#level#,#star#,#domestic#,#countryCode#,#privinceCode#,#city#,#cityName#,#tbShopName#,#areaCode#,#storeys#,#rooms#,#beds#,
+        	#postCode#,#bizId#,#houseOverbook#,#pmsType#,#position_type#,#email#,
+        	#telephone#,#fax#,#isNegotiate#,#isDirectPms#,#isUpdateIdent#,#homePage#,#reservationPage#,#checkInTime#,
+        	#checkOutTime#,#effectiveDate#,#expireDate#,#currencyCode#,#dateFormat#,#paymentMethod#,
+        	#smsUserId#,#smsPassword#,#partner#,#checkCode#,#sellerEmail#,#merchantid#,#merchant_tid#,#securekey#,#displayMode#,#logoPicId#,
+        	#isAddressRequired#,#isMobileRequired#,#isEmailRequird#,#maxResCount#,#orderRemind#,#messRemind#,
+        	#isSupportChinese#,#isSupportEnglish#,#isSupportJapanese#,#specialist#,#hotelPushUrl#,#officialWebsite#,#isCreditOnlineHotel#,#isDisplacementInterface#,#defGuaranteeId#,#defCancelId#,#remindEmail#,#remindEfax#,#isPMSHeartBeat#,#effectiveTime#,#expireTime#,
+        	#isMasterListener#,#allotNotificationEmail#,#pmsAccount#)
+    </insert>
+    
+    <insert id="addHotelI18nMC" parameterClass="hotelI18n">
+        insert into hotel_i18n (hotelMId,hotelId,languageCode,hotelName,hotelShortName,hotelUsedName,
+        createdBy,createdTime,delFlag,description,salutatory,address,business,
+        checkInTimeDesc,checkOutTimeDesc,cancelPolicyDesc,payRemind,pickUpService) 
+        values (#hotelMId#,#hotelId#,#languageCode#,#hotelName#,#hotelShortName#,#hotelUsedName#,
+        #createdBy#,#createdTime#,#delFlag#,#description#,#salutatory#,#address#,#business#,
+        #checkInTimeDesc#,#checkOutTimeDesc#,#cancelPolicyDesc#,#payRemind#,#pickUpService#)
+    </insert>
+    
+    <update id="updateHotelMC" parameterClass="hotel">
+        update hotel SET
+			chainId = #chainId#
+			,brandId = #brandId#
+			,whenBuilt = #whenBuilt#
+			,hotelStatusCode = #hotelStatusCode#
+        	,isDaylightSaving = #isDaylightSaving#
+        	,longitude = #longitude#
+        	,latitude = #latitude#
+        	,altitude = #altitude#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+			,level = #level#
+			,star = #star#
+			,domestic = #domestic#
+			,countryCode = #countryCode#
+			,privinceCode = #privinceCode#
+			,city = #city#
+			,cityName=#cityName# 
+			,tbShopName=#tbShopName# 
+			,areaCode = #areaCode#
+			,storeys = #storeys#
+			,rooms = #rooms#
+			,beds = #beds#
+			,postCode = #postCode#
+			,pmsType = #pmsType#
+			,position_type = #position_type#
+			,email = #email#
+        	,telephone = #telephone#
+        	,fax = #fax#
+        	,isNegotiate = #isNegotiate#
+        	<isNotEmpty property="pmsAccount" prepend=",">
+				pmsAccount = #pmsAccount#
+        	</isNotEmpty>
+        	<isNotEmpty property="isDirectPms" prepend=",">
+				isDirectPms = #isDirectPms#
+        	</isNotEmpty>
+        	<isNotEmpty property="isUpdateIdent" prepend=",">
+				isUpdateIdent = #isUpdateIdent#
+        	</isNotEmpty>
+        	,homePage = #homePage#
+        	,reservationPage = #reservationPage#
+        	,currencyCode = #currencyCode#
+        	,checkInTime = #checkInTime#
+        	,checkOutTime = #checkOutTime#
+        	,effectiveDate = #effectiveDate#
+        	,expireDate = #expireDate#
+        	,dateFormat = #dateFormat#
+        	,paymentMethod = #paymentMethod#
+        	,smsUserId = #smsUserId#
+        	,smsPassword = #smsPassword#
+        	,partner = #partner#
+        	,checkCode = #checkCode#
+        	,sellerEmail = #sellerEmail#
+        	,merchantid = #merchantid#
+        	,merchant_tid = #merchant_tid#
+        	,securekey = #securekey#
+        	,displayMode = #displayMode#
+        	,logoPicId = #logoPicId#
+        	,isAddressRequired = #isAddressRequired#
+        	,isMobileRequired = #isMobileRequired#
+        	,isEmailRequird = #isEmailRequird#
+        	,maxResCount = #maxResCount#
+        	,orderRemind=#orderRemind#
+        	,messRemind=#messRemind#
+        	,isSupportChinese=#isSupportChinese#
+        	,isSupportEnglish=#isSupportEnglish#
+        	,isSupportJapanese=#isSupportJapanese#
+        	,specialist=#specialist#
+        	,hotelPushUrl=#hotelPushUrl#
+        	,officialWebsite=#officialWebsite#
+        	,isCreditOnlineHotel=#isCreditOnlineHotel#
+			,isDisplacementInterface=#isDisplacementInterface#
+			,defGuaranteeId = #defGuaranteeId#
+			,defCancelId = #defCancelId#
+			,cssFileId = #cssFileId#
+			,remindEmail = #remindEmail#
+			,remindEfax = #remindEfax#
+			,isPMSHeartBeat = #isPMSHeartBeat#
+			,effectiveTime = #effectiveTime#
+			,expireTime = #expireTime#
+			,isMasterListener = #isMasterListener#
+			,sms = #sms#
+			,allotNotificationEmail =#allotNotificationEmail#
+        where hotelId = #hotelId#
+    </update>
+    
+    <update id="updateHotelI18nMC" parameterClass="hotelI18n">
+        update hotel_i18n SET
+        	hotelName = #hotelName#
+        	,hotelShortName = #hotelShortName#
+        	,hotelUsedName = #hotelUsedName#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+			,description = #description#
+			,salutatory = #salutatory#
+			,address = #address#
+			,business = #business#
+			,checkInTimeDesc = #checkInTimeDesc#
+			,checkOutTimeDesc = #checkOutTimeDesc#
+			,cancelPolicyDesc = #cancelPolicyDesc#
+			,payRemind = #payRemind#
+			,pickUpService = #pickUpService#
+        where hotelMId = #hotelMId#
+    </update>
+    
+    <update id="deleteHotelMC" parameterClass="hotel">
+        update hotel SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where hotelId = #hotelId#
+    </update>
+    
+    <update id="deleteHotelI18nMC" parameterClass="hotelI18n">
+        update hotel_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where hotelMId = #hotelMId#
+    </update>
+    
+    <select id="getHotelByCodeMC" resultClass="hotelvo">
+        SELECT * FROM `hotel` h left join `hotel_i18n` hi 
+        	ON h.`hotelId` = hi.`hotelId` AND hi.`delFlag` = 0 AND hi.`languageCode` = #languageCode#
+		WHERE h.`delFlag` = 0
+		AND h.`hotelCode` = #hotelCode#
+		AND h.`chainId` = #chainId#
+    </select>
+    
+    <select id="getHotelByCodeMC2" resultClass="hotelvo">
+        SELECT * FROM `hotel` h left join `hotel_i18n` hi 
+        	ON h.`hotelId` = hi.`hotelId` AND hi.`delFlag` = 0 AND hi.`languageCode` = #languageCode#
+		WHERE h.`delFlag` = 0
+		AND h.`hotelCode` = #hotelCode#
+    </select>
+    
+    <select id="getHotelByCodeMC3" resultClass="hotel">
+        SELECT c.chainId,h.hotelId,h.currencyCode FROM `hotel` h INNER JOIN `CHAIN` c
+        	ON h.`chainId` = c.`chainId`
+		WHERE h.`delFlag` = 0
+		AND c.`delFlag` = 0
+		AND h.`hotelCode` = #hotelCode#
+		AND c.`chainCode` = #chainCode#
+    </select>
+    
+  	<select id="getHotelByIdMC" resultClass="hotelvo" parameterClass="Map">
+        SELECT * FROM `hotel` h left join `hotel_i18n` hi 
+        	ON h.`hotelId` = hi.`hotelId` AND hi.`delFlag` = 0 AND hi.`languageCode` = #languageCode# 
+		WHERE h.`delFlag` = 0
+		AND h.`hotelId` = #hotelId#
+    </select>
+
+    <select id="searchHotelMC" resultClass="hotelvo">
+    	SELECT h.hotelId,h.hotelCode,h.brandId,h.chainId,hi.hotelName,
+    		h.whenBuilt,h.longitude,h.latitude,h.altitude 
+    	  FROM `hotel` h 
+		  LEFT JOIN `hotel_i18n` hi 
+		    ON h.`hotelId` = hi.`hotelId` 
+		    AND hi.`delFlag` = 0 
+		    AND hi.`languageCode` = #languageCode#
+		WHERE h.`delFlag` = 0
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainId">
+				chainId = #chainId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandId">
+				brandId = #brandId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="email">
+				(email like CONCAT('%',#email#,'%') or remindEmail like CONCAT('%',#email#,'%') or allotNotificationEmail like CONCAT('%',#email#,'%'))
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelCodeLike">
+				hotelCode like CONCAT('%',#hotelCodeLike#,'%')
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelName">
+				hotelName like CONCAT('%',#hotelName#,'%')
+	        </isNotEmpty>
+        </dynamic>
+        ORDER BY h.hotelCode
+    </select>
+
+    <select id="searchHotelCountMC" resultClass="Integer"> 
+    	SELECT 
+		  COUNT(*) 
+		FROM
+		  `hotel` h 
+		  LEFT JOIN `hotel_i18n` hi 
+		    ON h.`hotelId` = hi.`hotelId` 
+		    AND hi.`delFlag` = 0 
+		    AND hi.`languageCode` = #languageCode#
+		WHERE h.`delFlag` = 0
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainId">
+				chainId = #chainId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandId">
+				brandId = #brandId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="email">
+				(email like CONCAT('%',#email#,'%') or remindEmail like CONCAT('%',#email#,'%') or allotNotificationEmail like CONCAT('%',#email#,'%'))
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelCodeLike">
+				hotelCode like  CONCAT('%',#hotelCodeLike#,'%')
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="hotelName">
+				hotelName like  CONCAT('%',#hotelName#,'%')
+	        </isNotEmpty> 
+        </dynamic>
+    </select>
+    
+    <select id="getAllHotelMC" resultClass="hotelvo">
+    	SELECT h.hotelId,h.hotelCode,h.chainId,hi.hotelName FROM `hotel` h,`hotel_i18n` hi
+		WHERE h.`hotelId` = hi.`hotelId`
+		AND h.`delFlag` = 0
+		AND hi.`delFlag` = 0
+		AND hi.`languageCode` = #languageCode#
+		ORDER BY h.hotelCode
+    </select>
+    
+    <select id="getHotelByChannelCode" resultClass="hotelvo" parameterClass="Map">
+    	SELECT h.hotelId,h.hotelCode,h.chainId,hi.hotelName FROM
+channel_hotel ch LEFT JOIN hotel h ON ch.`hotelId`=h.`hotelId` LEFT JOIN hotel_i18n hi ON h.`hotelId`=hi.`hotelId`
+LEFT JOIN CHAIN c  ON h.`chainId`=c.`chainId`
+		WHERE h.`hotelId` = hi.`hotelId`
+		AND h.`delFlag` = 0
+		AND hi.`delFlag` = 0
+		AND hi.`languageCode` = #language#
+		AND ch.`channelCode`= #channel#
+		AND c.`chainCode`=#chainCode#
+		ORDER BY h.hotelCode
+    </select>
+    
+    <select id="loadPrivinces"	resultClass="String">
+    	SELECT DISTINCT h.`privinceCode` FROM hotel h WHERE h.`delFlag` = 0	AND h.`privinceCode` IS NOT NULL
+    </select>
+    
+    <select id="loadCitysByPrivince"	resultClass="String">
+    	SELECT DISTINCT h.`city` FROM hotel h WHERE h.`delFlag` = 0	AND h.`privinceCode` = #privinceCode#
+		AND h.`city` IS NOT NULL
+    </select>
+    
+    <select id="loadHotelsByCity"	resultClass="hotelvo">
+    	SELECT h.hotelId,h.hotelCode,h.chainId,hi.hotelName FROM `hotel` h LEFT JOIN `hotel_i18n` hi 
+        	 ON h.`hotelId` = hi.`hotelId` AND hi.`delFlag` = 0 
+        	AND hi.`languageCode` = #languageCode# 
+		  WHERE h.`delFlag` = 0
+		    AND h.`city` = #city#
+		    ORDER BY h.hotelCode
+    </select>
+    
+    <select id="getUserHotelByChainAndUserId" resultClass="hotel">
+	    SELECT h.hotelId,h.hotelCode,isDirectPms FROM hotel h
+		 WHERE h.delFlag = 0 
+			<isNotEmpty prepend="AND" property="chainId">
+				h.chainId = #chainId#
+	        </isNotEmpty>
+			AND EXISTS(
+				SELECT 1 FROM userrole ur 
+				WHERE ur.userId = #userId# 
+				  AND ur.hotelId = h.hotelId 
+				  AND ur.delFlag = 0
+			)
+		ORDER BY hotelCode
+	</select>
+	
+	<select id="getUserHotelByChainCodeAndUserId" resultClass="hotel">
+	    SELECT h.hotelId,h.hotelCode FROM hotel h inner join chain c on h.chainId=c.chainId and c.delFlag=0 
+		 WHERE h.delFlag = 0 
+			<isNotEmpty prepend="AND" property="chainCode">
+				c.chainCode = #chainCode#
+	        </isNotEmpty>
+			AND EXISTS(
+				SELECT 1 FROM userrole ur 
+				WHERE ur.userId = #userId# 
+				  AND ur.hotelId = h.hotelId 
+				  AND ur.delFlag = 0
+			)
+		ORDER BY hotelCode
+	</select>
+	
+	
+	 <select id="getPrivinces"	resultClass="city">
+    	SELECT DISTINCT  c.id,c.cityCode, c.`parentId`,  c.`cityName`
+		FROM  hotel h   LEFT JOIN city c  ON h.`privinceCode` = c.`cityCode` 
+		WHERE h.`delFlag` = 0 
+		  AND c.`delFlag` = 0 
+		  AND c.`language`=#language#
+		  AND h.`privinceCode` IS NOT NULL 
+    </select>
+	
+	
+	  <select id="getCitysByPrivince"	resultClass="city">
+    	SELECT DISTINCT  c.id,c.cityCode, c.`parentId`,  c.`cityName`
+		FROM  hotel h   LEFT JOIN city c  ON h.`city` = c.`cityCode` 
+		WHERE h.`delFlag` = 0 
+		  AND c.`delFlag` = 0 
+		  AND h.`privinceCode` = #privinceCode#
+		  AND c.`language`=#language#
+		  AND h.`privinceCode` IS NOT NULL 
+    </select>
+    
+    <select id="gethotelRemindInfo"	resultClass="hotelvo" parameterClass="Map">
+    SELECT h.`hotelId`,h.`hotelCode`,h.`remindEmail`,h.`effectiveTime`,h.`pmsType`,h.`isPMSHeartBeat`,h.expireTime, h.sms,h.`remindEfax`,hi.`hotelName`,h.isMasterListener FROM hotel h LEFT JOIN hotel_i18n hi ON h.`hotelId`=hi.`hotelId` WHERE hi.`languageCode`=#languageCode# AND hi.`delFlag`=0 and h.`delFlag`=0  and h.`hotelId`=#hotelId#
+    </select>
+    
+    <update id="updateHotelPMSHeartBeat" parameterClass="hotel">
+        update hotel SET isPMSHeartBeat = #isPMSHeartBeat# where hotelId = #hotelId#
+    </update>
+    
+    <select id="getAllHoteleRemind" resultClass="hotel">
+       SELECT hotelid,hotelCode,isPMSHeartBeat FROM hotel  WHERE delFlag=0
+    </select>
+</sqlMap>

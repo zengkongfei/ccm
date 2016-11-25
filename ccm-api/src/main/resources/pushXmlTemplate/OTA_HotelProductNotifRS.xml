@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OTA_HotelProductNotifRS Version="1.0" xmlns="http://www.opentravel.org/OTA/2003/05" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opentravel.org/OTA/2003/05 file:///C:/BaiduYunDownload/2014B/OTA2014B_Publication/OpenTravel_2014B_XML/OTA_HotelProductNotifRS.xsd">
+	<Success/>
+	<TPA_Extensions>
+		<PMSHotelMappingResults>
+				#foreach( $a in $adsGoods )
+				<PMSHotelMappingResult>
+					<!-- 渠道 -->
+					<Channel>$a.channelCode</Channel>
+					<!-- PMS酒店Code -->
+					<HotelCode>$a.hotelCode</HotelCode>
+					<!-- PMS房型代码 -->
+					<RoomTypeCode>$a.roomTypeCode</RoomTypeCode>
+					<!-- PMS房型价格代码 -->
+					<RatePlanCode>$a.ratePlanCode</RatePlanCode>
+					<!-- 创建结果：true成功，false失败 -->
+					<IsSuccess>$a.forcePush</IsSuccess>
+					<!-- 错误代码 101产品已经存在 102酒店创建失败 103价格代码不存在 104房型创建失败 109其它错误 -->
+					<ErrorCode>$a.hotelId</ErrorCode>
+					<!-- 错误描述 -->
+					<Message>产品已经存在</Message>
+				</PMSHotelMappingResult>
+				#end
+			</PMSHotelMappingResults>
+	</TPA_Extensions>
+</OTA_HotelProductNotifRS>

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Channel">
+
+	<typeAlias alias="channel" type="com.ccm.api.model.channel.Channel" />
+	
+	<sql id="pageSqlChannel">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addChannel" parameterClass="channel">
+		INSERT INTO channel( channelId, channelCode, addTime, delTime, isEnabled, createdTime,createdBy,delFlag,groupId,
+		validRoomPrice,pushAddress,pushRavl,pushRate,pushRateContent,pushRateUrl,pushHotel,pushRoom,pushRtav,pushRstu,maxPushDay,pushTime,pushStayHistoryAddress,isChannelOrderId,verifyChannelOrderId,
+		isOverRide,isRoomNumber,isGuarantee,guaranteeId,isCancel,isPushClose,isOTA,isChannelPushUrl,receiveAddress,receiveBlock,receiveRavl,receiveRate,receiveRtav,ordernNumberOfTimes,useAmountAfterTax,
+		invalidTimeBegin,invalidTimeEnd,allotNotificationEmail)
+		VALUES ( #channelId#, 
+		REPLACE(REPLACE(#channelCode#,' ',''),'　',''), 
+		#addTime#, #delTime#, #isEnabled#, #createdTime#,#createdBy#,#delFlag#,#groupId#,
+		#validRoomPrice#,#pushAddress#,#pushRavl#,#pushRate#,#pushRateContent#,#pushRateUrl#,#pushHotel#,#pushRoom#,#pushRtav#,#pushRstu#,#maxPushDay#,#pushTime#,#pushStayHistoryAddress#,#isChannelOrderId#,#verifyChannelOrderId#,
+		#isOverRide#,#isRoomNumber#,#isGuarantee#,#guaranteeId#,#isCancel#,#isPushClose#,#isOTA#,#isChannelPushUrl#,#receiveAddress#,#receiveBlock#,#receiveRavl#,#receiveRate#,#receiveRtav#,#ordernNumberOfTimes#,#useAmountAfterTax#,
+		#invalidTimeBegin#,#invalidTimeEnd#,#allotNotificationEmail#)
+	</insert>
+
+	<update id="deleteChannel" parameterClass="channel">
+		update channel SET
+		delFlag = #delFlag#,
+		updatedBy = #updatedBy#,
+		lastModifyTime = #lastModifyTime#
+		where channelId = #channelId#
+    </update>
+
+	<update id="updateChannel" parameterClass="channel">
+		UPDATE channel
+		<dynamic prepend="SET">
+			<isNotNull property="channelCode" prepend=",">
+		        <![CDATA[  
+		        channelCode = REPLACE(REPLACE(#channelCode#,' ',''),'　','')  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="addTime" prepend=",">
+		        <![CDATA[  
+		        addTime = #addTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="delTime" prepend=",">
+		        <![CDATA[  
+		        delTime = #delTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="invalidTimeBegin" prepend=",">
+		        <![CDATA[  
+		        invalidTimeBegin = #invalidTimeBegin#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="invalidTimeEnd" prepend=",">
+		        <![CDATA[  
+		        invalidTimeEnd = #invalidTimeEnd#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="isEnabled" prepend=",">
+		        <![CDATA[  
+		        isEnabled = #isEnabled#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="groupId" prepend=",">
+		        <![CDATA[  
+		        groupId = #groupId#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="validRoomPrice" prepend=",">
+		        <![CDATA[  
+		        validRoomPrice = #validRoomPrice#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="receiveAddress" prepend=",">
+		        <![CDATA[  
+		        receiveAddress = #receiveAddress#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="receiveBlock" prepend=",">
+					        <![CDATA[  
+					        receiveBlock = #receiveBlock#  
+					        ]]>
+			</isNotNull>
+			<isNotNull property="receiveRavl" prepend=",">
+					        <![CDATA[  
+					        receiveRavl = #receiveRavl#  
+					        ]]>
+			</isNotNull>
+			<isNotNull property="receiveRate" prepend=",">
+					        <![CDATA[  
+					        receiveRate = #receiveRate#  
+					        ]]>
+			</isNotNull>
+			<isNotNull property="receiveRtav" prepend=",">
+					        <![CDATA[  
+					        receiveRtav = #receiveRtav#  
+					        ]]>
+			</isNotNull>
+			<isNotNull property="pushAddress" prepend=",">
+		        <![CDATA[  
+		        pushAddress = #pushAddress#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRavl" prepend=",">
+		        <![CDATA[  
+		        pushRavl = #pushRavl#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRate" prepend=",">
+		        <![CDATA[  
+		        pushRate = #pushRate#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRateContent" prepend=",">
+		        <![CDATA[  
+		        pushRateContent = #pushRateContent#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRateUrl" prepend=",">
+		        <![CDATA[  
+		        pushRateUrl = #pushRateUrl#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushHotel" prepend=",">
+		        <![CDATA[  
+		        pushHotel = #pushHotel#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRoom" prepend=",">
+		        <![CDATA[  
+		        pushRoom = #pushRoom#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRtav" prepend=",">
+		        <![CDATA[  
+		        pushRtav = #pushRtav#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushRstu" prepend=",">
+		        <![CDATA[  
+		        pushRstu = #pushRstu#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="maxPushDay" prepend=",">
+		        <![CDATA[  
+		        maxPushDay = #maxPushDay#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushTime" prepend=",">
+		        <![CDATA[  
+		        pushTime = #pushTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="updatedBy" prepend=",">
+		        <![CDATA[  
+		        updatedBy = #updatedBy#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="lastModifyTime" prepend=",">
+		        <![CDATA[  
+		        lastModifyTime = #lastModifyTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="pushStayHistoryAddress" prepend=",">
+		        <![CDATA[  
+		        pushStayHistoryAddress = #pushStayHistoryAddress#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="isChannelOrderId" prepend=",">
+		        isChannelOrderId = #isChannelOrderId#  
+			</isNotNull>
+			<isNotNull property="verifyChannelOrderId" prepend=",">
+		        verifyChannelOrderId = #verifyChannelOrderId#  
+			</isNotNull>
+			<isNotNull property="isOverRide" prepend=",">
+				isOverRide = #isOverRide#  
+			</isNotNull>
+			<isNotNull property="isRoomNumber" prepend=",">
+				isRoomNumber = #isRoomNumber#  
+			</isNotNull>
+			<isNotNull property="isGuarantee" prepend=",">
+				isGuarantee = #isGuarantee#  
+			</isNotNull>
+			<isNotNull property="guaranteeId" prepend=",">
+				guaranteeId = #guaranteeId#  
+			</isNotNull>
+			<isNotNull property="isCancel" prepend=",">
+				isCancel = #isCancel#  
+			</isNotNull>
+			<isNotNull property="isPushClose" prepend=",">
+				isPushClose = #isPushClose#  
+			</isNotNull>
+			<isNotNull property="isOTA" prepend=",">
+				isOTA = #isOTA#  
+			</isNotNull>
+			<isNotNull property="isChannelPushUrl" prepend=",">
+				isChannelPushUrl = #isChannelPushUrl#  
+			</isNotNull>
+			<isNotNull property="ordernNumberOfTimes" prepend=",">
+				ordernNumberOfTimes = #ordernNumberOfTimes#  
+			</isNotNull>
+			<isNotNull property="useAmountAfterTax" prepend=",">
+				useAmountAfterTax = #useAmountAfterTax#  
+			</isNotNull>
+			<isNotNull property="allotNotificationEmail" prepend=",">
+				allotNotificationEmail = #allotNotificationEmail#  
+			</isNotNull>
+			<isNotNull property="isJointwisdom" prepend=",">
+		        isJointwisdom = #isJointwisdom#  
+			</isNotNull>
+		</dynamic>
+		WHERE channelId = #channelId#
+	</update>
+
+	<select id="getChannel" resultClass="channel">
+    <![CDATA[
+        select * from channel where channelId = #channelId# and delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getChannelByChannelCode" resultClass="channel">
+    <![CDATA[
+        select * from Channel where channelCode=#channelCode# and delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getChannels" resultClass="channel">
+    <![CDATA[
+        select channelId,channelCode,maxPushDay,pushRavl,pushAddress,pushRate,pushRstu,pushRtav from channel where delFlag = 0 AND isEnabled=1 AND delTime>NOW() order by channelCode
+    ]]>
+	</select>
+
+	<select id="getEnabledChannel" resultClass="String">
+		SELECT channelId FROM `channel` c
+		WHERE c.`delFlag` = 0 and c.isEnabled = 1
+		<isNotEmpty prepend="AND" property="channelCode">
+			c.channelCode = #channelCode#
+	    </isNotEmpty>
+		<isNotEmpty prepend="AND" property="addTime">
+			<![CDATA[c.addTime <= #addTime#]]>
+			and <![CDATA[c.delTime >= #addTime#]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="delTime">
+			<![CDATA[c.addTime <= #delTime#]]>
+			and <![CDATA[c.delTime >= #delTime#]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="searchChannelCount" resultClass="Integer">
+		SELECT count(*) FROM `channel` c
+		WHERE c.`delFlag` = 0
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="channelCode">
+				c.channelCode = #channelCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="addTime">
+				c.addTime <![CDATA[>=]]>
+				#addTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="delTime">
+				c.delTime <![CDATA[<=]]>
+				#delTime#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="searchChannel" resultClass="channel">
+		SELECT * FROM `channel` c
+		WHERE c.`delFlag` = 0
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="channelCode">
+				c.channelCode = #channelCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="addTime">
+				c.addTime <![CDATA[>=]]>
+				#addTime#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="delTime">
+				c.delTime <![CDATA[<=]]>
+				#delTime#
+			</isNotEmpty>
+		</dynamic>
+		<include refid="pageSqlChannel"/>
+	</select>
+	
+	<select id="getAllChannel" resultClass="channel">
+		SELECT * FROM `channel` c
+		WHERE c.`delFlag` = 0 ORDER BY channelcode ASC 
+	</select>
+	
+	<select id="getChannelInfoChainByUserId" resultClass="channel" parameterClass="String">
+		SELECT distinct c.* FROM `channel` c LEFT JOIN userrolechannel urc ON c.`channelId`=urc.`channelId`
+		WHERE c.`delFlag` = 0 AND urc.`delFlag`=0 AND urc.`userId`=#userId#  ORDER BY c.`channelCode` ASC
+	</select>
+	
+</sqlMap>

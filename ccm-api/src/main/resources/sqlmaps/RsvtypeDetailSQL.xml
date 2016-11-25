@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RsvtypeDetailSQL">
+	<typeAlias alias="rsvtypeDetail" type="com.ccm.api.model.rsvtype.RsvtypeDetail" />
+	
+	<insert id="addRsvtypeDetail" parameterClass="rsvtypeDetail">
+		INSERT INTO RsvtypeDetail(
+			hotelid,DATE,TYPE,rateCode,
+			rate1,rate2,rate3,rate4,rate5,
+			child1RateParentRoom,child2RateParentRoom,child3RateParentRoom,
+			child1RateOwnRoom,child2RateOwnRoom,child3RateOwnRoom,child4RateOwnRoom,
+			extraBed,payingChildren,freeChildren,marketCode
+		)VALUES(
+			#hotelid#,#date#,
+			REPLACE(REPLACE(#type#,' ',''),'　',''),
+			REPLACE(REPLACE(#rateCode#,' ',''),'　',''),
+			#rate1#,#rate2#,#rate3#,#rate4#,#rate5#,
+			#child1RateParentRoom#,#child2RateParentRoom#,#child3RateParentRoom#,
+			#child1RateOwnRoom#,#child2RateOwnRoom#,#child3RateOwnRoom#,#child4RateOwnRoom#,
+			#extraBed#,#payingChildren#,#freeChildren#,
+			REPLACE(REPLACE(#marketCode#,' ',''),'　','')	
+		)
+	</insert>
+	
+	<update id="updateRsvtypeDetail" parameterClass="rsvtypeDetail">
+		UPDATE RsvtypeDetail SET 
+			rate1=#rate1#,rate2=#rate2#,rate3=#rate3#,
+			rate4=#rate4#,rate5=#rate5#,
+			child1RateParentRoom=#child1RateParentRoom#,child2RateParentRoom=#child2RateParentRoom#,
+			child3RateParentRoom=#child3RateParentRoom#,
+			child1RateOwnRoom=#child1RateOwnRoom#,child2RateOwnRoom=#child2RateOwnRoom#,
+			child3RateOwnRoom=#child3RateOwnRoom#,child4RateOwnRoom=#child4RateOwnRoom#,
+			extraBed=#extraBed#,payingChildren=#payingChildren#,freeChildren=#freeChildren#,
+			marketCode=REPLACE(REPLACE(#marketCode#,' ',''),'　','')
+		WHERE hotelid=#hotelid#
+		and date=#date#
+		and type=REPLACE(REPLACE(#type#,' ',''),'　','')
+		and rateCode=REPLACE(REPLACE(#rateCode#,' ',''),'　','')
+	</update>
+	
+	<select id="getRsvtypeDetail" resultClass="rsvtypeDetail">
+		SELECT * FROM RsvtypeDetail
+		WHERE hotelid=#hotelid#
+		and date=#date#
+		and type=#type#
+		and rateCode=#rateCode#
+    </select>
+</sqlMap>

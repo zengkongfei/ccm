@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReceiveReqResSQL">
+
+	<typeAlias alias="receiveReqRes" type="com.ccm.api.model.log.ReceiveReqResLog" />
+
+	<sql id="pageSqlReceiveReqResSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+
+	<insert id="addReceiveReqResLog" parameterClass="receiveReqRes">
+    <![CDATA[
+        insert into receiveReqRes (receivereqresId,interfaceId, hotelCode,chainCode, type,request,response,createdTime,lastModifyTime,extId,status,processStatus,exception,module) 
+        values (#receivereqresId#,#interfaceId#, 
+        REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+        REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+        #type#,#request#,#response#,#createdTime#,#lastModifyTime#,#extId#,#status#,#processStatus#,#exception#,#module#);
+     ]]>
+	</insert>
+
+	<delete id="deleteReceiveReqResLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from receiveReqRes where receivereqresId = #receivereqresId#
+    ]]>
+	</delete>
+
+	<update id="updateReceiveReqResLog" parameterClass="receiveReqRes">
+    <![CDATA[
+		update receiveReqRes SET
+			status=#status#,
+			processStatus=#processStatus#,
+			lastModifyTime=#lastModifyTime#,
+			request=#request#,
+			response=#response#,
+			exception=#exception#
+        where receivereqresId = #receivereqresId#
+    ]]>
+	</update>
+
+	<select id="getReceiveReqResLog" resultClass="receiveReqRes">
+    <![CDATA[
+        select * from receiveReqRes 
+        where receivereqresId = #receivereqresId#
+    ]]>
+	</select>
+
+	<select id="getReceiveReqResLogs" resultClass="receiveReqRes">
+    <![CDATA[
+        select * from receiveReqRes
+    ]]>
+	</select>
+
+	<select id="getReceiveReqResByObj" resultClass="receiveReqRes">
+		select * from receiveReqRes
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type = #type# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="interfaceId">
+				interfaceId = #interfaceId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extId">
+				extId = #extId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getReceiveReqResByConf" resultClass="receiveReqRes">
+		select * from receiveReqRes
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="module">
+				module = #module# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type = #type# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="interfaceId">
+				interfaceId = #interfaceId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extId">
+				extId = #extId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="processStatus">
+				processStatus = #processStatus#
+		    </isNotEmpty>
+		</dynamic>
+		order by createdTime,lastModifyTime
+		<include refid="pageSqlReceiveReqResSQL"/> 
+	</select>
+
+	<select id="countReceiveReqResByConf" resultClass="Integer">
+		select count(*) from receiveReqRes
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="module">
+				module = #module# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="type">
+				type = #type# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="interfaceId">
+				interfaceId = #interfaceId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extId">
+				extId = #extId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="processStatus">
+				processStatus = #processStatus#
+		    </isNotEmpty>
+		</dynamic>
+	</select>
+
+</sqlMap>

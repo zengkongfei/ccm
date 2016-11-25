@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="TextfileSQL">
+
+	<typeAlias alias="textfile" type="com.ccm.api.model.common.Textfile" />
+	
+	<resultMap id="textfileResult" class="textfile">
+
+		<result property="fileId" column="fileId" />
+
+		<result property="fileType" column="fileType" />
+
+		<result property="fileName" column="fileName" />
+
+		<result property="fileSysName" column="fileSysName" />
+
+		<result property="fileUrl" column="fileUrl" />
+
+		<result property="createdTime" column="createdTime" />
+
+	</resultMap>
+	
+	<insert id="addTextfile" parameterClass="textfile">
+    <![CDATA[
+        insert into textfile
+        (fileId, fileType, fileName,fileSysName, fileUrl, createdTime,hotelId)
+        values 
+        (#fileId#, #fileType#, #fileName#,#fileSysName#,#fileUrl#, #createdTime#, #hotelId#)
+    ]]>
+	</insert>
+	<!-- 物理删除 -->
+	<delete id="deleteTextfile" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from textfile where fileId = #fileId#
+    ]]>
+	</delete>
+	
+	<select id="getTextfile" resultMap="textfileResult" parameterClass="java.lang.String">
+    <![CDATA[
+        select fileId, fileType, fileName,fileSysName, fileUrl, createdTime,hotelId
+        from textfile where fileId = #fileId#
+    ]]>
+	</select>
+	
+</sqlMap>

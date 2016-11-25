@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelReceivepmsSQL">
+    <typeAlias alias="hotelReceivepms" type="com.ccm.api.model.log.HotelReceivepms"/>
+    
+    
+    <insert id="addHotelReceivepms" parameterClass="hotelReceivepms">
+        INSERT INTO hotel_receivepms(`hotelReceivepmsId`,`hotelId`,`hotelCode`,`number`,`spaceSec`,`createdBy`,`createdTime`,`updatedBy`,`lastModifyTime`)
+	VALUES (REPLACE(UUID(), '-', ''),#hotelId#,#hotelCode#,#number#,#spaceSec#,
+        #createdBy#,#createdTime#,#updatedBy#, #lastModifyTime#)
+    </insert>
+    
+   <update id="updateHotelReceivepms" parameterClass="hotelReceivepms">
+    UPDATE hotel_receivepms
+	SET `hotelId` = #hotelId#,
+	  `hotelCode` = #hotelCode#,
+	  `number` = #number#,
+	  `spaceSec` = #spaceSec#,
+	  `createdBy` = #createdBy#,
+	  `createdTime` = #createdTime#,
+	  `updatedBy` = #updatedBy#,
+	  `lastModifyTime` = #lastModifyTime#
+	WHERE `hotelReceivepmsId` = #hotelReceivepmsId#
+	</update>
+	
+	<delete id="deleteHotelReceivepmsByIds" parameterClass="map">
+		delete from hotel_receivepms where 
+			hotelReceivepmsId in
+		<iterate property="hotelReceivepmsIdList" open="(" close=")" conjunction=",">
+			#hotelReceivepmsIdList[]#
+     	</iterate>
+	</delete>
+	<delete id="deleteHotelReceivepmsByHotelIds" parameterClass="map">
+		delete from hotel_receivepms where 
+			hotelid in
+		<iterate property="hotelReceivepmsIdList" open="(" close=")" conjunction=",">
+			#hotelReceivepmsIdList[]#
+     	</iterate>
+	</delete>
+	
+	<select id="getlive" resultClass="hotelReceivepms">
+	 <![CDATA[
+		SELECT  h.`hotelId`,h.`hotelCode` FROM receivepmslog r  LEFT JOIN hotel h 
+		    ON r.hotelcode = h.hotelcode 
+		    AND h.delFlag = 0 
+		  LEFT JOIN hotel_receivepms hr 
+		    ON hr.`hotelId` = h.`hotelId` 
+		WHERE (TIME_TO_SEC(  TIMEDIFF(NOW(), r.receiveMsgLogLastTime) ) < 5 * 60 OR r.lastModifyTime IS NULL OR TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))<5*60) 
+		  AND hr.`spaceSec` > 5 * 60
+		ORDER BY r.hotelCode
+		]]>
+	</select>
+	 
+	<select id="getAllHotelReceivepms" resultClass="hotelReceivepms">
+		SELECT * FROM hotel_receivepms 
+	</select>
+	
+	<select id="getIsRemindHotelReceivepms" resultClass="hotelReceivepms">
+	 <![CDATA[
+		SELECT  r.hotelCode,h.`hotelId`,TIME_TO_SEC(TIMEDIFF(NOW(), r.receiveMsgLogLastTime) ) spaceSec
+		FROM receivepmslog r LEFT JOIN hotel h  ON r.hotelcode = h.hotelcode  AND h.delFlag = 0 
+		WHERE  TIME_TO_SEC(  TIMEDIFF(NOW(), r.receiveMsgLogLastTime) ) > 5 * 60  AND TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))>5*60 
+		AND h.`isPMSHeartBeat`=1
+		ORDER BY r.hotelCode 
+		]]>
+	</select>
+	 
+	 
+	 <select id="getHotelIdS" resultClass="String">
+	 <![CDATA[
+		SELECT hotelid FROM  hotel_receivepms WHERE number>=#number#
+		]]>
+	</select>
+    
+   
+</sqlMap>

@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Rateplan">
+
+	<typeAlias alias="rateplan" type="com.ccm.api.model.channel.Rateplan" />
+	<typeAlias alias="ratePlanI18n" type="com.ccm.api.model.ratePlan.RatePlanI18n" />
+	<typeAlias alias="ratePlanVO" type="com.ccm.api.model.channel.vo.RatePlanVO" />
+	<typeAlias alias="cancelPolicy" type="com.ccm.api.model.ratePlan.CancelPolicy" />
+	<typeAlias alias="cancelPolicyVO" type="com.ccm.api.model.ratePlan.vo.CancelPolicyVO" />
+
+	<resultMap id="rateNameMap" class="HashMap">
+		<result property="ratePlanCode" column="ratePlanCode" />
+		<result property="description" column="description" />
+		<result property="ratePlanId" column="ratePlanId" />
+		<result property="expireDate" column="expireDate"/>
+	</resultMap>
+
+	<resultMap id="ratePlanList" class="ratePlanVO">
+		<result property="rp.hotelId" column="hotelId" />
+		<result property="rp.hotelName" column="hotelName" />
+		<result property="rp.ratePlanId" column="ratePlanId" />
+		<result property="rp.ratePlanCode" column="ratePlanCode" />
+		<result property="rpi18n.ratePlanName" column="ratePlanName" />
+		<result property="rp.paymentType" column="paymentType" />
+		<result property="rp.breakfastCount" column="breakfastCount" />
+		<result property="rp.availabilityStatus" column="availabilityStatus" />
+		<result property="cancelType" column="cancelType" />
+		<result property="ratePlanId" column="ratePlanId" />
+		<result property="ratePlanName" column="ratePlanName" />
+		<result property="exception" column="exception" />
+		<result property="rp.rpId" column="rpId" />
+		<result property="rp.isSuper" column="isSuper" />
+		<result property="rp.priceValidate" column="priceValidate" />
+	</resultMap>
+
+	<resultMap id="ratePlanTB" class="ratePlanVO">
+		<result property="rp.ratePlanId" column="ratePlanId" />
+		<result property="rp.rpId" column="rpId" />
+		<result property="rp.hotelId" column="hotelId" />
+		<result property="rp.ratePlanCode" column="ratePlanCode" />
+		<result property="rpi18n.ratePlanMId" column="ratePlanMId" />
+		<result property="rpi18n.ratePlanName" column="ratePlanName" />
+		<result property="rpi18n.englishName" column="englishName" />
+		<result property="rp.paymentType" column="paymentType" />
+		<result property="rp.breakfastCount" column="breakfastCount" />
+		<result property="rp.min_days" column="min_days" />
+		<result property="rp.max_days" column="max_days" />
+		<result property="rp.min_amount" column="min_amount" />
+		<result property="rp.min_adv_hours" column="min_adv_hours" />
+		<result property="rp.max_adv_hours" column="max_adv_hours" />
+		<result property="rp.startTime" column="startTime" />
+		<result property="rp.endTime" column="endTime" />
+		<result property="rp.fee_breakfast_count" column="fee_breakfast_count" />
+		<result property="rp.fee_breakfast_amount" column="fee_breakfast_amount" />
+		<result property="rp.fee_gov_tax_amount" column="fee_gov_tax_amount" />
+		<result property="rp.fee_gov_tax_percent" column="fee_gov_tax_percent" />
+		<result property="rp.fee_service_amount" column="fee_service_amount" />
+		<result property="rp.fee_service_percent" column="fee_service_percent" />
+		<result property="rp.availabilityStatus" column="availabilityStatus" />
+		<result property="rp.isSuper" column="isSuper" />
+		<result property="rp.priceValidate" column="priceValidate" />
+	</resultMap>
+	
+	<resultMap id="ratePlanI18nMap" class="ratePlanVO">
+		<result property="rp.ratePlanId" column="ratePlanId" />
+		<result property="rp.ratePlanCode" column="ratePlanCode" />
+		<result property="rpi18n.ratePlanName" column="ratePlanName" />
+		<result property="rpi18n.description" column="description" />
+		<result property="rp.marketCode" column="marketCode" />
+		<result property="rp.sourceCode" column="sourceCode" />
+		<result property="rp.orderNum" column="orderNum" />
+		<result property="rp.effectiveDate" column="effectiveDate" />
+		<result property="rp.expireDate" column="expireDate" />
+		<result property="rp.isSuper" column="isSuper" />
+		<result property="rp.priceValidate" column="priceValidate" />
+		<result property="rp.payment" column="payment" />
+	</resultMap>
+	
+	<resultMap id="ratePlanI18nOWS" class="ratePlanVO">
+		<result property="rp.ratePlanId" column="ratePlanId" />
+		<result property="rp.hotelId" column="hotelId" />
+		<result property="rp.effectiveDate" column="effectiveDate" />
+		<result property="rp.expireDate" column="expireDate" />
+		<result property="rp.ratePlanType" column="ratePlanType" />
+		<result property="rp.ratePlanCode" column="ratePlanCode" />
+		<result property="rpi18n.ratePlanMId" column="ratePlanMId" />
+		<result property="rpi18n.ratePlanName" column="ratePlanName" />
+		<result property="rpi18n.description" column="description" />
+	</resultMap>
+	
+	<resultMap id="rateChainHotel2ChannelMap" class="ratePlanVO">
+		<result property="rp.ratePlanId" column="ratePlanId" />
+		<result property="rp.ratePlanCode" column="ratePlanCode" />
+		<result property="rp.hotelCode" column="hotelCode" />
+		<result property="chainCode" column="chainCode" />
+		<result property="rp.soldableCondition" column="soldableCondition" />
+		<result property="rpi18n.ratePlanName" column="ratePlanName" />
+		<result property="rp.effectiveDate" column="effectiveDate" />
+		<result property="rp.expireDate" column="expireDate" />
+		<result property="rp.hotelId" column="hotelId" />
+		<result property="rp.isSuper" column="isSuper" />
+		<result property="rp.priceValidate" column="priceValidate" />
+	</resultMap>
+
+	<insert id="addRateplan" parameterClass="rateplan">
+		INSERT INTO rate_plan
+		(ratePlanId, paymentType, breakfastCount, createdTime, fee_breakfast_count,fee_gov_tax_amount,fee_gov_tax_percent,fee_service_amount,fee_service_percent,
+		min_days,max_days,min_amount,min_adv_hours,max_adv_hours,startTime,endTime, hotelId, effectiveDate, expireDate, ratePlanType, ratePlanCode, marketCode, availabilityStatus,
+		isViewabled, qualificationType, isTaxIncluded, isServiceFeeIncluded, isBreakfastIncluded, isLunchIncluded, isDinnerIncluded, inheritRatePlanId, basicType, percent, amount,
+		canBeSoldFunction, createdBy, fee_breakfast_amount, delFlag, sourceCode, isNegotiated, isExtraControl, commissionCode,
+		commisionPercent,orderNum,rpId,includeRoomType,accessCode,payment,soldableCondition,isSuper,priceValidate)
+		VALUES (#ratePlanId#, #paymentType#, #breakfastCount#, #createdTime#, #fee_breakfast_count#,#fee_gov_tax_amount#,#fee_gov_tax_percent#,#fee_service_amount#,
+		#fee_service_percent#,#min_days#,#max_days#,#min_amount#,#min_adv_hours#,#max_adv_hours#,#startTime#,#endTime#, #hotelId#, #effectiveDate#, #expireDate#,#ratePlanType#,
+		REPLACE(REPLACE(#ratePlanCode#,' ',''),'　',''), 
+		REPLACE(REPLACE(#marketCode#,' ',''),'　',''), 
+		#availabilityStatus#, #isViewabled#, #qualificationType#, #isTaxIncluded#, #isServiceFeeIncluded#, #isBreakfastIncluded#, #isLunchIncluded#,
+		#isDinnerIncluded#, #inheritRatePlanId#, #basicType#, #percent#, #amount#, #canBeSoldFunction#, #createdBy#,
+		#fee_breakfast_amount#, #delFlag#, 
+		REPLACE(REPLACE(#sourceCode#,' ',''),'　',''),
+		#isNegotiated#, #isExtraControl#, #commissionCode#, #commisionPercent#,#orderNum#,#rpId#,#includeRoomType#,
+		REPLACE(REPLACE(#accessCode#,' ',''),'　',''),#payment#,
+		#soldableCondition#,#isSuper#,#priceValidate#);
+  </insert>
+
+	<insert id="addRatePlanI18n" parameterClass="ratePlanI18n">
+		INSERT INTO rate_plan_i18n
+		(ratePlanMId, ratePlanId, LANGUAGE, ratePlanName,englishName, description, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#ratePlanMId#, #ratePlanId#, #language#, #ratePlanName#,#englishName#, #description#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)
+  	</insert>
+
+	<update id="updateRatePlanI18n" parameterClass="ratePlanI18n">
+		UPDATE rate_plan_i18n
+		SET ratePlanMId = #ratePlanMId#, ratePlanId = #ratePlanId#, LANGUAGE = #language#, ratePlanName = #ratePlanName#,englishName=#englishName#, description = #description#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE ratePlanMId = #ratePlanMId#
+  	</update>
+
+	<update id="deleteRateplan">
+		update rate_plan set delflag=1 where ratePlanId = #ratePlanId#
+    </update>
+
+	<update id="updateRateplan" parameterClass="rateplan">
+		UPDATE rate_plan
+		<dynamic prepend="SET">
+			<isNotNull property="paymentType" prepend=",">
+        		<![CDATA[ 
+        		paymentType = #paymentType# 
+        		]]>
+			</isNotNull>
+			<isNotNull property="breakfastCount" prepend=",">
+		        <![CDATA[  
+		        breakfastCount = #breakfastCount#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="fee_breakfast_count" prepend=",">
+		        <![CDATA[  
+		        fee_breakfast_count = #fee_breakfast_count#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="lastModifyTime" prepend=",">
+		        <![CDATA[  
+		        lastModifyTime = #lastModifyTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="min_days" prepend=",">
+		        <![CDATA[  
+		        min_days = #min_days#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="max_days" prepend=",">
+		        <![CDATA[  
+		        max_days = #max_days#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="min_amount" prepend=",">
+		        <![CDATA[  
+		        min_amount = #min_amount#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="min_adv_hours" prepend=",">
+		        <![CDATA[  
+		        min_adv_hours = #min_adv_hours#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="max_adv_hours" prepend=",">
+		        <![CDATA[  
+		        max_adv_hours = #max_adv_hours#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="startTime" prepend=",">
+		        <![CDATA[  
+		        startTime = #startTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="endTime" prepend=",">
+		        <![CDATA[  
+		        endTime = #endTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="availabilityStatus" prepend=",">
+		        <![CDATA[  
+		        availabilityStatus = #availabilityStatus#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="accessCode" prepend=",">
+		        <![CDATA[  
+		        accessCode = REPLACE(REPLACE(#accessCode#,' ',''),'　','')  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="hotelId" prepend=",">
+		        <![CDATA[  
+		        hotelId = #hotelId#  
+		        ]]>
+			</isNotNull>,payment=#payment#
+			,fee_breakfast_amount=#fee_breakfast_amount#,fee_gov_tax_amount = #fee_gov_tax_amount# ,fee_gov_tax_percent = #fee_gov_tax_percent#
+			,fee_service_amount = #fee_service_amount# ,fee_service_percent = #fee_service_percent#
+			,effectiveDate=#effectiveDate#, expireDate=#expireDate#, ratePlanType=#ratePlanType#,ratePlanCode= #ratePlanCode#, marketCode=#marketCode#,
+			fee_gov_tax_amount=#fee_gov_tax_amount#,updatedBy= #updatedBy#,sourceCode= #sourceCode#,isNegotiated= #isNegotiated#,
+			isExtraControl=#isExtraControl#, commissionCode=#commissionCode#, commisionPercent=#commisionPercent#
+			,orderNum=#orderNum#,inheritRatePlanId=#inheritRatePlanId#,percent=#percent#,
+			amount=#amount#,rpId=#rpId#
+			,includeRoomType=#includeRoomType#,soldableCondition=#soldableCondition#,isSuper=#isSuper#,priceValidate=#priceValidate#
+		</dynamic>
+		WHERE ratePlanId = #ratePlanId#
+	</update>
+
+	<select id="getRateplan" resultClass="rateplan" parameterClass="java.lang.String">
+		select * from rate_plan where delflag=0 and rateplanId=#ratePlanId#
+    </select>
+
+	<select id="getRatePlanByHotelId" resultClass="rateplan" parameterClass="java.lang.String">
+		select * from rate_plan where delflag=0 and hotelId=#hotelId#
+    </select>
+
+	<select id="getRatePlanByHotelIdList" resultClass="rateplan" parameterClass="Map">
+		select * from rate_plan where delflag=0 
+		<isNotEmpty prepend="AND" property="hotelIdList">
+			hotelId in
+			<iterate property="hotelIdList" open="(" close=")"
+				conjunction=",">
+				#hotelIdList[]#
+            </iterate>
+		</isNotEmpty>
+    </select>
+    
+	<select id="getRateplanByRateplanCode" resultClass="rateplan" parameterClass="Map">
+		select t1.*,t2.hotelCode from rate_plan t1 left join hotel t2 using(hotelId)
+		where t1.delflag=0 and t2.delflag=0 and t2.hotelCode=#hotelCode# and t1.rateplanCode = #rateplanCode#
+    </select>
+    
+    <select id="getRateChainHotelByRateplanIdHotelId" resultMap="rateChainHotel2ChannelMap" parameterClass="Map">
+		select t1.*,t2.hotelCode,t3.ratePlanName,c.chainCode from rate_plan t1 left join hotel t2 using(hotelId) 
+		LEFT JOIN rate_plan_i18n t3 ON t1.rateplanId = t3.rateplanId AND t3.language = #language# AND t3.delflag=0 
+		LEFT JOIN chain c ON c.chainId=t2.chainId and c.delflag=0 
+		where t1.delflag=0 and t2.hotelId=#hotelId# and t1.ratePlanId = #ratePlanId#
+    </select>
+    
+	<select id="getRatePlanI18nByHotelRateCode" resultMap="rateChainHotel2ChannelMap" parameterClass="Map">
+		SELECT rp.*,h.hotelCode,rpi.ratePlanName,c.chainCode FROM rate_plan rp 
+		left join rate_plan_i18n rpi on rp.ratePlanId=rpi.ratePlanId and rpi.language=#language# and rpi.delFlag=0
+		left join hotel h on rp.hotelId=h.hotelId and h.delFlag=0
+		LEFT JOIN chain c ON c.chainId=t2.chainId and c.delflag=0 
+		where rp.ratePlanCode=#ratePlanCode# and h.hotelCode=#hotelCode#
+	</select>
+
+	<select id="getRateNameByHotelId" remapResults="true" resultClass="java.util.HashMap" parameterClass="Map">
+		SELECT ratePlanCode,t1.ratePlanId,description,DATE_FORMAT(t1.expireDate ,'%Y-%m-%d') as expireDate 
+		  FROM rate_plan t1 LEFT JOIN rate_plan_i18n t2 ON t1.rateplanId = t2.rateplanId 
+		  					AND t2.language = #language#  AND t2.delflag=0 
+		 WHERE t1.delflag=0 
+		   AND t1.hotelId=#hotelId#
+		order by orderNum asc
+    </select>
+    <!-- 渠道绑定里获取可用的房价信息 -->
+	<select id="getValidRatePlanByHotelIdLang" remapResults="true" resultClass="java.util.HashMap" parameterClass="Map">
+		SELECT ratePlanCode,t1.ratePlanId,ratePlanName
+		FROM rate_plan t1 LEFT JOIN rate_plan_i18n t2 ON t1.rateplanId = t2.rateplanId
+		AND t2.language = #language# AND t2.delflag=0
+		WHERE t1.delflag=0 AND t1.hotelId=#hotelId# and <![CDATA[now()<expireDate]]>
+		order by ratePlanCode
+	</select>
+	<select id="getNoInheritRateNameByHotelId" resultMap="rateNameMap" parameterClass="Map">
+		SELECT ratePlanCode,t1.ratePlanId,description,expireDate FROM rate_plan t1 
+				LEFT JOIN rate_plan_i18n t2 ON t1.rateplanId = t2.rateplanId 
+					  AND t2.language = #language#  AND t2.delflag=0 
+		WHERE t1.delflag=0 and t1.hotelId=#hotelId# 
+		  AND (t1.inheritRatePlanId is null OR t1.inheritRatePlanId ='')
+		order by orderNum asc
+    </select>
+	<select id="getRatePlanI18nById" resultClass="ratePlanI18n">
+		SELECT * FROM rate_plan_i18n
+		where ratePlanId = #ratePlanId#
+		  AND language = #language#
+		  AND delflag=0
+    </select>
+	<select id="getRatePlanI18nByCodeHotelId" resultMap="ratePlanI18nMap" parameterClass="Map">
+		SELECT rp.hotelId,rp.ratePlanId,rp.ratePlanCode,rp.marketCode,rp.sourceCode,rp.effectiveDate,
+		rp.expireDate,rp.ratePlanType,rp.payment,rpi.ratePlanMId,rpi.ratePlanName,rpi.description,rp.orderNum,rp.isSuper,rp.priceValidate 
+		FROM rate_plan rp 
+		LEFT JOIN rate_plan_i18n rpi on rp.ratePlanId=rpi.ratePlanId and rpi.language = #language# and rpi.delFlag=0 
+		WHERE rp.delFlag=0 and rp.ratePlanCode=#ratePlanCode# AND rp.hotelId = #hotelId#
+    </select>
+
+	<select id="getRefRateplan" resultClass="rateplan" parameterClass="Map">
+		select * from rate_plan where delflag=0 and hotelId=#hotelId# and inheritRatePlanId=#ratePlanId#
+    </select>
+
+	<!-- b2b列表 -->
+	<select id="getRatePlanOfTB" resultMap="ratePlanList" parameterClass="Map">
+		SELECT hi.hotelName,rp.ratePlanId,rp.`ratePlanCode`,rpi.ratePlanName,rp.hotelId,rp.paymentType,rp.breakfastCount,rp.availabilityStatus,cp.cancelType,rp.rpId,reqr.exception,rp.isSuper,rp.priceValidate
+		FROM rate_plan rp left join rate_plan_i18n rpi on rp.ratePlanId=rpi.ratePlanId and rpi.delFlag=0 and rpi.language = #language#
+		left join rate_cancel_relationship rcr on rcr.ratePlanId=rp.ratePlanId and rcr.delFlag=0
+		left join cancel_policy cp on cp.cancelId=rcr.cancelId and cp.delFlag=0
+		left join (select *from receivereqres where type=#type# and interfaceId=#interfaceId#)reqr on rp.ratePlanId=reqr.extId
+		left join hotel_i18n hi on hi.hotelId=rp.hotelId and hi.languageCode = #language# and hi.delFlag=0
+		where rp.delFlag=0 and rp.hotelId in
+		<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+			#hotelIdList[]#
+      	</iterate>
+		GROUP BY rp.ratePlanId
+	</select>
+	<!-- b2b -->
+	<select id="getRateCancelByIdOfTB" resultClass="cancelPolicyVO">
+		SELECT cp.*
+		FROM cancel_policy cp
+		left join rate_cancel_relationship rcr on cp.cancelId=rcr.cancelId and rcr.delFlag=0
+		left join rate_plan rp on rcr.ratePlanId=rp.ratePlanId
+		where rp.ratePlanId=#ratePlanId# and cp.delFlag=0 
+	</select>
+	<select id="getRatePlanByObj" resultClass="rateplan">
+		SELECT ratePlanId FROM rate_plan where delFlag=0
+		<isNotEmpty prepend="AND" property="ratePlanCode">
+			ratePlanCode=#ratePlanCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelId">
+			hotelId=#hotelId#
+		</isNotEmpty>
+	</select>
+	
+	<select id="getRatePlanI18ns" resultClass="ratePlanI18n" parameterClass="Map">
+		select * from rate_plan_i18n rpi 
+		        where rpi.ratePlanId=#ratePlanId#
+		          AND rpi.`delFlag` = 0
+		order by ratePlanMId
+	</select>
+	
+	<update id="deleteRatePlanI18nByRatePlanId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update rate_plan_i18n set delFlag = 1
+         where ratePlanId = #ratePlanId#
+    ]]>
+	</update>
+	<update id="updateRateSoldableCondition" parameterClass="Map">
+    	update rate_plan set soldableCondition=#soldableCondition#
+         where ratePlanId = #ratePlanId#
+	</update>
+	<update id="updateAccessCodeById" parameterClass="rateplan">
+    	update rate_plan set accessCode=#accessCode#,isNegotiated=#isNegotiated#
+         where ratePlanId = #ratePlanId#
+	</update>
+</sqlMap>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="GuestroomI18n">
+
+	<typeAlias alias="guestroomI18n" type="com.ccm.api.model.guestroom.GuestroomI18n" />
+
+	<select id="getGuestroomI18nByGRID" resultClass="guestroomI18n">
+    <![CDATA[
+        select * from guestroom_i18n 
+        where guestroomid=#guestroomid# 
+    ]]>
+	</select>
+
+	<select id="getGuestRoomNameByRoomTypeCode" resultClass="String">
+    <![CDATA[
+        SELECT b.roomTypeName FROM guestroom AS a,guestroom_i18n AS b  WHERE a.roomtypeCode=#roomtypeCode# AND a.guestRoomId=b.guestRoomId
+    ]]>
+	</select>
+
+	<insert id="addGuestroomI18n" parameterClass="guestroomI18n">
+		INSERT INTO guestroom_i18n( guestroommId, guestRoomId, language, roomTypeName, guestRoomDesc,
+		guide)
+		VALUES ( #guestroommId#, #guestroomid#, #language#, #roomtypename#, #guestroomdesc#,
+		#guide#)
+		<selectKey keyProperty="guestroommId" resultClass="java.lang.String">
+			SELECT LAST_INSERT_ID() AS value
+    </selectKey>
+	</insert>
+
+	<update id="updateGuestroomI18n" parameterClass="guestroomI18n">
+		UPDATE guestroom_i18n
+		<dynamic prepend="SET">
+			<!-- <isNotNull property="guestroommId" prepend="," > <![CDATA[ guestroommId = #guestroommId# ]]> </isNotNull> -->
+			<isNotNull property="guestroomid" prepend=",">
+        <![CDATA[  
+        guestRoomId = #guestroomid#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="language" prepend=",">
+        <![CDATA[  
+        language = #language#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="roomtypename" prepend=",">
+        <![CDATA[  
+        roomTypeName = #roomtypename#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="guestroomdesc" prepend=",">
+        <![CDATA[  
+        guestRoomDesc = #guestroomdesc#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="guide" prepend=",">
+        <![CDATA[  
+        guide = #guide#  
+        ]]>
+			</isNotNull>
+		</dynamic>
+		WHERE guestroommId = #guestroommId#
+	</update>
+
+</sqlMap>

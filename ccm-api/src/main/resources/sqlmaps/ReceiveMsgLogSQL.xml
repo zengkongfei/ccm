@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReceiveMsgLogSQL">
+
+	<typeAlias alias="receiveMsgLog" type="com.ccm.api.model.log.ReceiveMsgLog" />
+	
+	<sql id="pageSqlReceiveMsgLogSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="createReceiveMsgLogTable">
+		CREATE TABLE $tableName$ LIKE receivemsglog
+	</insert>
+
+	<insert id="addReceiveMsgLog" parameterClass="receiveMsgLog">
+    <![CDATA[
+        insert into $tableName$ (receiveMsgLogId,interfaceId, hotelCode, messageType,message,createdTime,extOrderId,beginMsgId,extMsgId,status,processStatus,processTime) 
+        values (#receiveMsgLogId#,#interfaceId#,#hotelCode#,#messageType#,#message#,#createdTime#,#extOrderId#,#beginMsgId#,#extMsgId#,#status#,#processStatus#,#processTime#);
+     ]]>
+	</insert>
+
+	<delete id="deleteReceiveMsgLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from $tableName$ where receiveMsgLogId = #receiveMsgLogId#
+    ]]>
+	</delete>
+
+	<update id="updateReceiveMsgLog" parameterClass="receiveMsgLog">
+		update $tableName$ SET lastModifyTime=#lastModifyTime#,status=#status#
+		<isNotEmpty property="processStatus" prepend=",">
+			processStatus=#processStatus#
+        	</isNotEmpty>
+		<isNotEmpty property="processTime" prepend=",">
+			processTime=#processTime#
+        	</isNotEmpty>
+		<isNotEmpty property="extOrderId" prepend=",">
+			extOrderId=#extOrderId#
+        </isNotEmpty>
+		where receiveMsgLogId = #receiveMsgLogId# and hotelCode = #hotelCode#
+	</update>
+
+	<update id="updateReceiveMsgLogStatus" parameterClass="receiveMsgLog">
+    <![CDATA[
+		update $tableName$ SET
+			status=#status#
+        where receiveMsgLogId = #receiveMsgLogId# and hotelCode = #hotelCode#
+    ]]>
+	</update>
+
+	<select id="getReceiveMsgLog" resultClass="receiveMsgLog">
+    <![CDATA[
+        select * from receivemsglog 
+        where receiveMsgLogId = #receiveMsgLogId# and hotelCode = #hotelCode#
+    ]]>
+	</select>
+
+	<select id="getReceiveMsgLogs" resultClass="receiveMsgLog">
+    <![CDATA[
+        select * from $tableName$
+    ]]>
+	</select>
+
+	<select id="getReceiveMsgLogByOne" resultClass="receiveMsgLog" parameterClass="receiveMsgLog">
+		select * from $tableName$
+		where hotelCode = #hotelCode# and beginMsgId=#beginMsgId#
+    </select>
+
+	<select id="countReceiveMsgLog" resultClass="Integer">
+		select count(*) from $tableName$
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="ccmMsgId">
+				(beginMsgId = #ccmMsgId# or extMsgId=#ccmMsgId#)
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extMsgId">
+				beginMsgId = #extMsgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				extOrderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    
+		     <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+		    <isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				status in
+				<iterate property="downPmsMsgStatusList" open="(" close=")" conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageTypes">
+				messageType in
+				<iterate property="messageTypes" open="(" close=")" conjunction=",">
+					#messageTypes[]#
+            	</iterate>
+			</isNotEmpty>
+		    
+		</dynamic>
+	</select>
+
+	<select id="searchReceiveMsgLog" resultClass="receiveMsgLog">
+		select receivemsgLogId,hotelCode,createdTime,beginMsgId,extMsgId,messageType,extOrderId,STATUS from $tableName$
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="ccmMsgId">
+				(beginMsgId = #ccmMsgId# or extMsgId=#ccmMsgId#)
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extMsgId">
+				beginMsgId = #extMsgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				extOrderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    
+		  
+		     <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+		    <isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				status in
+				<iterate property="downPmsMsgStatusList" open="(" close=")" conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageTypes">
+				messageType in
+				<iterate property="messageTypes" open="(" close=")" conjunction=",">
+					#messageTypes[]#
+            	</iterate>
+			</isNotEmpty>
+		
+		</dynamic>
+		order by createdTime desc
+		<include refid="pageSqlMasterSQL"/>
+	</select>
+
+	
+	<!-- 根据日期与酒店编号删除receivemsglog表的数据并返回影响记录的条数 -->
+	<delete id="deleteReceiveMsgLogByCreatedTimeAndHotelCode" parameterClass="Map">
+		DELETE FROM receivemsglog WHERE createdTime <![CDATA[<]]> #createdTime# AND hotelCode=#hotelcode#
+	</delete>
+	
+	<select id="getPendingReceiveMsgLog" parameterClass="receiveMsgLog" resultClass="receiveMsgLog">
+		SELECT * FROM receivemsglog WHERE hotelCode=#hotelCode# AND extOrderId=#extOrderId# ORDER BY  createdtime DESC limit 0,1
+	</select>
+</sqlMap>

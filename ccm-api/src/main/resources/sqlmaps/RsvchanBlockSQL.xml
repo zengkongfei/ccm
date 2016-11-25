@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="RsvchanBLockSQL">
+	<typeAlias alias="rsvtypeChannel" type="com.ccm.api.model.rsvtype.RsvtypeChannel" />
+	<typeAlias alias="rsvchanBlock" type="com.ccm.api.model.rsvtype.RsvchanBlock" />
+	<typeAlias alias="rsvtype" type="com.ccm.api.model.rsvtype.Rsvtype" />
+	
+	<select id="getRsvchanBlocksByRsvchanelIds" parameterClass="Map" resultClass="rsvchanBlock">
+		SELECT * FROM rsvchanblock where  rsvtypeChannelId IN
+		<iterate property="rsvtypeChannelIds" open="(" close=")" conjunction=",">
+			#rsvtypeChannelIds[]#
+		</iterate>
+	</select>
+	
+	<select id="getRsvchanBlocksByRsvchanelId" parameterClass="Map" resultClass="rsvchanBlock">
+		SELECT * FROM rsvchanblock where  rsvtypeChannelId =#rsvtypeChannelId#
+	</select>
+	
+	<select id="getRsvchanBlocksByChannelAndBlock" parameterClass="Map" resultClass="rsvchanBlock">
+		SELECT * FROM rsvchanblock where  channelCode = #channelCode# and blockCode=#blockCode# and hotelCode=#hotelCode#
+	</select>
+	
+	<update id="updateRsvchanBlockSold" parameterClass="rsvchanBlock">
+	  <![CDATA[
+		UPDATE rsvchanblock
+		SET lastModifyTime=#lastModifyTime#, blockSold = blockSold+#blockSold# 
+		WHERE rsvchanblockId=#rsvchanblockId#
+	 ]]>
+	</update>
+
+	<select id="getBlockListByRsvChanIdAndBlockCode" resultClass="rsvchanBlock">
+		select * from rsvchanblock where rsvtypeChannelId = #rsvtypeChannelId# and blockCode=#blockCode#
+	</select>
+	
+	<select id="getBlockCountWithoutRates" resultClass="Integer">
+		select count(*) from rsvchanblock where rsvtypeChannelId = #rsvtypeChannelId# and trim(rateplancodes) is null
+	</select>
+	
+	<insert id="addRsvchanBlock" parameterClass="rsvchanBlock">
+		INSERT INTO rsvchanblock
+            (rsvchanblockId,rsvtypeId,rsvtypeChannelId,channelId,channelCode,blockCode,cutOffDate,cutOffDays,ratePlanCodes,blockNum,blockSold,date,hotelCode,type,createdTime,isSendToPMS)
+		VALUES (#rsvchanblockId#,#rsvtypeId#,#rsvtypeChannelId#,#channelId#,#channelCode#,#blockCode#,#cutOffDate#,#cutOffDays#,#ratePlanCodes#,#blockNum#,#blockSold#,#date#,#hotelCode#,#type#,#createdTime#,#isSendToPMS#)
+	</insert>
+	
+	<update id="updateRsvchanBlock" parameterClass="rsvchanBlock">
+		UPDATE rsvchanblock
+		SET blockNum = #blockNum#
+		<isNotEmpty property="blockSold" prepend=",">
+				blockSold = #blockSold#
+			</isNotEmpty>
+		,cutOffDays=#cutOffDays#,
+		cutOffDate=#cutOffDate#,
+		ratePlanCodes=#ratePlanCodes#,
+		lastModifyTime=#lastModifyTime#,
+		isSendToPMS=#isSendToPMS# 
+		WHERE rsvchanblockId=#rsvchanblockId#
+	</update>
+	
+	
+	<update id="updateRsvchanBlockByParam" parameterClass="rsvchanBlock">
+		UPDATE rsvchanblock
+		SET blockNum = #blockNum#, blockSold = #blockSold#,cutOffDays=#cutOffDays#,cutOffDate=#cutOffDate#,ratePlanCodes=#ratePlanCodes#,lastModifyTime=#lastModifyTime#,isSendToPMS=#isSendToPMS# 
+		WHERE hotelCode=#hotelCode# and type=#type# and channelId = #channelId# and blockCode=#blockCode# and date=#date#
+	</update>
+	
+	<select id="getRsvchanBlock" resultClass="rsvchanBlock">
+		select * from rsvchanblock where rsvchanblockId = #rsvchanblockId#
+	</select>
+	
+	<delete id="deleteRsvchanBlockByCondition">
+			DELETE FROM rsvchanblock WHERE blockCode=#blockCode# and type=#type# and hotelCode=#hotelCode# and date=#date# and channelCode=#channelCode#
+	</delete>
+	
+	<delete id="deleteRsvchanBlocksByRsvchanelId">
+			DELETE FROM rsvchanblock WHERE  rsvtypeChannelId =#rsvtypeChannelId#
+	</delete>
+	
+	<delete id="removeRsvchanBlockByRsvchannelIdAndBlockCode">
+			DELETE FROM rsvchanblock WHERE  rsvtypeChannelId =#rsvtypeChannelId# and blockCode=#blockCode#
+	</delete>
+	
+	<select id="getIsSendToPMSRsvchanBlock" resultClass="rsvchanBlock" parameterClass="Map">
+		SELECT blockCode, rateplanCodes,DATE FROM rsvchanblock 
+		WHERE channelCode = #channelCode#
+		  AND hotelCode =#hotelCode# 
+		  AND TYPE = #type#
+		 AND DATE IN 
+			 <iterate property="dateList" open="(" close=")" conjunction=",">
+				#dateList[]#
+			</iterate>
+		  AND isSendToPMS='1'
+	</select>
+		
+	<select id="getHandSendRsvchanBlock" resultClass="rsvchanBlock" parameterClass="Map">
+		SELECT * FROM rsvchanblock 
+		WHERE isSendToPMS='1'
+		  AND TYPE = #type#
+		  AND DATE = #date# 
+		  AND channelCode = #channelCode#
+		  AND hotelCode =#hotelCode#
+	</select>
+	
+	<select id="getRsvchanBlocksByOrder" resultClass="rsvchanBlock" parameterClass="Map">
+		SELECT blockCode, rateplanCodes,DATE FROM rsvchanblock 
+		WHERE channelCode = #channelCode#
+		  AND hotelCode =#hotelCode# 
+		  AND TYPE = #type#
+		 AND DATE IN 
+			 <iterate property="dateList" open="(" close=")" conjunction=",">
+				#dateList[]#
+			</iterate>
+	</select>
+	
+	<select id="getRsvchanBlockNum" resultClass="rsvchanBlock" parameterClass="Map">
+		SELECT * FROM rsvchanblock 
+		WHERE channelCode = #channelCode#
+		  AND hotelCode =#hotelCode# 
+		  AND TYPE = #type#
+		  AND DATE = #date#
+		  AND (ratePlanCodes='' or ratePlanCodes is null)
+	</select>
+	
+	<select id="getRsvchanBlockByParam" resultClass="rsvchanBlock" parameterClass="Map">
+		SELECT * FROM rsvchanblock 
+		WHERE channelCode = #channelCode#
+		  AND hotelCode =#hotelCode# 
+		  AND TYPE = #type#
+		  AND DATE = #date#
+		  AND blockCode=#blockCode#
+	</select>
+	
+</sqlMap>

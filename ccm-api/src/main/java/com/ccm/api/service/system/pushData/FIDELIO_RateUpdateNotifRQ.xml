@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GDSPublisherRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" UserID="COL$Expedia"
+	Password="H57w3aRgy6" Type="RateMessage" Profile="COL"
+	RateNotificationType="UPDATE" Destination="http://10.90.6.105/ADSListner/Default.aspx">
+	<FIDELIO_RateUpdateNotifRQ echoToken="OFY20AL246SWMD1ZDEQG"
+		timeStamp="2013-02-27T11:02:55.068125+08:00" version="3.1"
+		xmlns="http://www.micros.com/2002A">
+		<Properties>
+			<Property chainCode="COL" hotelCode="HNKTJ">
+				<RateUpdateSegments>
+					<RateUpdateSegment roomTypeCode="1KEHS" rateCode="WHL02"
+						currencyCode="CNY">
+						<TargetGDS>LESUKE</TargetGDS>
+						<TimeSpan start="2013-04-27T00:00:00" end="2013-04-27T00:00:00"
+							duration="1" />
+						<DOW Mon="false" Tue="false" Wed="false" Thu="false" Fri="true"
+							Sat="true" Sun="true" />
+						<RateAmounts>
+							<RateAmount rateAmountType="OnePerson">1128</RateAmount>
+							<RateAmount rateAmountType="TwoPerson">1246</RateAmount>
+							<RateAmount rateAmountType="ThreePerson">1364</RateAmount>
+							<RateAmount rateAmountType="ExtraAdult">118</RateAmount>
+							<RateAmount rateAmountType="ExtraChild">118</RateAmount>
+						</RateAmounts>
+					</RateUpdateSegment>
+				</RateUpdateSegments>
+			</Property>
+		</Properties>
+	</FIDELIO_RateUpdateNotifRQ>
+</GDSPublisherRequest>

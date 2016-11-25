@@ -1,0 +1,1302 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MasterSQL">
+
+	<typeAlias alias="masterOrder" type="com.ccm.api.model.order.MasterOrder" />
+	<typeAlias alias="masterVO" type="com.ccm.api.model.order.vo.MasterVO" />
+
+	<typeAlias alias="masterRate" type="com.ccm.api.model.order.MasterRate" />
+	<typeAlias alias="masterCancel" type="com.ccm.api.model.order.MasterCancel" />
+	<typeAlias alias="masterPackage" type="com.ccm.api.model.order.MasterPackage" />
+	<typeAlias alias="masterProfile" type="com.ccm.api.model.order.MasterProfile" />
+	<typeAlias alias="masterPms" type="com.ccm.api.model.order.MasterPms" />
+	<typeAlias alias="masterPms2" type="com.ccm.api.model.order.MasterPms2" />
+
+	<typeAlias alias="master" type="com.ccm.api.model.order.Master" />
+
+	<typeAlias alias="channelOrder" type="com.ccm.api.model.log.ChannelOrder" />
+
+	<typeAlias alias="owsReservation" type="com.ccm.api.model.bdp.OWSReservation" />
+
+	<sql id="pageSqlMasterSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+		</isNotEmpty>
+	</sql>
+
+	<insert id="saveMasterOrder" parameterClass="masterOrder">
+		insert into master_order
+		(masterId,hotelCode,numberOfUnits,nameTitle,transactionID,chainCode,ratePlanCode,qualifyingIdType,child,cardCode,
+		cardHolderName,cardNumber,expirationDate,addressType,addressLine,cityName,stateProv,countryCode,postCode,business,home,email,fax,earliestTime,
+		lastTime,qualifyingIdValue,pmsId,pmsType)
+		values(#masterId#,
+		REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+		#numberOfUnits#,#nameTitle#,#transactionID#,
+		REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+		REPLACE(REPLACE(#ratePlanCode#,' ',''),'　',''),
+		#qualifyingIdType#,#child#,
+		REPLACE(REPLACE(#cardCode#,' ',''),'　',''),
+		#cardHolderName#,#cardNumber#,#expirationDate#,#addressType#,#addressLine#,#cityName#,#stateProv#,#countryCode#,#postCode#,#business#,#home#,
+		#email#,#fax#,#earliestTime#,#lastTime#,#qualifyingIdValue#,#pmsId#,#pmsType#)
+	</insert>
+
+	<insert id="saveMasterRate" parameterClass="masterRate">
+		insert into master_rate
+		(hotelid,masterId,date,rmrate,setrate,setrateAfterTax,packages,bkf,rtreason,manual,cby,changed)
+		values(#hotelId#,#masterId#,#date#,#rmrate#,#setrate#,#setrateAfterTax#,#packages#,#bkf#,#rtreason#,#manual#,#cby#,#changed#)
+	</insert>
+	<insert id="saveMasterCancel" parameterClass="masterCancel">
+		insert into master_cancel
+		(masterCancelId,masterId,cancelId,cancelCode,cancelDesc,channelIsCancel,isNonRefundable,absoluteDeadline,offsetTimeUnit,
+		offsetUnitMultiplier,offsetDropTime,taxInclusive,feesInclusive,basisType,numberOfNights,percent,amount,
+		effectiveDate,expireDate,isApplyToMonday,isApplyToTuesday,isApplyToWednesday,isApplyToThursday,isApplyToFriday,isApplyToSaturday,isApplyToSunday,createdTime,createdBy,offsetCutTime)
+		values(#masterCancelId#,#masterId#,#cancelId#,REPLACE(REPLACE(#cancelCode#,' ',''),'　',''),
+		#cancelDesc#,#channelIsCancel#,#isNonRefundable#,#absoluteDeadline#,#offsetTimeUnit#,
+		#offsetUnitMultiplier#,#offsetDropTime#,#taxInclusive#,#feesInclusive#,#basisType#,#numberOfNights#,#percent#,#amount#,
+		#effectiveDate#,#expireDate#,#isApplyToMonday#,#isApplyToTuesday#,#isApplyToWednesday#,#isApplyToThursday#,#isApplyToFriday#,#isApplyToSaturday#,#isApplyToSunday#,#createdTime#,#createdBy#,#offsetCutTime#)
+	</insert>
+	<insert id="saveMasterPackage" parameterClass="masterPackage">
+		insert into master_package
+		(masterPackageId,masterId,packageId,packageCode,date,amount,isDynamic,quantity,packageDesc,packageName,createdTime,
+		createdBy)
+		values(#masterPackageId#,#masterId#,#packageId#,
+		REPLACE(REPLACE(#packageCode#,' ',''),'　',''),
+		#date#,#amount#,#isDynamic#,#quantity#,#packageDesc#,#packageName#,#createdTime#,
+		#createdBy#)
+	</insert>
+	<insert id="saveMasterProfile" parameterClass="masterProfile">
+		insert into master_profile
+		(masterProfileId,masterId,firstName,lastName,chinaName,sex,nameTitle,createdTime,createdBy)
+		values(#masterProfileId#,#masterId#,#firstName#,#lastName#,#chinaName#,#sex#,#nameTitle#,#createdTime#,#createdBy#)
+	</insert>
+
+	<insert id="saveMaster" parameterClass="master">
+		insert into master
+		(masterId,sta,osta,name,name2,customName,invoiceTitle,sex,mobile,arr,ocheckinDate,dep,ocheckoutDate,gstno,
+		ogstno,ochild,onumberOfRooms,roomno,type,otype,charge,rmrate,
+		setrate,staticPackage,payment,guaranteeDesc,channelId,channel,ochannel,ref,srqs,cby,changed,haccnt,membershipNumber,
+		restype,ochainCode,hotelId,ohotelCode,hotelConfirm,confirmMethod,
+		crsno,source,market,name4,currencyCode,lang,channelRateId,
+		channelRateStart,channelRateEnd,rpid,rid,gid,ratePlanId,oratePlanCode,ratePlanDesc,
+		roomTypeOuterId,roomTypeId,roomTypeName,outerHotelId,hid,createToken,username,password,contactor,pcrec,resno,mfNameCode,
+		dateFormat,transportID,transportTime,idcls,ident,paymentTransaction,prepaidAmount,bookingSource,createBY,
+		autoDeposit,transactionCode,traceDept,paymentRemark,isDiscount)
+		values(#masterId#,#sta#,#osta#,#name#,#name2#,#customName#,#invoiceTitle#,#sex#,#mobile#,#arr#,#ocheckinDate#,#dep#,#ocheckoutDate#,#gstno#,
+		#ogstno#,#ochild#,#onumberOfRooms#,#roomno#,REPLACE(REPLACE(#type#,' ',''),'　',''),REPLACE(REPLACE(#otype#,' ',''),'　',''),#charge#,#rmrate#,
+		#setrate#,#staticPackage#,#payment#,#guaranteeDesc#,#channelId#,#channel#,#ochannel#,#ref#,#srqs#,#cby#,#changed#,#haccnt#,#membershipNumber#,
+		#restype#,REPLACE(REPLACE(#ochainCode#,' ',''),'　',''),#hotelId#,REPLACE(REPLACE(#ohotelCode#,' ',''),'　',''),#hotelConfirm#,#confirmMethod#,
+		#crsno#,REPLACE(REPLACE(#source#,' ',''),'　',''),REPLACE(REPLACE(#market#,' ',''),'　',''),#name4#,#currencyCode#,#lang#,#channelRateId#,
+		#channelRateStart#,#channelRateEnd#,#rpid#,#rid#,#gid#,#ratePlanId#,REPLACE(REPLACE(#oratePlanCode#,' ',''),'　',''),#ratePlanDesc#,
+		#roomTypeOuterId#,#roomTypeId#,#roomTypeName#,#outerHotelId#,#hid#,#createToken#,#username#,#password#,#contactor#,#pcrec#,#resno#,#mfNameCode#,
+		#dateFormat#,#transportID#,#transportTime#,#idcls#,#ident#,#paymentTransaction#,#prepaidAmount#,#bookingSource#,#createBY#,
+		#autoDeposit#,#transactionCode#,#traceDept#,#paymentRemark#,#isDiscount#)
+	</insert>
+
+	<delete id="deleteMasterRateByOrderId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_rate where masterId = #orderId#
+    ]]>
+	</delete>
+	<delete id="deleteMasterCancelByOrderId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_cancel where masterId = #orderId#
+    ]]>
+	</delete>
+	<delete id="deleteMasterPackageByOrderId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_package where masterId = #orderId#
+    ]]>
+	</delete>
+	<delete id="deleteMasterProfileByOrderId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from master_profile where masterId = #orderId#
+    ]]>
+	</delete>
+
+	<update id="updateMasterOrder" parameterClass="masterOrder">
+		update master_order set
+		hotelCode =REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+		numberOfUnits =#numberOfUnits#,
+		nameTitle =#nameTitle#,
+		transactionID =#transactionID#,
+		chainCode=REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+		ratePlanCode=REPLACE(REPLACE(#ratePlanCode#,' ',''),'　',''),
+		qualifyingIdType=#qualifyingIdType#,
+		qualifyingIdValue=#qualifyingIdValue#,
+		child=#child#,
+		cardCode =REPLACE(REPLACE(#cardCode#,' ',''),'　',''),
+		cardHolderName =#cardHolderName#,
+		cardNumber =#cardNumber#,
+		expirationDate =#expirationDate#,
+		addressType =#addressType#,
+		addressLine =#addressLine#,
+		cityName =#cityName#,
+		stateProv=#stateProv#,
+		countryCode =#countryCode#,
+		postCode =#postCode#,
+		business=#business#,
+		home =#home#,
+		email =#email#,
+		fax =#fax#,
+		earliestTime=#earliestTime#,
+		lastTime =#lastTime#,
+		pmsType=#pmsType#,
+		updatedBy=#updatedBy#,
+		lastModifyTime=#lastModifyTime#
+		<isNotEmpty prepend="," property="pmsId">
+			pmsId = #pmsId#
+		</isNotEmpty>
+		where masterId=#masterId#
+	</update>
+
+	<update id="updateMaster" parameterClass="master">
+		update master set sta =#sta#,name =#name#,customName=#customName#,mfNameCode=#mfNameCode#,sex=#sex#,mobile =#mobile#,arr =#arr#,ocheckinDate=#ocheckinDate#,
+		dep=#dep#,ocheckoutDate=#ocheckoutDate#,gstno=#gstno#,ogstno=#ogstno#,ochild=#ochild#,onumberOfRooms=#onumberOfRooms#,roomno=#roomno#,
+		type =REPLACE(REPLACE(#type#,' ',''),'　',''),otype=REPLACE(REPLACE(#otype#,' ',''),'　',''),
+		charge=#charge#,rmrate=#rmrate#,setrate=#setrate#,staticPackage=#staticPackage#,payment=#payment#,guaranteeDesc=#guaranteeDesc#,ref =#ref#,
+		srqs=#srqs#,name2=#name2#,restype=#restype#,ochainCode=REPLACE(REPLACE(#ochainCode#,' ',''),'　',''),hotelid=#hotelId#,
+		ohotelCode=REPLACE(REPLACE(#ohotelCode#,' ',''),'　',''),hotelConfirm=#hotelConfirm#,confirmMethod=#confirmMethod#,name4=#name4#,
+		currencyCode = #currencyCode#,channelRateId =#channelRateId#,channelRateStart = #channelRateStart#,channelRateEnd =#channelRateEnd#,
+		lang=#lang#,channelId=#channelId#,channel =#channel#,ochannel=#ochannel#,
+		market = REPLACE(REPLACE(#market#,' ',''),'　',''),
+		source = REPLACE(REPLACE(#source#,' ',''),'　',''),
+		isDiscount = #isDiscount#,
+		rpid =#rpid#,rid = #rid#,gid = #gid#,
+		ratePlanId=#ratePlanId#,oratePlanCode=REPLACE(REPLACE(#oratePlanCode#,' ',''),'　',''),ratePlanDesc=#ratePlanDesc#,roomTypeOuterId=#roomTypeOuterId#,roomTypeId=#roomTypeId#,roomTypeName=#roomTypeName#,
+		outerHotelId=#outerHotelId#,hid=#hid#,createToken=#createToken#,username=#username#,password=#password#,contactor=#contactor#,
+		dateFormat=#dateFormat#,transportID=#transportID#,transportTime=#transportTime#,membershipNumber= #membershipNumber#,invoiceTitle = #invoiceTitle#,
+		idcls=#idcls#,ident=#ident#,autoDeposit=#autoDeposit#,transactionCode=#transactionCode#,traceDept=#traceDept#,paymentRemark=#paymentRemark#
+		<isNotEmpty prepend="," property="cancelPmsId">
+			cancelPmsId=#cancelPmsId#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="paymentTransaction">
+			paymentTransaction=#paymentTransaction#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="prepaidAmount">
+			prepaidAmount=#prepaidAmount#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="bookingSource">
+			bookingSource=#bookingSource#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="osta">
+			osta = #osta# 
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="deduct">
+			deduct = #deduct#
+		</isNotEmpty>
+		where masterId=#masterId#
+	</update>
+
+	<update id="updateOstaByMasterIds" parameterClass="Map">
+		update master set osta =#osta#
+		<dynamic prepend="WHERE">
+			masterId in
+			<iterate open="(" close=")" conjunction="," property="masterIds">
+				#masterIds[]# 
+		</iterate>
+		</dynamic>
+	</update>
+
+	<update id="updateDownPmsMsgStatusByMasterId" parameterClass="Map">
+		update master set downPmsMsgStatus =#downPmsMsgStatus# where
+		masterId=#masterId#
+	</update>
+
+	<update id="updateMasterOrderPmsId" parameterClass="masterOrder">
+        update master_order set 
+        pmsId = #pmsId#,
+        updatedBy=#updatedBy#,
+        lastModifyTime=#lastModifyTime#
+        where masterId=#masterId#
+	</update>
+
+	<update id="cancelOrderById" parameterClass="masterOrder">
+    <![CDATA[
+        update master_order set 
+        cancelBy = #cancelBy#,
+        cancelTime=#cancelTime#,
+        cancelType=#cancelType#,
+        cancelReasonCode=#cancelReasonCode#,
+        cancelRef=#cancelRef#,        
+        updatedBy=#updatedBy#,
+		lastModifyTime=#lastModifyTime#    
+        where masterId=#masterId#
+    ]]>
+	</update>
+	
+	<update id="updateDeduct" parameterClass="master">
+		update MASTER set
+		deduct = #deduct# where masterId=#masterId#
+	</update>
+	
+	<update id="updateAccountMsgId" parameterClass="master">
+		update MASTER set accountMsgId = #accountMsgId# where masterId=#masterId#
+	</update>
+
+	<select id="getMasterOrders" resultClass="masterOrder">
+		 <![CDATA[SELECT * FROM master_order WHERE cardNumber IS NOT NULL AND cardNumber !="" AND LENGTH(cardNumber)<=16 ]]>
+	</select>
+
+	<!-- 目前只被淘宝订单使用 -->
+	<select id="getMasterOrder" resultClass="masterOrder">
+		SELECT * from
+		master_order WHERE masterId=#masterId#
+    </select>
+
+	<select id="getMasterRate" resultClass="masterRate">
+		SELECT * from master_rate
+		WHERE masterId=#masterId# order by date 
+    </select>
+
+	<select id="getMasterPackage" resultClass="masterPackage">
+		SELECT * from
+		master_package WHERE masterId=#masterId#
+    </select>
+
+	<select id="getMasterCancel" resultClass="masterCancel">
+		SELECT * from
+		master_cancel WHERE masterId=#masterId#
+    </select>
+
+	<select id="getMasterCancelByObj" resultClass="masterCancel">
+		SELECT * from master_cancel WHERE masterId=#masterId# 
+		<![CDATA[and effectiveDate<=#createdTime# and expireDate>=#createdTime#]]>
+		<isNotEmpty property="isApplyToMonday" prepend="AND">
+			isApplyToMonday=#isApplyToMonday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToTuesday" prepend="AND">
+			isApplyToTuesday=#isApplyToTuesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToWednesday" prepend="AND">
+			isApplyToWednesday=#isApplyToWednesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToThursday" prepend="AND">
+			isApplyToThursday=#isApplyToThursday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToFriday" prepend="AND">
+			isApplyToFriday=#isApplyToFriday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSaturday" prepend="AND">
+			isApplyToSaturday=#isApplyToSaturday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSunday" prepend="AND">
+			isApplyToSunday=#isApplyToSunday#
+		</isNotEmpty>
+	</select>
+
+	<select id="getMasterProfile" resultClass="masterProfile">
+		SELECT * from
+		master_profile WHERE masterId=#masterId# order by createdTime
+    </select>
+
+	<select id="getMaxOrderIdMasterOrder" resultClass="String">
+		SELECT
+		MAX(CAST(SUBSTR(resno,1,8) AS UNSIGNED)) maxOrderId FROM master
+	</select>
+
+	<select id="getMaxProfileIdMasterOrder" resultClass="String">
+		SELECT
+		MAX(CAST(haccnt AS UNSIGNED)) profileId FROM master
+    </select>
+
+	<select id="getHotelIdByMasterId" resultClass="String">
+		SELECT hotelId
+		FROM MASTER WHERE masterId=#masterId#
+	</select>
+
+	<select id="getMasterByCrsno" resultClass="master">
+		SELECT * from master
+		WHERE crsno=#crsno#
+	</select>
+
+	<!-- WBE使用 -->
+	<select id="getParentOrderById" resultClass="master">
+		SELECT
+		m.masterId,m.charge,m.sta FROM MASTER m WHERE m.masterId=#parentId#
+		and m.pcrec="0"
+    </select>
+	<select id="getChildOrderByParentId" resultClass="master">
+		SELECT
+		m.masterId,m.charge,m.rmrate,m.sta,m.name4,m.name2,m.name,mo.`email`,m.`mobile`,mo.`hotelCode`
+		FROM MASTER m INNER JOIN master_order mo ON m.`masterId`=mo.`masterId`
+		WHERE m.pcrec=#parentId# order by masterId
+    </select>
+
+	<!--CCM获取新订单，修改订单，取消订单;WBE中获取25分钟内未支付子订单 -->
+	<select id="getMasterByOsta" resultClass="String"
+		parameterClass="Map">
+		SELECT masterId FROM MASTER where pcrec != "0"
+		<isNotEmpty prepend="AND" property="osta">
+			osta=#osta#
+	    </isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelId">
+			hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="payment">
+			cby="WBE" and payment=#payment# AND pcrec!="" and sta != "CANCEL" and
+			time_to_sec(timediff(now(), changed)) <![CDATA[>=]]>1500
+		</isNotEmpty>
+		order by masterId
+	</select>
+
+	<select id="getMasterOrderByParam" resultClass="master">
+		SELECT
+		m.channelId,m.channel,m.ochannel,m.roomTypeId,m.type,m.otype,m.roomTypeName,m.arr,m.ocheckinDate,m.dep,m.ocheckoutDate,m.gstno,m.ogstno,m.ochild,m.onumberOfRooms,m.sex,m.name,m.name2,m.invoiceTitle,m.customName,m.mobile,m.payment,m.guaranteeDesc,m.ref,m.deduct,
+		m.srqs,m.changed,m.cby,m.charge,m.rmrate,m.setrate,m.staticPackage,m.sta,m.roomno,m.restype,m.haccnt,m.ochainCode,m.hotelId,m.ohotelCode,m.hotelConfirm,m.confirmMethod,
+		m.crsno,m.market,m.source,m.name4,m.currencyCode,m.channelRateId,m.channelRateStart,m.channelRateEnd,m.mfNameCode,m.dateFormat,m.ratePlanId,m.oratePlanCode,m.ratePlanDesc,
+		m.transportID,m.transportTime,m.pcrec,m.lang,m.membershipNumber,m.idcls,m.ident,m.paymentTransaction,m.prepaidAmount,m.bookingSource,m.createBY,
+		m.accountMsgId,m.autoDeposit,m.transactionCode,m.traceDept,m.paymentRemark,m.isDiscount,mo.*
+		FROM MASTER m INNER JOIN master_order mo ON
+		m.masterId = mo.masterId
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="crsno">
+				m.crsno = #crsno#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="masterId">
+				mo.masterId=#masterId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="pcrec">
+				m.pcrec=#pcrec# order
+				by m.masterId
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="pmsId">
+				mo.pmsId=#pmsId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				mo.hotelCode=#hotelCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				m.hotelId=#hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelId">
+				m.channelId=#channelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name1">
+				m.name2=#name1#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getMasterByOrderId" resultClass="master">
+		SELECT masterId,autoDeposit,transactionCode,accountMsgId,charge,currencyCode,paymentTransaction,isDiscount,sta FROM MASTER WHERE masterId=#masterId#
+    </select>
+
+	<select id="countChildOrder" resultClass="Integer">
+		SELECT count(DISTINCT mo.masterId) FROM MASTER m INNER JOIN
+		master_order mo ON m.masterId = mo.masterId
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="parentId">
+				m.pcrec=#parentId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderStatus">
+				m.sta =#orderStatus#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="searchMOrderCount" resultClass="Integer">
+		SELECT count(DISTINCT mo.masterId)
+		FROM MASTER m 
+		INNER JOIN master_order mo 
+		ON m.masterId = mo.masterId 
+		and m.pcrec !="0" 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="crsno">
+				m.crsno = #crsno#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyStart">
+           	<![CDATA[
+            	mo.lastModifyTime >= #lastModifyStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyEnd">
+           	<![CDATA[
+            	mo.lastModifyTime <= #lastModifyEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cancelTimeStart">
+           	<![CDATA[
+            	mo.cancelTime >= #cancelTimeStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cancelTimeEnd">
+           	<![CDATA[
+            	mo.cancelTime <= #cancelTimeEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="orderNo">
+				mo.masterId=#orderNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="pmsId">
+				mo.pmsId=#pmsId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderStatus">
+				m.sta =#orderStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="restype">
+				m.restype =#restype#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				mo.hotelCode LIKE
+				CONCAT('%',#hotelCode#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinStart">
+           	<![CDATA[
+            	m.arr>=#checkinStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinEnd">
+           	<![CDATA[
+            	m.arr<=#checkinEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutStart">
+           	<![CDATA[
+            	m.dep>=#checkoutStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutEnd">
+           	<![CDATA[
+            	m.dep<=#checkoutEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	m.changed >= #createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	m.changed <= #createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="guestName">
+				(m.name LIKE
+				CONCAT('%',#guestName#,'%') or m.name2 LIKE
+				CONCAT('%',#guestName#,'%') or m.name4 LIKE
+				CONCAT('%',#guestName#,'%'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				m.name=#name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				m.channel=#channelCode#
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				mo.chainCode=#chainCode#
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				m.hotelid = #hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCodeList">
+				mo.chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")"
+					conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlan">
+				mo.rateplancode in
+				<iterate property="ratePlan" open="(" close=")" conjunction=",">
+					#ratePlan[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomType">
+				m.type in
+				<iterate property="roomType" open="(" close=")" conjunction=",">
+					#roomType[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="masterIdList">
+				mo.masterId in
+				<iterate property="masterIdList" open="(" close=")"
+					conjunction=",">
+					#masterIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")"
+					conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")"
+					conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				m.downPmsMsgStatus in
+				<iterate property="downPmsMsgStatusList" open="(" close=")"
+					conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="market">
+				m.market = #market#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="marketList">
+				m.market in
+				<iterate property="marketList" open="(" close=")"
+					conjunction=",">
+					#marketList[]#
+            	</iterate>
+			</isNotEmpty>
+			
+		</dynamic>
+	</select>
+
+	<select id="searchOrders" resultClass="master">
+		SELECT
+		m.deduct,m.channel,m.type,m.arr,m.dep,m.gstno,m.sex,m.name,m.name2,m.mobile,m.payment,m.ref,m.changed,m.cby,m.charge,m.sta,m.roomno,m.restype,m.haccnt,m.hotelId,
+		m.crsno,m.market,m.source,m.name4,m.downPmsMsgStatus,m.isDiscount,mo.*
+		,m.createBY
+		FROM MASTER m
+		INNER JOIN master_order mo ON m.masterId = mo.masterId and m.pcrec!="0" 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="crsno">
+				m.crsno = #crsno#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderNo">
+				mo.masterId=#orderNo#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="pmsId">
+				mo.pmsId=#pmsId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderStatus">
+				m.sta =#orderStatus#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="restype">
+				m.restype =#restype#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				mo.hotelCode LIKE
+				CONCAT('%',#hotelCode#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinStart">
+           	<![CDATA[
+            	m.arr>=#checkinStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinEnd">
+           	<![CDATA[
+            	m.arr<=#checkinEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutStart">
+           	<![CDATA[
+            	m.dep>=#checkoutStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutEnd">
+           	<![CDATA[
+            	m.dep<=#checkoutEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	m.changed >= #createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	m.changed <= #createEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="lastModifyStart">
+           	<![CDATA[
+            	mo.lastModifyTime >= #lastModifyStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyEnd">
+           	<![CDATA[
+            	mo.lastModifyTime <= #lastModifyEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cancelTimeStart">
+           	<![CDATA[
+            	mo.cancelTime >= #cancelTimeStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cancelTimeEnd">
+           	<![CDATA[
+            	mo.cancelTime <= #cancelTimeEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="guestName">
+				(m.name LIKE
+				CONCAT('%',#guestName#,'%') or m.name2 LIKE
+				CONCAT('%',#guestName#,'%') or m.name4 LIKE
+				CONCAT('%',#guestName#,'%'))
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				m.name=#name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				m.channel=#channelCode#
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				mo.chainCode=#chainCode#
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				m.hotelid = #hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCodeList">
+				mo.chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")"
+					conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlan">
+				mo.rateplancode in
+				<iterate property="ratePlan" open="(" close=")" conjunction=",">
+					#ratePlan[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomType">
+				m.type in
+				<iterate property="roomType" open="(" close=")" conjunction=",">
+					#roomType[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="masterIdList">
+				mo.masterId in
+				<iterate property="masterIdList" open="(" close=")"
+					conjunction=",">
+					#masterIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")"
+					conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")"
+					conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				m.downPmsMsgStatus in
+				<iterate property="downPmsMsgStatusList" open="(" close=")"
+					conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="orderNos">
+				m.masterId in
+				<iterate property="orderNos" open="(" close=")" conjunction=",">
+					#orderNos[]#
+            	</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="market">
+				m.market = #market#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="marketList">
+				m.market in
+				<iterate property="marketList" open="(" close=")"
+					conjunction=",">
+					#marketList[]#
+            	</iterate>
+			</isNotEmpty>
+			
+		</dynamic>
+		order by m.changed desc
+		<include refid="pageSqlMasterSQL" />
+	</select>
+
+	<select id="searchOrdersOfStayHistory" resultClass="master">
+		SELECT
+		m.channel,m.type,m.arr,m.dep,m.gstno,m.name,m.name2,m.ref,m.charge,m.rmrate,m.setrate,
+		m.sta,m.roomno,m.restype,m.hotelId,m.crsno,m.market,m.source,m.changed,m.isDiscount,
+		m.name4,mo.masterId,mo.hotelCode,mo.ratePlanCode,mo.pmsId,mo.lastModifyTime
+		FROM MASTER m INNER JOIN master_order mo ON m.masterId = mo.masterId
+		and m.pcrec !='0'
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="confirmationIDs">
+				mo.masterId in
+				<iterate property="confirmationIDs" open="(" close=")"
+					conjunction=",">
+					#confirmationIDs[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				m.channel=#channelCode#
+           	</isNotEmpty>
+		</dynamic>
+		order by m.hotelId
+	</select>
+
+	<select id="countOrdersExcel" resultClass="Integer">
+		SELECT count(DISTINCT m.masterId) FROM MASTER m INNER JOIN
+		master_order mo ON m.masterId = mo.masterId and m.pcrec !="0" and
+		mo.pmsId=""
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="crsno">
+				m.crsno = #crsno#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				m.hotelid = #hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")"
+					conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	m.changed >= #createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	m.changed <= #createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")"
+					conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="market">
+				m.market = #market#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="marketList">
+				m.market in
+				<iterate property="marketList" open="(" close=")"
+					conjunction=",">
+					#marketList[]#
+            	</iterate>
+			</isNotEmpty>
+			
+		</dynamic>
+		order by m.changed desc
+	</select>
+
+	<select id="searchOrdersExcel" resultClass="master">
+		SELECT
+		m.deduct,mo.hotelCode,mo.lastModifyTime,m.channel,m.masterId,m.sta,m.arr,m.dep,m.changed,m.type,m.ref,m.payment
+		,m.createBY
+		FROM MASTER m INNER JOIN master_order mo ON m.masterId = mo.masterId
+		and m.pcrec !="0" and mo.pmsId=""
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="crsno">
+				m.crsno = #crsno#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				m.hotelid = #hotelId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")"
+					conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlan">
+				mo.rateplancode in
+				<iterate property="ratePlan" open="(" close=")" conjunction=",">
+					#ratePlan[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomType">
+				m.type in
+				<iterate property="roomType" open="(" close=")" conjunction=",">
+					#roomType[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")"
+					conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	m.changed >= #createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	m.changed <= #createEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="lastModifyStart">
+           	<![CDATA[
+            	mo.lastModifyTime >= #lastModifyStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyEnd">
+           	<![CDATA[
+            	mo.lastModifyTime <= #lastModifyEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cancelTimeStart">
+           	<![CDATA[
+            	mo.cancelTime >= #cancelTimeStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="cancelTimeEnd">
+           	<![CDATA[
+            	mo.cancelTime <= #cancelTimeEnd#
+            ]]>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="orderNos">
+				m.masterId in
+				<iterate property="orderNos" open="(" close=")" conjunction=",">
+					#orderNos[]#
+            	</iterate>
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="market">
+				m.market = #market#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="marketList">
+				m.market in
+				<iterate property="marketList" open="(" close=")"
+					conjunction=",">
+					#marketList[]#
+            	</iterate>
+			</isNotEmpty>
+			
+		</dynamic>
+		order by m.changed desc
+		<include refid="pageSqlMasterSQL" />
+	</select>
+
+	<select id="getMasterAvailableByDate" resultClass="Integer">
+		SELECT SUM(mo.`numberOfUnits`) FROM `master` m,`master_order` mo
+		WHERE
+		m.`masterId` = mo.`masterId`
+		AND mo.`hotelCode` = #hotelCode#
+		AND
+		m.`type` = #roomTypeCode#
+		AND m.`changed` <![CDATA[>]]>
+		#date#
+	</select>
+
+	<select id="searchSummaryOrders" resultClass="masterVO">
+		SELECT m.channel,m.sta,mo.hotelCode,COUNT(*) numberOfOrders,SUM(mo.numberOfUnits) numberOfUnits,
+			SUM(IF(DATEDIFF(m.dep, m.arr) = 0,1,DATEDIFF(m.dep, m.arr))) sumArrDays,
+		  	SUM(m.charge) totalCharge
+		FROM MASTER m INNER JOIN master_order mo ON m.masterId = mo.masterId AND m.pcrec !="0"
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinStart">
+           		<![CDATA[ m.arr>=#checkinStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinEnd">
+           		<![CDATA[ m.arr<=#checkinEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCodeList">
+				mo.chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutStart">
+           		<![CDATA[ m.dep>=#checkoutStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutEnd">
+           		<![CDATA[ m.dep<=#checkoutEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           		<![CDATA[ m.changed >= #createStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           		<![CDATA[ m.changed <= #createEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyStart">
+           		<![CDATA[ mo.lastModifyTime >= #lastModifyStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyEnd">
+           		<![CDATA[ mo.lastModifyTime <= #lastModifyEnd# ]]>
+			</isNotEmpty>
+		</dynamic>
+		GROUP BY m.channel,m.sta,mo.hotelCode,mo.chainCode
+		<include refid="pageSqlMasterSQL" />
+	</select>
+
+	<select id="searchSummaryOrdersCount" resultClass="Integer">
+		SELECT COUNT(1) FROM
+		(SELECT m.channel,m.sta,mo.hotelCode,mo.chainCode FROM MASTER m
+		INNER JOIN master_order mo ON m.masterId = mo.masterId AND m.pcrec!="0"
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelCodeList">
+				m.channel in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinStart">
+           		<![CDATA[ m.arr>=#checkinStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkinEnd">
+           		<![CDATA[ m.arr<=#checkinEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCodeList">
+				mo.chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutStart">
+           		<![CDATA[ m.dep>=#checkoutStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="checkoutEnd">
+           		<![CDATA[ m.dep<=#checkoutEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           		<![CDATA[ m.changed >= #createStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           		<![CDATA[ m.changed <= #createEnd# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="statusList">
+				m.sta in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyStart">
+           		<![CDATA[ mo.lastModifyTime >= #lastModifyStart# ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyEnd">
+           		<![CDATA[ mo.lastModifyTime <= #lastModifyEnd# ]]>
+			</isNotEmpty>
+		</dynamic>
+		GROUP BY m.channel,m.sta,mo.hotelCode,mo.chainCode
+		) res
+	</select>
+
+	<select id="getMasterRateByOrderNoDay" resultClass="masterRate"
+		parameterClass="Map">
+		SELECT * from master_rate WHERE masterId=#masterId# AND
+		DATE= #date#
+    </select>
+
+	<select id="getFirstMasterRateByOrderNo" resultClass="masterRate"
+		parameterClass="Map">
+		SELECT mr.* FROM MASTER m LEFT JOIN master_rate mr ON
+		m.`masterId` = mr.`masterId`
+		AND DATE_FORMAT(m.`arr`, '%Y-%m-%d') =
+		DATE_FORMAT(mr.`date`, '%Y-%m-%d')
+		WHERE m.`masterId` = #masterId# ;
+	</select>
+
+	<select id="getMarketsByHotelId" resultClass="String"
+		parameterClass="String">
+		SELECT DISTINCT market FROM MASTER
+		where
+		hotelId=#hotelId#
+	</select>
+
+	<select id="getAllList" resultClass="master">
+	 <![CDATA[
+	 SELECT mo.masterId,mo.cardNumber
+		FROM MASTER m INNER JOIN master_order mo ON
+		m.masterId = mo.masterId
+		where  LENGTH(mo.cardNumber)>=32 ]]>
+	</select>
+
+	<select id="getMasterByArrSta" resultClass="master" parameterClass="Map">
+
+		SELECT m.`masterId`, m.`arr`, m.`sta`,m.`hotelid`,m.channelId FROM MASTER m LEFT
+		JOIN hotel h ON m.`hotelid`=h.`hotelId`LEFT JOIN master_order mo  ON m.`masterId`=mo.`masterId`
+		WHERE mo.pmsId = ''
+		<isNotEmpty prepend="AND" property="sta">
+			m.`sta` = #sta#
+		</isNotEmpty>
+		  <![CDATA[
+		  AND m.`changed`<= #changed#
+        ]]>
+        
+         <![CDATA[
+		  AND m.`changed`>= #createdTime#
+        ]]>
+        
+		AND m.`masterId`!=''
+		AND m.`pcrec`!='0'
+		AND h.`isMasterListener`=1
+	</select>
+
+	<select id="getMasterCancelByArrSta" resultClass="master" parameterClass="Map">
+		SELECT m.`masterId`, m.`arr`, m.`sta`,m.`hotelid`,m.channelId FROM MASTER m LEFT
+		JOIN hotel h ON m.`hotelid`=h.`hotelId` AND h.`isMasterListener`=1
+		LEFT JOIN master_order mo ON m.`masterId`=mo.masterId
+		WHERE m.`cancelPmsId`!=#cancelPmsId#
+				and m.`sta` in('CANCEL','HARDCANCEL') 
+		  <![CDATA[
+		 AND  mo.cancelTime <= #cancelTime#
+        ]]>
+        <![CDATA[
+		 AND  mo.cancelTime >= #createdTime#
+        ]]>
+		AND m.`masterId`!=''
+		AND m.`pcrec`!='0'
+		AND h.`isMasterListener`=1
+	</select>
+
+	<insert id="saveMasterPms" parameterClass="masterPms">
+		insert into master_pms
+		(hotelId,masterId,sta,number,createdBy,createdTime,updatedBy,lastModifyTime,arr,channelId)
+		values(#hotelId#,#masterId#,#sta#,#number#,#createdBy#,#createdTime#,#updatedBy#,#lastModifyTime#,#arr#,#channelId#)
+	</insert>
+
+	<update id="updateMasterPms" parameterClass="Map">
+		update master_pms
+		set number=#number# ,sta=#sta#,arr=#arr# where masterId=#masterId#
+	</update>
+
+	<delete id="deleteMasterPms" parameterClass="map">
+		delete from master_pms where
+		masterId in
+		<iterate property="masterIdList" open="(" close=")"
+			conjunction=",">
+			#masterIdList[]#
+          	</iterate>
+	</delete>
+
+	<select id="getHasPmsIdMaster" resultClass="String">
+		SELECT
+		mp.`masterId` FROM master_pms mp LEFT JOIN master_order mo ON
+		mo.`masterId`=mp.`masterId` WHERE mp.`sta` = 'ADD'  AND mo.`pmsId`!=''
+	</select>
+	
+	<select id="getAllMasterPms" resultClass="masterPms">
+		<![CDATA[
+		SELECT * from master_pms 
+		]]>
+	</select>
+
+	<select id="getHasCancelIdMaster" resultClass="String">
+		SELECT   mp.`masterId`  FROM  master_pms mp  LEFT JOIN MASTER m  ON m.`masterId` = mp.`masterId` 
+		WHERE mp.`sta` = 'CANCEL'   AND m.`cancelPmsId`!=#sta# AND m.`cancelPmsId` IS NOT NULL
+	</select>
+	
+	<select id="getNonePmsIdMasterByCancel" resultClass="String">
+		SELECT   mp.`masterId`  FROM  master_pms mp  LEFT JOIN master_order mo  ON mo.`masterId` = mp.`masterId` INNER JOIN MASTER m ON m.masterId=mo.masterId
+		WHERE (m.`sta` = 'CANCEL' OR m.`sta`='HARDCANCEL')   AND (mo.`pmsId`=''  OR mo.`pmsId` IS NULL)
+	</select>
+
+	<select id="getChannelOrders" resultClass="channelOrder">
+	 <![CDATA[
+		SELECT
+		h.hotelName,
+		c.channelCode,
+		COUNT(m.masterId) countOfOrder,
+		SUM(DATEDIFF(DATE_FORMAT(m.dep,'%Y-%m-%d'),DATE_FORMAT(m.arr,'%Y-%m-%d'))*mo.numberOfUnits)
+		totalRoomNights,
+		SUM(ROUND(m.charge,2)) totalAmountOfOrders
+		FROM
+		mc.master m
+	 ]]>
+		INNER JOIN mc.master_order mo
+		ON mo.masterId = m.masterId
+		AND DATE_FORMAT(m.changed,'%Y-%m-%d') = #changedStr#
+		AND m.sta!='HARDCANCEL'
+		AND m.sta!='CANCEL'
+		
+		INNER JOIN mc.hotel_i18n h
+		ON h.languageCode = #languageCode#
+		AND h.delflag=0
+		AND h.hotelId = m.hotelid
+		AND h.hotelId = #hotelId#
+		
+		INNER JOIN mc.channel c
+		ON c.channelId = m.channelId
+		
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="channelCodeList">
+					m.channel in
+					<iterate property="channelCodeList" open="(" close=")"
+						conjunction=",">
+						#channelCodeList[]#
+	            	</iterate>
+			</isNotEmpty>
+		</dynamic>
+		
+		GROUP BY h.hotelName,c.channelCode
+
+	</select>
+
+	<select id="getCreatedOrderHistoryYesterDay" resultClass="owsReservation">
+		SELECT 
+	  m.masterId AS id,
+	  'OWS' AS fromSource, 
+	  'CCM' AS chainCode,
+	  'CCM' AS chainName,
+	  m.masterId AS confirmationNo,
+	  h.hotelcode AS resortCode,
+	  hi.hotelName AS resortName,
+	  m.channel AS channelCode,
+	  m.channel AS channelDes,
+	  m.arr AS arrivalDate,
+	  m.dep AS departureDate,
+	  m.type AS roomType,
+	  mo.rateplancode AS rateCode,
+	  m.name AS guestLastName,
+	  m.name2 AS guestFirstName,
+	  mo.numberOfUnits AS numOfRooms,
+	  DATEDIFF(
+	    DATE_FORMAT(m.dep, '%Y-%m-%d'),
+	    DATE_FORMAT(m.arr, '%Y-%m-%d')
+	  ) * mo.numberOfUnits AS roomNights,
+	  IFNULL(mr.rmrate, 0) + IFNULL(mr.setrate, 0) AS rate,
+	  m.charge AS totalRate,
+	  m.deduct AS deduct,
+	  m.changed AS originBookingDate,
+	  mo.lastModifyTime AS updateBookingDate,
+	  m.sta AS STATUS,
+	  m.crsno AS channelUniqueResID,
+	  m.payment AS guaranteeType 
+	FROM
+	  MASTER m 
+	  INNER JOIN hotel h 
+	    ON h.hotelid = m.hotelid 
+	  LEFT JOIN hotel_i18n hi
+   		ON h.hotelid=hi.hotelid
+   		AND hi.languageCode='zh_CN'
+   		AND hi.delflag=0
+	  INNER JOIN master_order mo 
+	    ON m.masterid = mo.masterid 
+	    AND  m.channel='OWS'
+	  INNER JOIN master_rate mr 
+	    ON mr.masterid = m.masterid 
+	    AND m.arr = mr.date 
+	    AND m.pcrec = '0'
+	    AND DATE_FORMAT(m.changed, '%Y-%m-%d')=#effectiveDate#
+	</select>
+	
+	<select id="getModifedOrderHistoryYesterDay"  resultClass="owsReservation">
+		SELECT 
+	  m.masterId AS id,
+	  'OWS' AS fromSource, 
+	  'CCM' AS chainCode,
+	  'CCM' AS chainName,
+	  m.masterId AS confirmationNo,
+	  h.hotelcode AS resortCode,
+	  hi.hotelName AS resortName,
+	  m.channel AS channelCode,
+	  m.channel AS channelDes,
+	  m.arr AS arrivalDate,
+	  m.dep AS departureDate,
+	  m.type AS roomType,
+	  mo.rateplancode AS rateCode,
+	  m.name AS guestLastName,
+	  m.name2 AS guestFirstName,
+	  mo.numberOfUnits AS numOfRooms,
+	  DATEDIFF(
+	    DATE_FORMAT(m.dep, '%Y-%m-%d'),
+	    DATE_FORMAT(m.arr, '%Y-%m-%d')
+	  ) * mo.numberOfUnits AS roomNights,
+	  IFNULL(mr.rmrate, 0) + IFNULL(mr.setrate, 0) AS rate,
+	  m.charge AS totalRate,
+	  m.deduct AS deduct,
+	  m.changed AS originBookingDate,
+	  mo.lastModifyTime AS updateBookingDate,
+	  m.sta AS STATUS,
+	  m.crsno AS channelUniqueResID,
+	  m.payment AS guaranteeType 
+	FROM
+	  MASTER m 
+	  INNER JOIN hotel h 
+	    ON h.hotelid = m.hotelid 
+	  LEFT JOIN hotel_i18n hi
+   		ON h.hotelid=hi.hotelid
+   		AND hi.languageCode='zh_CN'
+   		AND hi.delflag=0
+	  INNER JOIN master_order mo 
+	    ON m.masterid = mo.masterid 
+	    AND  m.channel='OWS'
+	  INNER JOIN master_rate mr 
+	    ON mr.masterid = m.masterid 
+	    AND m.arr = mr.date 
+	    AND m.pcrec = '0'
+	    AND DATE_FORMAT(mo.lastmodifytime, '%Y-%m-%d')=#effectiveDate#
+	</select>
+	
+	<update id="updateCancelPmsId" parameterClass="Map">
+		UPDATE MASTER SET cancelPmsId=#cancelPmsId# WHERE masterid=#masterId#;
+	</update>
+	
+	<select id="getMasterPmsListBYCreatedTime" resultClass="String">
+		<![CDATA[
+			SELECT masterid FROM master_pms WHERE createdTime<=#time#
+		]]>
+	</select>
+	
+	
+</sqlMap>

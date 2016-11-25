@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoleSQL">
+
+	<typeAlias alias="role" type="com.ccm.api.model.user.Role" />
+
+	<typeAlias alias="userRoleVO" type="com.ccm.api.model.user.vo.UserRoleVO" />
+	
+	<typeAlias alias="roleCriteria" type="com.ccm.api.model.role。RoleCriteria" />
+	
+
+	<insert id="addRole" parameterClass="role">
+    <![CDATA[
+        insert into role (roleId, name, cnName, companyId, description, usescope, createdBy, createdTime, delFlag) 
+        values (#roleId#, #name#, #cnName#, #companyId#, #description#, #usescope#, #createdBy#, #createdTime#, #delFlag#)
+    ]]>
+	</insert>
+
+	<delete id="removeRoleByName">
+    <![CDATA[
+        delete from role where name=#name#
+    ]]>
+	</delete>
+
+	<update id="deleteRole">
+	    <![CDATA[
+	        update role set delflag=1 where roleId=#roleId#
+	    ]]>
+	</update>
+	
+	<update id="updateRole" parameterClass="role">
+    <![CDATA[
+        update role set name = #name#, description = #description#, cnName = #cnName#, companyId = #companyId#, usescope = #usescope#,
+		updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime# 
+        where roleid=#roleId#
+    ]]>
+	</update>
+
+	<select id="getRoleByName" resultClass="role">
+    <![CDATA[
+        select * from role where name=#name#
+    ]]>
+	</select>
+
+	<select id="getAuthedRoles" resultClass="userRoleVO">
+    <![CDATA[
+         SELECT ur.userId,ur.hotelId,r.roleId,r.cnName as roleCnName,r.name 
+         FROM userrole  ur JOIN role  r ON ur.roleId = r.roleId WHERE ur.userid=#userid#
+    ]]>
+	</select>
+
+	 <select id="searchRoles" resultClass="com.ccm.api.model.user.Role" >
+        select * from role where delflag=0 and isShow = 1
+        <isNotEmpty prepend="AND" property="roleCode">
+				name=#roleCode#
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roleName">
+				cnName = #roleName# 
+           </isNotEmpty>
+    </select>
+    
+     <select id="searchRolesCount" resultClass="Integer">
+        select count(*) from role where delflag=0 and isShow = 1
+        	<isNotEmpty prepend="AND" property="roleCode">
+				name=#roleCode#
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roleName">
+				cnName = #roleName# 
+           </isNotEmpty>
+    </select>
+    
+    <select id="getRole" resultClass="role">
+    <![CDATA[
+        select * from role where roleId=#roleId#
+    ]]>
+	</select>
+	
+	<select id="getAllShowedRoles" resultClass="role">
+    <![CDATA[
+        select * from role where delflag=0 and isShow =1
+    ]]>
+	</select>
+	
+	<select id="getRoleIdsByUserId" resultClass="String">
+    <![CDATA[
+         SELECT distinct roleId 
+         FROM userrole  
+         WHERE delFlag =0 and userid=#userid#
+    ]]>
+	</select>
+	
+	<select id="getRoleCountByName"  resultClass="Integer">
+    <![CDATA[
+        select count(*) from role where delflag=0 and isShow =1 and name=#name#
+    ]]>
+	</select>
+	
+</sqlMap>

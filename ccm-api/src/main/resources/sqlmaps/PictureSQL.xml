@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PictureSQL">
+
+	<typeAlias alias="picture" type="com.ccm.api.model.common.Picture" />
+
+	<typeAlias alias="pictureVO" type="com.ccm.api.model.base.vo.PictureVO" />
+
+	<resultMap id="pictureResult" class="picture">
+
+		<result property="picId" column="picId" />
+
+		<result property="cateId" column="cateId" />
+
+		<result property="picSysName" column="picSysName" />
+
+		<result property="fileFileName" column="fileFileName" />
+
+		<result property="specName" column="specName" />
+
+		<result property="url" column="url" />
+
+		<result property="picName" column="picName" />
+
+		<result property="bizId" column="bizId" />
+
+		<result property="bizType" column="bizType" />
+
+		<result property="createdTime" column="createdTime" jdbcType="DATETIME" />
+
+		<result property="srcFlag" column="srcFlag" />
+
+		<result property="cutFlag" column="cutFlag" />
+
+		<result property="defaultFlag" column="defaultFlag" />
+
+		<result property="width" column="width" />
+
+		<result property="height" column="height" />
+
+	</resultMap>
+
+	<resultMap id="pictureNameUrlResultMap" class="java.util.HashMap">
+		<result property="title" column="title" />
+		<result property="url" column="url" />
+	</resultMap>
+
+	<insert id="addPicture" parameterClass="picture">
+    <![CDATA[
+        insert into picture
+                (picId, cateId, picSysName,fileFileName, specName, url,picName,
+                   bizId, bizType,createdTime,srcFlag,cutFlag, defaultFlag,width,height,channelCode)
+        values (#picId#, #cateId#, #picSysName#,#fileFileName#,#specName#, #url#,#picName#,
+                #bizId#, #bizType#,#createdTime#, #srcFlag#, #cutFlag#, #defaultFlag#,#width#,#height#,#channelCode#)
+    ]]>
+	</insert>
+
+
+	<update id="updatePicture" parameterClass="picture">
+    <![CDATA[
+        update picture SET         
+            cateId = #cateId#,
+            picSysName = #picSysName#,  
+            fileFileName    = #fileFileName#,      
+            specName = #specName#,
+            url = #url#,
+            picName = #picName#,
+            bizId = #bizId#,
+            bizType = #bizType#,
+            createdTime=#createdTime#,
+            srcFlag = #srcFlag#,
+            cutFlag = #cutFlag#,
+            defaultFlag = #defaultFlag#,
+             width = #width#,
+            height = #height#,
+            channelCode=#channelCode# 
+        where picId = #picId#
+    ]]>
+	</update>
+	
+	<update id="updatePictureBizIdToPId" parameterClass="Map">
+    <![CDATA[
+        update picture SET         
+            bizId = #pId#
+        where bizId = #bizId#
+    ]]>
+	</update>
+
+	<select id="getPicture" resultMap="pictureResult" parameterClass="java.lang.String">
+    <![CDATA[
+        select * from picture where picId=#picId#
+    ]]>
+	</select>
+
+	<select id="searchPicture" resultMap="pictureResult">
+		select * from picture
+		<dynamic prepend="WHERE">
+
+			<isNotEmpty prepend="AND" property="bizId">
+				bizId = #bizId# 
+	           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="bizType">
+				bizType = #bizType# 
+	        </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cateId">
+				cateId = #cateId# 
+	        </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="picSysName">
+				picSysName = #picSysName# 
+	        </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="specName">
+				specName = #specName# 
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="picName">
+				picName LIKE CONCAT('%',#picName#,'%')
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="srcFlag">
+				srcFlag = #srcFlag# 
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cutFlag">
+				cutFlag = #cutFlag# 
+			</isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="defaultFlag">
+				defaultFlag = #defaultFlag# 
+			</isNotEmpty>
+
+		</dynamic>
+		order by createdTime
+	</select>
+
+	<select id="getDefaultPicture" resultClass="picture" parameterClass="Map">
+    <![CDATA[
+        select * from picture where bizId   = #bizId# and bizType   = #bizType# and defaultFlag=1 
+    ]]>
+	</select>
+
+	<select id="getUploadChannelPicture" resultClass="picture" parameterClass="Map">
+    <![CDATA[
+        select * from picture where 
+        bizId   = #bizId# and bizType   = #bizType# and defaultFlag=0 
+        and  (channelCode is null or channelCode='')
+    ]]>
+	</select>
+
+	<delete id="deletePicture" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from picture where picId = #picId#
+    ]]>
+	</delete>
+	
+	<delete id="deletePictureByBizId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from picture where bizId = #bizId#
+    ]]>
+	</delete>
+
+	<select id="searchPictureForCut" resultMap="pictureResult">
+		select * from picture where 1=1 and bizType in ('2','3')
+		<dynamic prepend="AND">
+
+			<isNotEmpty prepend="AND" property="bizId">
+				bizId = #bizId# 
+           </isNotEmpty>
+
+
+
+			<isNotEmpty prepend="AND" property="cateId">
+				cateId = #cateId# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="picSysName">
+				picSysName = #picSysName# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="specName">
+				specName = #specName# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="picName">
+				picName LIKE CONCAT('%',#picName#,'%') 
+           </isNotEmpty>
+
+
+			<isNotEmpty prepend="AND" property="srcFlag">
+				srcFlag = #srcFlag# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="cutFlag">
+				cutFlag = #cutFlag# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="defaultFlag">
+				defaultFlag = #defaultFlag# 
+           </isNotEmpty>
+
+
+		</dynamic>
+	</select>
+
+
+
+	<select id="getPictureCountByBizTypeBizId" resultClass="Integer">
+    <![CDATA[
+        select count(picId) from picture where bizId= #bizId# and  bizType= #bizType#
+    ]]>
+	</select>
+
+	<select id="getPictureOfHotelAndRooomType" resultMap="pictureResult" parameterClass="java.lang.String">
+		select p.*
+		from picture p
+		inner join roomType rt on rt.roomTypeId = p.bizId
+		where rt.hotelId = #hotelId#
+		AND (rt.delFlag = 0 OR rt.delFlag IS NULL) and p.bizType = 3
+		union
+		select p.*
+		from picture p
+		where bizId = #hotelId# and p.bizType = 2
+    </select>
+
+	<select id="getPictureNameAndUrl" resultMap="pictureNameUrlResultMap" parameterClass="Map">
+    <![CDATA[
+    	select  b.picName as title ,CONCAT(#pictureUrlContext#,a.url) as url from picture a 
+			left join 
+			(select picSysName,picName from picture where bizType= #bizType# and bizId=#bizId# and srcFlag = '1' )
+ 		b on a.picSysName = b.picSysName where  a.bizType= #bizType# and a.bizId=#bizId# and a.specName = #specName# 
+    ]]>
+	</select>
+	<select id="getPictureByBizTypeBizIdList" resultMap="pictureResult">
+		select * from picture where bizType= #bizType# and
+		bizId in
+		<iterate property="bizIdList" open="(" close=")" conjunction=",">
+			#bizIdList[]#
+         </iterate>
+	</select>
+
+	<select id="getDefPicture" resultMap="pictureNameUrlResultMap" parameterClass="Map">
+    <![CDATA[
+	SELECT CONCAT(#pictureUrlContext#,a.url) as url,b.picName as title FROM picture a
+	RIGHT JOIN (SELECT picName,picSysName FROM picture WHERE bizId = #bizId# AND bizType = #bizType# AND defaultFlag = '1' and srcFlag = '1') b 
+	ON a.picSysName = b.picSysName
+	WHERE a.bizId = #bizId# AND a.specName = #specName# AND a.biztype = #bizType# 
+    ]]>
+	</select>
+
+	<select id="getDefPicturelist" resultClass="pictureVO">
+		SELECT CONCAT(#pictureUrlContext#,a.url) as url,b.picName as title, a.bizId ,a.bizId as roomTypeId
+		FROM picture a
+		RIGHT JOIN (SELECT picName,picSysName
+		FROM picture WHERE
+		bizId in
+		<iterate property="bizIdList" open="(" close=")" conjunction=",">
+			#bizIdList[]#
+         </iterate>
+		AND bizType = #bizType# AND defaultFlag = '1' and srcFlag = '1') b
+		ON a.picSysName = b.picSysName
+		WHERE a.specName = #specName# AND a.biztype = #bizType# and
+		a.bizId in
+		<iterate property="bizIdList" open="(" close=")" conjunction=",">
+			#bizIdList[]#
+         </iterate>
+	</select>
+
+
+	<select id="queryPicture" resultClass="picture">
+
+		SELECT cp.picId,p.bizId,p.bizType,p.picName,cp.url,p.defaultFlag,p.picSysName FROM
+		(SELECT * FROM picture sp WHERE sp.srcFlag='1'
+
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="bizId">
+				sp.bizId = #bizId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizType">
+				sp.bizType = #bizType# 
+           </isNotEmpty>
+
+		</dynamic>
+
+		) p
+		LEFT JOIN (SELECT * FROM picture cutp WHERE cutp.srcFlag ='0'
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="bizId">
+				cutp.bizId = #bizId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizType">
+				cutp.bizType = #bizType# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="specName">
+				cutp.specName = #specName# 
+           </isNotEmpty>
+		</dynamic>
+
+		) cp ON p.picSysName=cp.picSysName
+
+	</select>
+
+	<update id="updateDefaultFlag">
+	<![CDATA[
+	update picture set defaultFlag=0 where bizType=#bizType# and bizId=#bizId#;
+	]]>
+	</update>
+
+	<update id="updatePictureSetDefaultFlag">
+	<![CDATA[
+	update picture set defaultFlag=1 where picId=#picId#;
+	]]>
+	</update>
+
+	<update id="updateOtherToNotDefault" parameterClass="Map">
+    <![CDATA[
+        update picture SET 
+                defaultFlag = '0'
+        where bizId= #bizId# and  bizType= #bizType# and srcFlag='1' and picId != #picId#
+    ]]>
+	</update>
+
+	<delete id="delCurrentFileCut" parameterClass="Map">
+    <![CDATA[
+        delete from picture where srcFlag = '0'
+    ]]>
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="bizId">
+				bizId = #bizId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizType">
+				bizType = #bizType# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="picSysName">
+				picSysName = #picSysName# 
+           </isNotEmpty>
+		</dynamic>
+
+	</delete>
+
+
+</sqlMap>

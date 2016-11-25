@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RefundSQL">
+
+	<typeAlias alias="refund" type="com.ccm.api.model.user.Refund" />
+
+	<sql id="pageSqlRefundSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+	<select id="getRefund" resultClass="refund">
+    <![CDATA[
+        select * from refund where refundId=#refundId#
+    ]]>
+	</select>
+
+	<insert id="addRefund" parameterClass="refund">
+    <![CDATA[
+        insert into refund (refundId, userId, reason) 
+        values (#refundId#, #userId#, #reason#)
+    ]]>
+	</insert>
+
+	<insert id="batchInsertRefund" parameterClass="List">
+		insert into refund (refundId, userId, reason) values
+		<iterate conjunction=",">
+			<![CDATA[ 
+            (#rList[].refundId#, #rList[].userId#, #rList[].reason#) 
+        ]]>
+		</iterate>
+	</insert>
+
+	<update id="updateRefund" parameterClass="refund">
+    <![CDATA[
+        update refund set reason=#reason# 
+        where refundId=#refundId#
+    ]]>
+	</update>
+
+	<delete id="deleteRefund">
+    <![CDATA[
+        delete from refund where refundId=#refundId#
+    ]]>
+	</delete>
+
+	<select id="searchRefundCount" resultClass="Integer">
+		SELECT count(refundId) FROM refund
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="reason">
+				reason LIKE CONCAT('%',#reason#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="userId">
+				userId = #userId# 
+           </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="searchRefunds" resultClass="refund">
+
+		SELECT * FROM refund
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="reason">
+				reason LIKE CONCAT('%',#reason#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="userId">
+				userId = #userId# 
+           </isNotEmpty>
+		</dynamic>
+		<include refid="pageSqlRefundSQL"/>
+	</select>
+
+	<select id="countRefundByUserId" resultClass="Integer">
+		SELECT count(refundId) FROM refund where userId = #userId#
+	</select>
+
+</sqlMap>

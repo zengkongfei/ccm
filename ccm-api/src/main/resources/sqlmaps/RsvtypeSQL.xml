@@ -1,0 +1,743 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RsvtypeSQL">
+	<typeAlias alias="rsvtype" type="com.ccm.api.model.rsvtype.Rsvtype" />
+	<typeAlias alias="roomStatusVO" type="com.ccm.api.model.rsvtype.vo.RoomStatusVO" />
+	<typeAlias alias="roomRateRSVO" type="com.ccm.api.model.ws.vo.availability.RoomRateRSVO" />
+	<typeAlias alias="fetchCalendarRSVO" type="com.ccm.api.model.ws.vo.fetchCalendar.FetchCalendarRSVO" />
+	<typeAlias alias="rent" type="com.ccm.api.model.rsvtype.Rent"/>
+	<typeAlias alias="rateCodeWithRoomVO" type="com.ccm.api.model.rsvtype.vo.RateCodeWithRoomVO" />
+
+	<sql id="pageSqlRsvtypeSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+	<resultMap id="available" class="com.ccm.api.model.rsvtype.vo.RsvtypeVO">
+		<result property="count" column="count" columnIndex="2" />
+		<result property="available" column="available" columnIndex="1" />
+	</resultMap>
+
+	<insert id="addRsvtype" parameterClass="rsvtype">
+		insert into rsvtype(rsvtypeId,hotelid,date,type,available,unavailable,outoforder,definite,channel,
+		houseOverbook,generic,physicalRooms,roomTypeOverbook,adultsInHouse,childrenInHouse,
+		arrivalRooms,departureRooms,blockCount,resvCount,hotelCode,
+		overbookAmount,createdBy,createdTime,delFlag,overBooking,totalOBSold)
+		values(#rsvtypeId#,#hotelid#,#date#,
+		REPLACE(REPLACE(#type#,' ',''),'　',''),
+		#available#,#unavailable#,#outoforder#,#definite#,
+		REPLACE(REPLACE(#channel#,' ',''),'　',''),
+		#houseOverbook#,#generic#,#physicalRooms#,#roomTypeOverbook#,#adultsInHouse#,#childrenInHouse#,
+		#arrivalRooms#,#departureRooms#,#blockCount#,#resvCount#,
+		REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+		#overbookAmount#,#createdBy#,#createdTime#,#delFlag#,#overBooking#,#totalOBSold#)
+	</insert>
+	
+	<insert id="addRsvtypeByBlock" parameterClass="rsvtype">
+		insert into rsvtype(rsvtypeId,date,type,hotelCode,delFlag)values(#rsvtypeId#,#date#,#type#,#hotelCode#,#delFlag#)
+	</insert>
+	
+	<insert id="addBatchRsvtypes" parameterClass="java.util.List">
+	    <![CDATA[
+	        insert into rsvtype(rsvtypeId,hotelid,date,type,available,unavailable,outoforder,definite,channel,
+					houseOverbook,generic,physicalRooms,roomTypeOverbook,adultsInHouse,childrenInHouse,
+					arrivalRooms,departureRooms,blockCount,resvCount,hotelCode,
+					overbookAmount,createdBy,createdTime,updatedBy,lastModifyTime,delFlag,overBooking,totalOBSold)
+	        values
+	    ]]>
+		<iterate conjunction=",">
+	      <![CDATA[
+	          (
+	              #list[].rsvtypeId#,
+	              #list[].hotelid#,
+	              #list[].date#,
+	              REPLACE(REPLACE(#list[].type#,' ',''),'　',''),
+	              #list[].available#,
+	              #list[].unavailable#,
+	              #list[].outoforder#,
+	              #list[].definite#,
+	              REPLACE(REPLACE(#list[].channel#,' ',''),'　',''),
+	              #list[].houseOverbook#,
+	              #list[].generic#,
+	              #list[].physicalRooms#,
+	              #list[].roomTypeOverbook#,
+	              #list[].adultsInHouse#,
+	              #list[].childrenInHouse#,
+	              #list[].arrivalRooms#,
+	              #list[].departureRooms#,
+	              #list[].blockCount#,
+	              #list[].resvCount#,
+	              REPLACE(REPLACE(#list[].hotelCode#,' ',''),'　',''),
+	              #list[].overbookAmount#,
+	              #list[].createdBy#,
+	              #list[].createdTime#,
+	              #list[].updatedBy#,
+	              #list[].lastModifyTime#,
+	              #list[].delFlag#,
+	              #list[].overBooking#,
+	              #list[].totalOBSold#
+	          )
+	      ]]>
+		</iterate>
+	</insert>
+	
+	<delete id="deleteBatchRsvtypes" parameterClass="java.util.List">
+		<![CDATA[
+			delete from rsvtype where 1=1 
+		]]>
+		and rsvtypeId in
+		<iterate open="(" close=")" conjunction=",">
+			<![CDATA[
+				#list[].rsvtypeId#
+			]]>
+		</iterate>
+	</delete>
+	
+	
+	<select id="searchResvType" parameterClass="rsvtype" resultClass="rsvtype">
+		select *from rsvtype rsv where 1=1
+			<isNotEmpty prepend="AND" property="hotelCode">
+				rsv.hotelCode = #hotelCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="type">
+				rsv.type = #type#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="channel">
+				rsv.channel = #channel#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="date">
+				rsv.date = #date#
+	        </isNotEmpty>
+	</select>
+	
+	<select id="getRsvtypeByHotelIdDateType" parameterClass="rsvtype">
+		select * from rsvtype where hotelid = #hotelid# and date=#date# and type = #type#
+	</select>
+
+	<select id="getRsvtype" resultClass="rsvtype">
+		select * from rsvtype
+		where hotelCode = #hotelCode#
+		and date = #date#
+		and type = #type#
+		and delflag='0'
+	</select>
+	
+	<select id="getRsvtypeById" resultClass="rsvtype">
+		select * from rsvtype
+		where rsvtypeId=#rsvtypeId#
+		and delflag='0'
+	</select>
+	
+	<select id="getRsvtypeByDateSpan" resultClass="rsvtype">
+		select * from rsvtype
+		where hotelCode = #hotelCode#
+		and type in 
+		<iterate open="(" close=")" conjunction="," property="roomTypeCodes">
+			<![CDATA[ #roomTypeCodes[]# ]]>
+		</iterate>
+		and date  <![CDATA[ >=  #dateStart# ]]>
+		and date  <![CDATA[ <=  #dateEnd#   ]]>
+	</select>
+
+	<select id="getRsvtypeByHotelRoomDate" resultClass="rsvtype">
+		select * from rsvtype
+		where hotelCode = #hotelCode#
+		<isNotEmpty prepend="AND" property="roomTypeCode">
+			`type` = #roomTypeCode#
+	        </isNotEmpty>
+		and date  <![CDATA[ >=  #startDate# ]]>
+		and date  <![CDATA[ <  #endDate#   ]]>
+		ORDER BY `date`
+	</select>
+
+	<select id="getResvTypeAvail" parameterClass="Map" resultMap="available">
+	<![CDATA[
+		SELECT MIN(IF(freeSell=0,0,(IFNULL(PhysicalRooms,0) + IFNULL(roomTypeOverbook,0) - IFNULL(unavailable,0) - IFNULL(outoforder,0)))) as available,COUNT(1) count FROM rsvtype 
+		WHERE hotelCode = #hotelCode# 
+		AND DATE <#checkoutDate# AND DATE>=#checkinDate# 
+		AND TYPE = #type# 
+		GROUP BY TYPE
+	]]>
+	</select>
+	
+	<select id="getResvTypeAvailByDay" parameterClass="Map" resultMap="available">
+	<![CDATA[
+		SELECT MIN(IF(freeSell=0,0,(IFNULL(PhysicalRooms,0) + IFNULL(roomTypeOverbook,0) - IFNULL(unavailable,0) - IFNULL(outoforder,0)))) as available,COUNT(1) count FROM rsvtype 
+		WHERE hotelCode = #hotelCode# 
+		AND DATE = #date# 
+		AND TYPE = #type# 
+		GROUP BY TYPE
+	]]>
+	</select>
+
+	<update id="updateRsvtype" parameterClass="rsvtype">
+		update rsvtype set
+		available = #available#
+		,outoforder = #outoforder#
+		,definite = #definite#
+		,channel = #channel#
+		,houseOverbook = #houseOverbook#
+		,generic = #generic#
+		,physicalRooms = #physicalRooms#
+		,roomTypeOverbook = #roomTypeOverbook#
+		,adultsInHouse = #adultsInHouse#
+		,childrenInHouse = #childrenInHouse#
+		,arrivalRooms = #arrivalRooms#
+		,departureRooms = #departureRooms#
+		,unavailable = #unavailable#
+		,blockCount = #blockCount#
+		,resvCount = #resvCount#
+		,overbookAmount = #overbookAmount#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		,overBooking=#overBooking#
+		,totalOBSold=#totalOBSold#
+		where hotelCode = #hotelCode#
+		and date=#date#
+		and type = #type#
+	</update>
+	
+	
+	<update id="updateBatchRsvtypes"  parameterClass="java.util.List" >
+	      <iterate conjunction=";"	property="rsvList">
+	      <![CDATA[
+	        update rsvtype set
+				available = #rsvList[].available#
+				,outoforder = #rsvList[].outoforder#
+				,definite = #rsvList[].definite#
+				,channel = #rsvList[].channel#
+				,houseOverbook = #rsvList[].houseOverbook#
+				,generic = #rsvList[].generic#
+				,physicalRooms = #rsvList[].physicalRooms#
+				,roomTypeOverbook = #rsvList[].roomTypeOverbook#
+				,adultsInHouse = #rsvList[].adultsInHouse#
+				,childrenInHouse = #rsvList[].childrenInHouse#
+				,arrivalRooms = #rsvList[].arrivalRooms#
+				,departureRooms = #rsvList[].departureRooms#
+				,unavailable = #rsvList[].unavailable#
+				,blockCount = #rsvList[].blockCount#
+				,resvCount = #rsvList[].resvCount#
+				,overbookAmount = #rsvList[].overbookAmount#
+				,updatedBy = #rsvList[].updatedBy#
+				,lastModifyTime = #rsvList[].lastModifyTime#
+				,overBooking=#rsvList[].overBooking#
+				,totalOBSold=#rsvList[].totalOBSold#
+				where hotelCode = #rsvList[].hotelCode#
+				and date=#rsvList[].date#
+				and type = #rsvList[].type#
+		  ]]>
+	      </iterate>
+    </update>   
+
+	<update id="updateRsvtypeSta" parameterClass="Map">
+		<![CDATA[
+        	UPDATE rsvtype r SET sta = #sta#
+			WHERE r.`hotelid` = #hotelId#
+			AND r.`type` = #roomTypeCode#
+			AND r.`date` >= CURDATE()
+			AND r.`date` < DATE_ADD(CURDATE(), INTERVAL 90 DAY)
+		]]>
+	</update>
+
+	<select id="getDate90RsvtypeList" resultClass="rsvtype">
+		<![CDATA[
+	    	SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+			        TYPE, COUNT(0) type_count 
+			      FROM
+			        rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+			        rsv.date >= rm.arr 
+			        AND rsv.date < rm.dep
+			      ) 
+			      OR (
+			        rsv.date = rm.arr 
+			        AND rm.arr = rm.dep
+			      )
+			    ) 
+			WHERE rsv.date >= CURDATE() 
+			AND rsv.date < DATE_ADD(CURDATE(), INTERVAL 90 DAY)
+			AND rsv.channel = 'TB' 
+		]]>
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="sta">
+				rsv.sta = #sta#
+	           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				rsv.hotelid = #hotelId#
+	           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rsv.type = #roomTypeCode#
+	           	</isNotEmpty>
+		</dynamic>
+		GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel
+		ORDER BY rsv.hotelid, rsv.type, rsv.date
+	</select>
+
+	<select id="getDate90RsvtypeListOfChange" resultClass="rsvtype">
+		<![CDATA[
+			SELECT DISTINCT a.hotelid,a.type FROM 
+	    	(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta,IFNULL(rsv.available, 0) AS available1, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) AS available2 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel,r.available
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+			        TYPE, COUNT(0) type_count 
+			      FROM
+			        rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+			        rsv.date >= rm.arr 
+			        AND rsv.date < rm.dep
+			      ) 
+			      OR (
+			        rsv.date = rm.arr 
+			        AND rm.arr = rm.dep
+			      )
+			    ) 
+			WHERE rsv.date >= CURDATE() 
+			AND rsv.date < DATE_ADD(CURDATE(), INTERVAL 90 DAY)
+			AND rsv.channel = 'TB' 
+		]]>
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="sta">
+				rsv.sta = #sta#
+	           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				rsv.hotelid = #hotelId#
+	           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rsv.type = #roomTypeCode#
+	           	</isNotEmpty>
+		</dynamic>
+		GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel
+		ORDER BY rsv.hotelid, rsv.type, rsv.date) a
+		WHERE a.available1-a.available2<![CDATA[<>]]>0
+	</select>
+
+	<select id="getAvailableListOfRsvtype" resultClass="Integer">
+		SELECT available FROM rsvtype
+		WHERE hotelId=#hotelId#
+		AND TYPE=#roomTypeCode#
+	</select>
+
+	<select id="getGeneralBaseAmount" resultClass="roomRateRSVO">
+	<![CDATA[
+		SELECT r.type AS roomTypeCode,r.rate AS baseAmount,'CNY' AS currencyCode
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,guestRoom_i18n gri18n,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND gr.`guestRoomId` = gri18n.`guestRoomId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date = #startDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		ORDER BY r.type
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+	</select>
+
+	<select id="getGeneralTotalAmount" resultClass="roomRateRSVO">
+	<![CDATA[
+		SELECT r.type AS roomTypeCode,SUM(r.rate) AS totalAmount,'CNY' AS currencyCode
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,guestRoom_i18n gri18n,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND gr.`guestRoomId` = gri18n.`guestRoomId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date >= #startDate#
+		AND r.date < #endDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		GROUP BY r.type
+		ORDER BY r.type
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+	</select>
+
+	<select id="getDetailTotalRoomRateandpackages" resultClass="roomRateRSVO">
+	<![CDATA[
+		SELECT SUM(r.rate)*r.available AS totalRoomRateandpackages
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date >= #startDate#
+		AND r.date < #endDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		AND r.type = #roomTypeCode#
+		AND rp.`rateCode` = #ratePlanCode#
+		GROUP BY r.type
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+	</select>
+
+	<select id="getDetailRoomRateAndPackages" resultClass="roomRateRSVO">
+	<![CDATA[
+		SELECT r.rate AS roomRateAndPackage,r.available AS available,r.date AS postingDate,'CNY' AS currencyCode
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date >= #startDate#
+		AND r.date < #endDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		AND r.type = #roomTypeCode#
+		AND rp.`rateCode` = #ratePlanCode#
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+	</select>
+
+	<select id="getFetchCalendar" resultClass="fetchCalendarRSVO">
+		select * from rsvtypeDetail rd,rsvtype r
+		WHERE r.hotelid = rd.`hotelid`
+		AND r.date = rd.`DATE`
+		AND r.type = rd.`TYPE`
+		AND r.rateCode = rd.`rateCode`
+	</select>
+	
+	<select id="searchHotelRoomRentRate" resultClass="rent">
+	    SELECT res2.* FROM (
+			SELECT res.`hotelCode`,res.`date`,res.`specialist`,
+			  IF(
+			    IFNULL(res.`unavailable`, 0) = 0,
+			    0.00,
+			    res.`unavailable` / (
+			      res.`physicalRooms` + res.`roomTypeOverbook` - res.`outoforder`
+			    ) * 100
+			  ) AS rentRate 
+			  FROM (
+			    SELECT 
+				    h.`hotelCode`,r.`date`,h.`specialist`,
+				    SUM(IFNULL(r.`physicalRooms`, 0)) AS `physicalRooms`,
+				    SUM(IFNULL(r.`roomTypeOverbook`, 0)) AS `roomTypeOverbook`,
+				    SUM(IFNULL(r.`resvCount`, 0)) AS `resvCount`,
+				    SUM(IFNULL(r.`outoforder`, 0)) AS `outoforder`,
+				    SUM(IFNULL(r.`available`, 0)) AS `available`,
+				    SUM(IFNULL(r.`unavailable`, 0)) AS `unavailable` 
+				FROM
+				  CHAIN c,hotel h,rsvtype r 
+				WHERE c.`chainId` = h.`chainId` 
+				  AND h.`hotelCode` = r.`hotelCode` 
+				  AND c.`delFlag` = 0 
+				  AND h.`delFlag` = 0 
+				  AND r.`delFlag` = 0 
+				  <isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="startDate">
+			          <![CDATA[
+			            r.`date` >= #startDate#
+			          ]]>
+				  </isNotEmpty>
+			      <isNotEmpty prepend="AND" property="endDate">
+			          <![CDATA[
+			            r.`date` < #endDate#
+			          ]]>
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="hotelCodeList">
+						h.`hotelCode` in
+						<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+							#hotelCodeList[]#
+			            </iterate>
+			      </isNotEmpty>
+			    GROUP BY h.`hotelCode`,r.`date`,h.`specialist`
+			) res 
+		) res2
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="rentRate">
+			res2.rentRate >= #rentRate#
+		</isNotEmpty>
+		ORDER BY res2.`hotelCode`,res2.`date`,res2.`specialist`
+		<include refid="pageSqlRsvtypeSQL"/>
+	</select>
+	
+	<select id="searchHotelRoomRentRateCount" resultClass="Integer">
+		SELECT count(*) FROM (
+			SELECT res.`hotelCode`,res.`date`,res.`specialist`,
+			  IF(
+			    IFNULL(res.`unavailable`, 0) = 0,
+			    0.00,
+			    res.`unavailable` / (
+			      res.`physicalRooms` + res.`roomTypeOverbook` - res.`outoforder`
+			    ) * 100
+			  ) AS rentRate 
+			  FROM (
+			    SELECT 
+				    h.`hotelCode`,r.`date`,h.`specialist`,
+				    SUM(IFNULL(r.`physicalRooms`, 0)) AS `physicalRooms`,
+				    SUM(IFNULL(r.`roomTypeOverbook`, 0)) AS `roomTypeOverbook`,
+				    SUM(IFNULL(r.`resvCount`, 0)) AS `resvCount`,
+				    SUM(IFNULL(r.`outoforder`, 0)) AS `outoforder`,
+				    SUM(IFNULL(r.`available`, 0)) AS `available`,
+				    SUM(IFNULL(r.`unavailable`, 0)) AS `unavailable` 
+				FROM
+				  CHAIN c,hotel h,rsvtype r 
+				WHERE c.`chainId` = h.`chainId` 
+				  AND h.`hotelCode` = r.`hotelCode` 
+				  AND c.`delFlag` = 0 
+				  AND h.`delFlag` = 0 
+				  AND r.`delFlag` = 0 
+				  <isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="startDate">
+			          <![CDATA[
+			            r.`date` >= #startDate#
+			          ]]>
+				  </isNotEmpty>
+			      <isNotEmpty prepend="AND" property="endDate">
+			          <![CDATA[
+			            r.`date` < #endDate#
+			          ]]>
+				  </isNotEmpty>
+				  <isNotEmpty prepend="AND" property="hotelCodeList">
+						h.`hotelCode` in
+						<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+							#hotelCodeList[]#
+			            </iterate>
+			      </isNotEmpty>
+			   GROUP BY h.`hotelCode`,r.`date`,h.`specialist`
+			) res 
+		) res2
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="rentRate">
+			res2.rentRate >= #rentRate#
+		</isNotEmpty>
+	</select>
+
+	<select id="getRateCodeFromRoomType" resultClass="rateCodeWithRoomVO" >
+	SELECT DISTINCT abc.roomTypeCode,rp.ratePlanCode FROM 
+	(SELECT rt.roomTypeCode,m.ratePlanCode,m.ratePlanId FROM rate_plan m INNER JOIN
+	rate_detail d
+	ON m.`ratePlanId`=d.`ratePlanId`
+	AND d.expireDate>=CURDATE() 
+	AND d.`delFlag`='0'
+	AND m.`delFlag`='0'
+	<!-- <isNotEmpty prepend="AND" property="weekRange">
+	CONCAT(
+    IFNULL(isApplyToSunday, 0),
+    IFNULL(isApplyToMonday, 0),
+    IFNULL(isApplyToTuesday, 0),
+    IFNULL(isApplyToWednesday, 0),
+    IFNULL(isApplyToThursday, 0),
+    IFNULL(isApplyToFriday, 0),
+    IFNULL(isApplyToSaturday, 0))=#weekRange#
+    </isNotEmpty>-->
+	<![CDATA[ AND M.`effectiveDate`<= #startDate# ]]>
+	<![CDATA[ AND M.`expireDate`>= #endDate#]]>
+	INNER JOIN HOTEL h
+	on m.hotelId=h.hotelId
+	and h.hotelCode=#hotelCode#
+	and h.`delFlag`='0'
+	INNER JOIN room_rate rr
+	ON rr.`rateDetailId`=d.`rateDetailId`
+	AND rr.`delFlag`='0'
+	INNER JOIN room_type rt
+	on rt.hotelId=m.hotelId
+	and rt.roomTypeId=rr.roomTypeId
+	<isNotEmpty prepend="AND" property="roomCodeList">
+	 rt.roomTypeCode in
+		<iterate property="roomCodeList" open="(" close=")" conjunction=",">
+									#roomCodeList[]#
+		</iterate>
+	</isNotEmpty>
+	) abc,
+  	rate_plan rp 
+	WHERE (rp.inheritRatePlanId = abc.ratePlanId 
+  	OR rp.`ratePlanId` = abc.ratePlanId)
+  	<![CDATA[ AND rp.`effectiveDate`<= #startDate# ]]> 
+	<![CDATA[ AND rp.`expireDate`>= #endDate# ]]>
+  	AND rp.`delFlag`='0'
+	ORDER BY abc.roomTypeCode, rp.ratePlanCode
+	</select>
+</sqlMap>

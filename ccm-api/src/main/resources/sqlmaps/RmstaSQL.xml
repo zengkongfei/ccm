@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RmstaSQL">
+	<typeAlias alias="rmsta" type="com.ccm.api.dao.pms.form.Rmsta"/>
+	<insert id="saveRmsta">
+        INSERT INTO rmsta(hotelId,TYPE,roomno) 
+        VALUES(#hotelId#,
+        REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''),
+        #roomNo#);
+	</insert>
+	
+    <select id="getCountRmsta" resultClass="Integer">
+    	SELECT COUNT(*) FROM rmsta 
+		WHERE hotelId = #hotelId#
+		AND TYPE = #roomTypeCode#
+    </select>
+    
+    <select id="getRmsta" resultClass="rmsta">
+        select * from rmsta
+    	WHERE hotelId = #hotelId#
+		AND TYPE = #roomTypeCode#
+    </select>
+    <delete id="delRmstaByRoomNoAndHotelId" >
+    	DELETE FROM rmsta WHERE hotelid=#hotelId# AND roomno=#roomNo#
+    </delete>
+    
+    <delete id="delRmstaByHotelIdAndRoomTypeCode" >
+    	DELETE FROM rmsta WHERE hotelid=#hotelId# AND TYPE=#roomTypeCode#
+    </delete>
+    
+    <select id="getIsNotRmstaCount" resultClass="Integer">
+    	SELECT count(*) FROM rmsta r,userrole u
+		WHERE u.hotelId = r.hotelId
+		AND TYPE = #roomTypeCode#
+		AND u.userId = #userId#
+    </select>
+    
+    <select id="getValidRoomno" resultClass="Integer">
+    	SELECT COUNT(0) FROM `master` AS m 
+		WHERE m.dep>=CURDATE() 
+		AND m.sta IN ('R','I')
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roomNo">
+				m.roomno=#roomNo#
+           	</isNotEmpty>
+        </dynamic> 
+		AND m.type = #roomTypeCode#
+    </select>
+</sqlMap>

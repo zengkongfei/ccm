@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GDSPublisherRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" UserID="$obj.userID"
+	Type="BookingLimitMessage">
+	<FIDELIO_AvailabilityStatusRQ echoToken="$obj.echoToken" xmlns="http://www.micros.com/2002A">
+		<Properties>
+		#foreach( $pl in $obj.propertieList )
+			<Property chainCode="$pl.chainCode" hotelCode="$pl.hotelCode"
+				roomsAvailable="$pl.roomsAvailable" startDate="$pl.startDate" channelCode="$pl.channelCode">
+				<RoomTypeSegments>
+				#foreach( $rt in $pl.roomTypeSegments )
+					<RoomTypeSegment roomTypeCode="$rt.roomTypeCode" roomsAvailable="$rt.roomsAvailable" />
+				#end
+				</RoomTypeSegments>
+			</Property>
+		#end
+		</Properties>
+	</FIDELIO_AvailabilityStatusRQ>
+</GDSPublisherRequest>

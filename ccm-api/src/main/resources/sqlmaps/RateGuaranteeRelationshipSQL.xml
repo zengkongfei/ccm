@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RateGuaranteeRelationshipSQL">
+	<typeAlias alias="rateGuaranteeRelationship" type="com.ccm.api.model.ratePlan.RateGuaranteeRelationship" />
+	<typeAlias alias="guaranteePolicy" type="com.ccm.api.model.ratePlan.GuaranteePolicy" />
+
+	<insert id="addRateGuaranteeRelationship" parameterClass="rateGuaranteeRelationship">
+		INSERT INTO rate_guarantee_relationship
+		(rateGuaranteeRelationshipId, ratePlanId, guaranteeId, effectiveDate, expireDate, isApplyToMonday, isApplyToTuesday, isApplyToWednesday, isApplyToThursday, isApplyToFriday, isApplyToSaturday, isApplyToSunday, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#rateGuaranteeRelationshipId#, #ratePlanId#, #guaranteeId#, #effectiveDate#, #expireDate#, #isApplyToMonday#, #isApplyToTuesday#, #isApplyToWednesday#, #isApplyToThursday#, #isApplyToFriday#, #isApplyToSaturday#, #isApplyToSunday#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)
+	</insert>
+
+	<select id="getRateGuaranteeRelationship" resultClass="rateGuaranteeRelationship">
+		SELECT * FROM rate_guarantee_relationship WHERE delFlag = 0 and rateGuaranteeRelationshipId=#value#
+    </select>
+
+	<select id="getRateGuaranteeRelationshipByRatePlanId" resultClass="rateGuaranteeRelationship" parameterClass="String">
+		SELECT t1.*,guaranteeCode as policyName FROM rate_guarantee_relationship t1 
+							 LEFT JOIN guarantee_policy t2 
+							 		ON t1.guaranteeId = t2.guaranteeId AND t2.delFlag = 0
+								 WHERE t1.delFlag = 0 AND t1.ratePlanId=#ratePlanId# 
+    </select>
+    
+    <select id="getEffectiveRateGuaranteeByRatePlanId" resultClass="GuaranteePolicy" parameterClass="rateGuaranteeRelationship">
+		SELECT t2.* FROM rate_guarantee_relationship t1 
+							 INNER JOIN guarantee_policy t2 
+							 		ON t1.guaranteeId = t2.guaranteeId AND t2.delFlag = 0
+								 AND t1.delFlag = 0 AND t1.ratePlanId=#ratePlanId#
+								<isNotEmpty property="effectiveDate" prepend="AND">
+									<![CDATA[t1.effectiveDate<=#effectiveDate# and t1.expireDate>=#effectiveDate#]]>
+								</isNotEmpty>
+    </select>
+    
+
+	<select id="getRateGuarRealByRatePlanIdGuaranteeId" resultClass="rateGuaranteeRelationship">
+		SELECT rateGuaranteeRelationshipId FROM rate_guarantee_relationship
+		WHERE delFlag = 0 and ratePlanId=#ratePlanId# and guaranteeId=#guaranteeId#
+		<isNotEmpty property="effectiveDate" prepend="AND">
+			<![CDATA[
+			effectiveDate<=#effectiveDate# and expireDate>=#effectiveDate#
+			]]>
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToMonday" prepend="AND">
+			isApplyToMonday=#isApplyToMonday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToTuesday" prepend="AND">
+			isApplyToTuesday=#isApplyToTuesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToWednesday" prepend="AND">
+			isApplyToWednesday=#isApplyToWednesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToThursday" prepend="AND">
+			isApplyToThursday=#isApplyToThursday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToFriday" prepend="AND">
+			isApplyToFriday=#isApplyToFriday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSaturday" prepend="AND">
+			isApplyToSaturday=#isApplyToSaturday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSunday" prepend="AND">
+			isApplyToSunday=#isApplyToSunday#
+		</isNotEmpty>
+	</select>
+
+	<update id="updateRateGuaranteeRelationship" parameterClass="rateGuaranteeRelationship">
+		UPDATE rate_guarantee_relationship
+		SET rateGuaranteeRelationshipId = #rateGuaranteeRelationshipId#, ratePlanId = #ratePlanId#, guaranteeId = #guaranteeId#, effectiveDate = #effectiveDate#, expireDate = #expireDate#, isApplyToMonday = #isApplyToMonday#, isApplyToTuesday = #isApplyToTuesday#, isApplyToWednesday = #isApplyToWednesday#,
+		isApplyToThursday = #isApplyToThursday#, isApplyToFriday = #isApplyToFriday#, isApplyToSaturday = #isApplyToSaturday#, isApplyToSunday = #isApplyToSunday#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE rateGuaranteeRelationshipId = #rateGuaranteeRelationshipId#
+    </update>
+
+	<update id="deleteRateGuaranteeRelationship">
+		UPDATE rate_guarantee_relationship set delFlag = 1 where rateGuaranteeRelationshipId = #value#
+    </update>
+
+	<delete id="deleteRateGuaranteeRelationshipByRatePlanId">
+		DELETE
+		FROM rate_guarantee_relationship
+		WHERE ratePlanId = #ratePlanId#
+    </delete>
+</sqlMap>

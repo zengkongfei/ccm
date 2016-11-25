@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="LogInfoSQL">
+	<typeAlias alias="logInfo" type="com.ccm.api.log.model.LogInfo" />
+	<typeAlias alias="logDetail" type="com.ccm.api.log.model.LogDetail" />
+	<typeAlias alias="logVO" type="com.ccm.api.log.vo.LogVO" />
+
+	<!-- 保存日志信息表 -->
+	<insert id="saveLogInfo" parameterClass="logInfo">
+		INSERT INTO loginfo (logId,operaterId,hotelId,lastLoginTime,operateTime,businessId,
+		functionId,operateType,primaryValue)
+		VALUES(#logId#,#operaterId#,#hotelId#,#lastLoginTime#,#operateTime#,#businessId#,
+		#functionId#,#operateType#,#primaryValue#)
+    </insert>
+
+	<!-- 保存日志明细表 -->
+	<insert id="saveLogDetail" parameterClass="logDetail">
+		INSERT INTO logDetail (logDetailId,logId,className,attributeName,primaryKey,
+		newValue,oldValue,urlId)
+		VALUES(#logDetailId#,#logId#,#className#,#attributeName#,#primaryKey#,
+		#newValue#,#oldValue#,#urlId#)
+    </insert>
+
+	<select id="getLogInfo" resultClass="logInfo">
+		select * from loginfo where logId = #logId# 
+    </select>
+
+	<!-- 查看日志信息 -->
+	<select id="searchLogInfo" resultClass="logVO">
+		SELECT l.*,u.`username` AS operaterName,i.`hotelName`,b.displayName AS businessName,f.displayName AS functionName
+		FROM logInfo l
+		LEFT JOIN b2buser u ON l.`operaterId` = u.`userId`
+		LEFT JOIN hotel_i18n i ON l.`hotelId` = i.`hotelId` AND i.`delFlag` = 0 AND i.`languageCode` = #language#
+		LEFT JOIN (SELECT tl.`LogId`,tmi.`displayName`  FROM logInfo tl LEFT  JOIN menu tm ON tl.`businessId` = tm.menuId LEFT JOIN menu_i18n tmi ON tm.`menuId`=tmi.`menuId` WHERE tmi.`language`=#language# ) b ON l.`LogId` = b.LogId
+		LEFT JOIN (SELECT t2.`LogId`,tmi2.`displayName` FROM logInfo t2 LEFT  JOIN menu tm2 ON t2.`functionId` = tm2.menuId LEFT JOIN menu_i18n tmi2 ON tm2.`menuId`=tmi2.`menuId` WHERE tmi2.`language`= #language#) f ON l.`LogId` = f.logid
+		<dynamic prepend="WHERE">
+		
+			<isNotEmpty prepend="AND" property="operaterIds">
+				l.operaterId in
+				<iterate open="(" close=")" conjunction="," property="operaterIds">
+					#operaterIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="businessIds">
+				l.businessId in
+				<iterate open="(" close=")" conjunction="," property="businessIds">
+					#businessIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="functionIds">
+				l.functionId in
+				<iterate open="(" close=")" conjunction="," property="functionIds">
+					#functionIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="operaterId">
+				l.`operaterId` = #operaterId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateTimeBegin">
+				l.`operateTime` <![CDATA[>=]]>
+				#operateTimeBegin#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateTimeEnd">
+				l.`operateTime` <![CDATA[<=]]>
+				#operateTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="businessId">
+				l.`businessId` = #businessId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="functionId">
+				l.`functionId` = #functionId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateType">
+				l.`operateType` = #operateType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIds">
+				l.hotelId in
+				<iterate open="(" close=")" conjunction="," property="hotelIds">
+					#hotelIds[]# 
+		        </iterate>
+			</isNotEmpty>
+		</dynamic>
+		order by operateTime desc
+	</select>
+
+	<!-- 查看日志信息总数 -->
+	<select id="searchLogInfoCount" resultClass="Integer">
+		SELECT count(*) FROM logInfo l
+		LEFT JOIN b2buser u ON l.`operaterId` = u.`userId`
+		LEFT JOIN hotel_i18n i ON l.`hotelId` = i.`hotelId` AND i.`delFlag` = 0 AND i.`languageCode` = #language#
+		LEFT JOIN (SELECT `LogId`,`displayName` FROM logInfo,menu WHERE `businessId` = menuId) b ON l.`LogId` = b.LogId
+		LEFT JOIN (SELECT `LogId`,`displayName` FROM logInfo,menu WHERE `functionId` = menuId) f ON l.`LogId` = f.logid
+		<dynamic prepend="WHERE">
+		
+			<isNotEmpty prepend="AND" property="operaterIds">
+				l.operaterId in
+				<iterate open="(" close=")" conjunction="," property="operaterIds">
+					#operaterIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="businessIds">
+				l.businessId in
+				<iterate open="(" close=")" conjunction="," property="businessIds">
+					#businessIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="functionIds">
+				l.functionId in
+				<iterate open="(" close=")" conjunction="," property="functionIds">
+					#functionIds[]# 
+		        </iterate>
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="operaterId">
+				l.`operaterId` = #operaterId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateTimeBegin">
+				l.`operateTime` <![CDATA[>=]]>
+				#operateTimeBegin#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateTimeEnd">
+				l.`operateTime` <![CDATA[<=]]>
+				#operateTimeEnd#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="businessId">
+				l.`businessId` = #businessId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="functionId">
+				l.`functionId` = #functionId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="operateType">
+				l.`operateType` = #operateType#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIds">
+				l.hotelId in
+				<iterate open="(" close=")" conjunction="," property="hotelIds">
+					#hotelIds[]# 
+		        </iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<!-- 查看日志明细 -->
+	<select id="searchLogDetails" resultClass="logDetail">
+		select * from logDetail where logId = #logId# 
+    </select>
+
+	<!-- 查询目标参数旧数据值 -->
+	<select id="searchObjectInfo" resultClass="java.util.HashMap" remapResults="true">
+		select t.* from $tableName$ t where $primaryKey$=#primaryKeyValue#
+    </select>
+
+	<!-- 查询目志表里旧数据值 -->
+	<select id="searchLogDetailPrev" resultClass="logDetail">
+		select attributeName,newValue from logDetail
+		where logId=(select DISTINCT(li.logId) from loginfo li,logDetail ld WHERE hotelId=#hotelId#
+		and businessId=#businessId# and operateTime<![CDATA[<]]>#operateTime#
+		<isNotEmpty prepend="AND" property="functionId">
+			functionId = #functionId#
+		</isNotEmpty>
+		AND newValue=li.primaryValue AND attributeName=primaryKey AND li.primaryValue=#primaryValue#
+		ORDER BY operateTime DESC LIMIT 0,1)
+	</select>
+
+</sqlMap>

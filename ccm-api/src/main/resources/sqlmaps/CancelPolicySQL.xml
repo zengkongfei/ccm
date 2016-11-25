@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CancelPolicySQL">
+	<typeAlias alias="cancelPolicyvo" type="com.ccm.api.model.ratePlan.vo.CancelPolicyVO" />
+	<typeAlias alias="cancelPolicy" type="com.ccm.api.model.ratePlan.CancelPolicy" />
+	<typeAlias alias="cancelPolicyI18n" type="com.ccm.api.model.ratePlan.CancelPolicyI18n" />
+
+	<insert id="addCancelPolicy" parameterClass="cancelPolicy">
+		insert into cancel_policy (cancelId,cancelPolicyCode,isNonRefundable,
+		absoluteDeadline,offsetTimeUnit,offsetUnitMultiplier,offsetDropTime,
+		taxInclusive,feesInclusive,basisType,numberOfNights,percent,amount,cancelType,
+		createdBy,createdTime,delFlag,offsetCutTime)
+		values (#cancelId#,
+		REPLACE(REPLACE(#cancelPolicyCode#,' ',''),' ',''),
+		#isNonRefundable#,
+		#absoluteDeadline#,#offsetTimeUnit#,#offsetUnitMultiplier#,#offsetDropTime#,
+		#taxInclusive#,#feesInclusive#,#basisType#,#numberOfNights#,#percent#,#amount#,#cancelType#,
+		#createdBy#,#createdTime#,#delFlag#,#offsetCutTime#)
+    </insert>
+
+	<insert id="addCancelPolicyI18n" parameterClass="cancelPolicyI18n">
+		insert into cancel_policy_i18n (cancelMId,cancelId,language,policyName,description,
+		createdBy,createdTime,delFlag)
+		values (#cancelMId#,#cancelId#,#language#,#policyName#,#description#,
+		#createdBy#,#createdTime#,#delFlag#)
+    </insert>
+
+	<update id="updateCancelPolicy" parameterClass="cancelPolicy">
+		update cancel_policy SET
+		isNonRefundable = #isNonRefundable#
+		,absoluteDeadline = #absoluteDeadline#
+		,offsetTimeUnit = #offsetTimeUnit#
+		,offsetUnitMultiplier = #offsetUnitMultiplier#
+		,offsetDropTime = #offsetDropTime#
+		,taxInclusive = #taxInclusive#
+		,feesInclusive = #feesInclusive#
+		,basisType = #basisType#
+		,numberOfNights = #numberOfNights#
+		,percent = #percent#
+		,amount = #amount#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		,offsetCutTime=#offsetCutTime#
+		where cancelId = #cancelId#
+    </update>
+
+	<update id="updateCancelPolicyI18n" parameterClass="cancelPolicyI18n">
+		update cancel_policy_i18n SET
+		policyName = #policyName#
+		,description = #description#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where cancelMId = #cancelMId#
+    </update>
+
+	<update id="deleteCancelPolicy" parameterClass="cancelPolicy">
+		update cancel_policy SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where cancelId = #cancelId#
+    </update>
+
+	<update id="deleteCancelPolicyI18n" parameterClass="cancelPolicyI18n">
+		update cancel_policy_i18n SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where cancelMId = #cancelMId#
+    </update>
+
+	<update id="deleteCancelPolicyI18nByCancelId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update cancel_policy_i18n SET delFlag = 1
+         WHERE cancelId = #cancelId#
+    ]]>
+	</update>
+
+	<select id="getAllCancelPolicys" resultClass="cancelPolicyvo">
+		SELECT * FROM `cancel_policy` c,`cancel_policy_i18n` ci
+		WHERE c.`cancelId` = ci.`cancelId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		order by c.cancelPolicyCode
+	</select>
+
+	<select id="getCancelPolicyByCode" resultClass="cancelPolicyvo">
+		SELECT * FROM `cancel_policy` c left join `cancel_policy_i18n` ci
+		on c.`cancelId` = ci.`cancelId` and ci.`delFlag` = 0 and ci.`language` = #language#
+		WHERE c.`delFlag` = 0
+		AND c.`cancelPolicyCode` = #cancelPolicyCode#
+    </select>
+
+	<select id="getCancelPolicyById" resultClass="cancelPolicyvo">
+		SELECT * FROM `cancel_policy` c left join `cancel_policy_i18n` ci
+		on c.`cancelId` = ci.`cancelId` and ci.`delFlag` = 0 and ci.`language` = #language#
+		WHERE c.`delFlag` = 0
+		AND c.`cancelId` = #cancelId#
+    </select>
+
+	<select id="searchCancelPolicy" resultClass="cancelPolicyvo">
+		SELECT * FROM `cancel_policy` c,`cancel_policy_i18n` ci
+		WHERE c.`cancelId` = ci.`cancelId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cancelPolicyCode">
+				c.cancelPolicyCode = #cancelPolicyCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="policyName">
+				ci.policyName like  CONCAT('%',#policyName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		order by c.cancelPolicyCode
+	</select>
+
+	<select id="searchCancelPolicyCount" resultClass="Integer">
+		SELECT count(*) FROM `cancel_policy` c,`cancel_policy_i18n` ci
+		WHERE c.`cancelId` = ci.`cancelId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="cancelPolicyCode">
+				c.cancelPolicyCode = #cancelPolicyCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="policyName">
+				ci.policyName like CONCAT('%',#policyName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getCancelPolicyI18ns" resultClass="cancelPolicyI18n" parameterClass="Map">
+		select * from cancel_policy_i18n ci
+		where ci.cancelId =#cancelId#
+		AND ci.delFlag = 0
+		order by cancelMId
+	</select>
+
+	<select id="getRateCancelByRatePlanId" resultClass="cancelPolicy" parameterClass="String">
+		SELECT DISTINCT c.* FROM rate_cancel_relationship rcr, cancel_policy c
+		WHERE rcr.cancelId=c.cancelId AND rcr.delFlag=0 AND c.delFlag=0 AND rcr.ratePlanId=#ratePlanId#
+	</select>
+
+	<select id="getRateCancelI18nByRatePlanId" resultClass="cancelPolicyvo" parameterClass="Map">
+		SELECT DISTINCT c.*,ci.policyName,ci.description FROM rate_cancel_relationship rcr, cancel_policy c, `cancel_policy_i18n` ci
+		WHERE rcr.cancelId=c.cancelId AND rcr.`cancelId`=ci.cancelId AND rcr.delFlag=0 AND c.delFlag=0 AND ci.delFlag=0
+		AND rcr.ratePlanId=#ratePlanId#
+		AND ci.language = #language#
+	</select>
+	
+	<select id="getRateCancelI18nByCondition" resultClass="cancelPolicyvo" parameterClass="Map">
+		SELECT DISTINCT c.*,ci.policyName,ci.description FROM rate_cancel_relationship rcr, cancel_policy c, `cancel_policy_i18n` ci
+		WHERE rcr.cancelId=c.cancelId AND rcr.`cancelId`=ci.cancelId AND rcr.delFlag=0 AND c.delFlag=0 AND ci.delFlag=0
+		AND rcr.ratePlanId=#ratePlanId#
+		AND ci.language = #language#
+		<![CDATA[and effectiveDate<=#curDate# and expireDate>=#curDate#]]>
+		<isNotEmpty property="isApplyToMonday" prepend="AND">
+			isApplyToMonday=#isApplyToMonday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToTuesday" prepend="AND">
+			isApplyToTuesday=#isApplyToTuesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToWednesday" prepend="AND">
+			isApplyToWednesday=#isApplyToWednesday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToThursday" prepend="AND">
+			isApplyToThursday=#isApplyToThursday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToFriday" prepend="AND">
+			isApplyToFriday=#isApplyToFriday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSaturday" prepend="AND">
+			isApplyToSaturday=#isApplyToSaturday#
+		</isNotEmpty>
+		<isNotEmpty property="isApplyToSunday" prepend="AND">
+			isApplyToSunday=#isApplyToSunday#
+		</isNotEmpty>
+	</select>
+	
+</sqlMap>

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RatepmsSQL">
+	<typeAlias alias="ratepms" type="com.ccm.api.model.rsvtype.Ratepms" />
+	
+	<insert id="addRatepms" parameterClass="ratepms">
+		INSERT INTO Ratepms(
+			ratepmsId,hotelCode,rateCode,startDate,endDate,roomTypeList,
+			rate1,rate2,rate3,rate4,rate5,
+			child1RateParentRoom,child2RateParentRoom,child3RateParentRoom,
+			child1RateOwnRoom,child2RateOwnRoom,child3RateOwnRoom,child4RateOwnRoom,
+			extraBed,monday,tuesday,wednesday,thursday,friday,saturday,sunday,
+			payingChildren,freeChildren,status,marketCode
+		)VALUES(
+			#ratepmsId#,
+			REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+			REPLACE(REPLACE(#rateCode#,' ',''),'　',''),
+			#startDate#,#endDate#,#roomTypeList#,
+			#rate1#,#rate2#,#rate3#,#rate4#,#rate5#,
+			#child1RateParentRoom#,#child2RateParentRoom#,#child3RateParentRoom#,
+			#child1RateOwnRoom#,#child2RateOwnRoom#,#child3RateOwnRoom#,#child4RateOwnRoom#,
+			#extraBed#,#monday#,#tuesday#,#wednesday#,#thursday#,#friday#,#saturday#,#sunday#,
+			#payingChildren#,#freeChildren#,0,
+			REPLACE(REPLACE(#marketCode#,' ',''),'　','')
+		)
+	</insert>
+	
+	<update id="updateRatepmsStatus" parameterClass="String">
+		UPDATE Ratepms SET status=1
+		WHERE ratepmsId=#ratepmsId#
+	</update>
+	
+	<select id="getRatepms" resultClass="ratepms">
+		SELECT * FROM Ratepms WHERE status=0
+    </select>
+</sqlMap>

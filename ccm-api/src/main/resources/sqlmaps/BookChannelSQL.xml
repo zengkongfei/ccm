@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="BookChannel" >
+
+  <typeAlias alias="bookChannel" type="com.ccm.api.model.system.BookChannel" />
+
+	<select id="getBookChannel" resultClass="bookChannel">
+        select * from bookchannel where id=#id# 
+    </select>
+    
+    <select id="getBookChannels" resultClass="bookChannel">
+        select * from bookchannel where (delFlag IS NULL OR delFlag =0)
+    </select>
+    
+    <select id="getBookChannelsByUserId" resultClass="bookChannel">
+        select * from bookchannel where userId=#value# and (delFlag IS NULL OR delFlag =0)
+    </select>
+
+  <insert id="addBookChannel" parameterClass="bookChannel" >
+    INSERT INTO bookChannel( id, source ,userId,code) 
+    VALUES ( #id#, #source#,#userId#,
+    	REPLACE(REPLACE(#code#,' ',''),'　',''))
+  </insert>
+
+  <update id="updateBookChannel" parameterClass="bookChannel" >
+    UPDATE BookChannel   
+    <dynamic prepend="SET" >
+      <isNotNull property="source" prepend="," >
+        source = #source#
+      </isNotNull>
+      <isNotNull property="code" prepend="," >
+        code = REPLACE(REPLACE(#code#,' ',''),'　','')
+      </isNotNull>
+    </dynamic>
+     WHERE id = #id#  
+  </update>
+  
+  <update id="updateBookChannelDelFlag" parameterClass="java.util.HashMap" >
+    UPDATE BookChannel   
+    <dynamic prepend="SET" >
+    	<isNotNull property="delFlag" prepend="," >
+        <![CDATA[  
+        delFlag = #delFlag#  
+        ]]>
+      </isNotNull>
+    </dynamic>
+    WHERE id = #id#    
+</update> 
+</sqlMap>

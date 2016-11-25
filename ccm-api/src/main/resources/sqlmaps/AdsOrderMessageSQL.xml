@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AdsOrderMessageSQL">
+
+    <typeAlias alias="adsOrderMessage" type="com.ccm.api.model.ads.AdsOrderMessage"/>
+	
+    <resultMap id="adsOrderMessageResult" class="adsOrderMessage">
+        <result property="adsOrderId" column="adsOrderID"/>
+        <result property="chainCode" column="chainCode"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="channelResId" column="channelResID" />
+        <result property="confirmationNo" column="confirmationNo"/>
+        <result property="pmsResId" column="pmsResID"/>
+        <result property="status" column="STATUS"/>
+        <result property="guestFirstName" column="guestFirstName"/>
+        <result property="guestLastName" column="guestLastName"/>
+        <result property="arrivalTime" column="ArrivalTime" jdbcType="DATETIME"/>
+        <result property="departureTime" column="departureTime" jdbcType="DATETIME"/>
+        <result property="roomType" column="roomType"/>
+        <result property="rateCode" column="rateCode"/>
+        <result property="roomNo" column="roomNo"/>
+        <result property="channelCode" column="channelCode"/>
+		<result property="resDate" column="resDate" jdbcType="DATETIME"/>
+		<result property="remark" column="remark"/>
+     </resultMap>
+     
+    <insert id="addAdsOrderMessage" parameterClass="adsOrderMessage">
+    <![CDATA[
+		insert into adsOrderMessage 
+				(adsOrderID, chainCode, hotelCode, channelResID, confirmationNo, pmsResID, 
+				 status, guestFirstName, guestLastName, ArrivalTime, departureTime, roomType,
+				 rateCode, roomNo, channelCode, resDate, remark) 
+				 values(#adsOrderId#,
+				 REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+				 REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+				 #channelResId#,#confirmationNo#,
+				 #pmsResId#,#status#,#guestFirstName#,#guestLastName#,#arrivalTime#,
+				 #departureTime#,
+				 REPLACE(REPLACE(#roomType#,' ',''),'　',''),
+				 REPLACE(REPLACE(#rateCode#,' ',''),'　',''),
+				 #roomNo#,
+				 REPLACE(REPLACE(#channelCode#,' ',''),'　',''),
+				 #resDate#,#remark#)
+    ]]>
+    </insert>
+
+    
+</sqlMap>

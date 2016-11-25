@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- For mail settings and future properties files -->
+	<bean id="propertyConfigurer" class="com.ccm.api.util.PropertiesUtil">
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value>
+				<value>classpath:mail.properties</value>
+				<value>classpath:project.properties</value>
+				<value>classpath:ccm-api-version.properties</value>
+				<value>classpath:ccm-mc-version.properties</value>
+				<value>classpath:redis.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.ccm.api.util.CCMBasicDataSource" destroy-method="close">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+		<property name="maxActive" value="1000" />
+		<property name="maxWait" value="1000" />
+		<property name="poolPreparedStatements" value="true" />
+		<property name="defaultAutoCommit" value="true" />
+		<property name="testOnBorrow" value="true" />
+		<property name="validationQuery" value="SELECT 1" />
+		<!-- #是否在自动回收超时连接的时候打印连接的超时错误 -->
+		<property name="logAbandoned" value="true"></property>
+		<!-- #是否自动回收超时连接 -->
+		<property name="removeAbandoned" value="true"></property>
+		<!-- #超时时间(以秒数为单位) -->
+		<property name="removeAbandonedTimeout" value="30"></property>
+	</bean>
+
+	<!-- <bean id="readDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"> <property name="driverClassName" value="${jdbc.driverClassName}"/> <property name="url" value="${jdbc.url}"/> <property name="username" value="${jdbc.username}"/> <property name="password" value="${jdbc.password}"/> <property name="maxActive" value="100"/> <property name="maxWait" value="1000"/> <property name="poolPreparedStatements" value="true"/> <property name="defaultAutoCommit" value="true"/> </bean> -->
+
+	<bean id="projectProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="singleton" value="true" />
+		<property name="properties">
+			<props>
+				<!-- emay sms -->
+				<prop key="sms.softwareSerialNo">${sms.softwareSerialNo}</prop>
+				<prop key="sms.key">${sms.key}</prop>
+
+				<!-- picture -->
+				<prop key="watermarkFilePath">${watermarkFilePath}</prop>
+				<prop key="pictureUploadPath">${pictureUploadPath}</prop>
+				<prop key="pictureUrlContext">${pictureUrlContext}</prop>
+				<prop key="picCutConfig">${picCutConfig}</prop>
+				<prop key="otaUrlContext">${otaUrlContext}</prop>
+				<prop key="otaInfType">${otaInfType}</prop>
+			</props>
+		</property>
+	</bean>
+
+
+
+</beans>

@@ -1,0 +1,488 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UserSQL">
+
+	<typeAlias alias="user" type="com.ccm.api.model.user.B2BUser" />
+
+	<typeAlias alias="userRole" type="com.ccm.api.model.user.UserRole" />
+
+	<typeAlias alias="roleVO" type="com.ccm.api.model.user.vo.UserRoleVO" />
+
+	<typeAlias alias="userVO" type="com.ccm.api.model.user.vo.B2BUserVO" />
+	<typeAlias alias="userRoleChannel" type="com.ccm.api.model.user.UserRoleChannel" />
+	<typeAlias alias="userPasswordVO" type="com.ccm.api.model.user.UserPassword" />
+
+	<typeAlias alias="hotel" type="com.ccm.api.model.hotel.Hotel" />
+
+	<sql id="pageSqlUserSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+	<resultMap id="userResult" class="user">
+
+		<result property="userId" column="userId" />
+		<result property="companyId" column="companyId" />
+		<result property="username" column="username" />
+		<result property="password" column="password" />
+		<result property="employeeId" column="employeeId" />
+
+		<result property="accountExpired" column="account_expired" />
+		<result property="accountLocked" column="account_locked" />
+		<result property="credentialsExpired" column="credentials_expired" />
+		<result property="enabled" column="account_enabled" />
+
+		<result property="lastLoginTime" column="lastLoginTime" />
+		<result property="version" column="version" />
+
+		<result property="sessionKey" column="sessionKey" />
+
+		<result property="createdTime" column="createdTime" />
+		<result property="createdBy" column="createdBy" />
+		<result property="updatedBy" column="updatedBy" />
+		<result property="lastModifyTime" column="lastModifyTime" />
+		<result property="delFlag" column="delFlag" />
+
+		<result property="initStatus" column="initStatus" />
+
+		<result property="alipayAccount" column="alipayAccount" />
+
+		<result property="hasInvoice" column="hasInvoice" />
+		<result property="hotelInvoiceType" column="hotelInvoiceType" />
+		<result property="otherInvoiceType" column="otherInvoiceType" />
+
+		<result property="sendMess" column="sendMess" />
+		<result property="chainCode" column="chainCode" />
+		
+		<result property="isLive" column="isLive" />
+		<result property="passwordIsInit" column="passwordIsInit" />
+		<result property="islocak" column="islocak" />
+		<result property="ishotelBlackList" column="ishotelBlackList" />
+	</resultMap>
+
+	<insert id="addB2BUser" parameterClass="user">
+    <![CDATA[
+        insert into
+        b2buser (userid, username, password, companyId, lastLoginTime, version, account_enabled, account_expired,account_locked, credentials_expired, sessionKey, 
+        createdTime, initStatus, sendMess, chainCode, createdBy, delFlag,employeeId,isLive,passwordIsInit,islocak,ishotelBlackList)
+        values (#userId#, #username#, #password#, #companyId#, #lastLoginTime#, #version#, #enabled#, #accountExpired#, #accountLocked#, #credentialsExpired#, 
+        #sessionKey#, #createdTime#, #initStatus#, #sendMess#, 
+        REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+        #createdBy#, #delFlag#,#employeeId#,#isLive#,#passwordIsInit#,#islocak#,#ishotelBlackList#)
+    ]]>
+	</insert>
+
+	<insert id="addUserRole" parameterClass="userRole">
+    <![CDATA[
+        insert into userrole (userid, roleid, hotelId, createdBy, createdTime, delFlag) 
+        values (#userId#, #roleId#, #hotelId#, #createdBy#, #createdTime#, #delFlag#)
+    ]]>
+	</insert>
+
+	<insert id="addUserRoleList" parameterClass="Map">
+		INSERT INTO userrole(userid, roleid, createdBy, createdTime, delFlag)
+		select #desUserId#,roleId,#desUserId#,now(),0 FROM userrole WHERE userId = #orgUserId#
+		and roleId IS NOT NULL and roleId not in
+		<iterate open="(" close=")" conjunction="," property="roleIds">#roleIds[]#</iterate>
+	</insert>
+
+	<delete id="deleteB2BUser" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from b2buser where userid = #userId#
+    ]]>
+	</delete>
+
+	<delete id="deleteUserRoles" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from userrole where userid = #userId#
+    ]]>
+	</delete>
+
+	<delete id="deleteHotelUserRole" parameterClass="Map">
+		delete from userrole where userId =#userId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roleId">
+				roleId = #roleId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				hotelId = #hotelId#  
+           </isNotEmpty>
+			<isEmpty prepend="AND" property="hotelId">
+				hotelId IS NULL
+           </isEmpty>
+		</dynamic>
+	</delete>
+
+	<delete id="deleteUserRoleByURID" parameterClass="Map">
+		delete from userrole where userId =#userId# and hotelId IS NULL
+		and roleId not in
+		<iterate open="(" close=")" conjunction="," property="roleIds">#roleIds[]#</iterate>
+	</delete>
+
+	<update id="updateB2BUser" parameterClass="user">
+    <![CDATA[
+        update b2buser SET 
+            lastLoginTime = #lastLoginTime#,
+            version = #version#,
+            account_enabled = #enabled#,
+            account_expired = #accountExpired#,
+            account_locked = #accountLocked#,
+            credentials_expired = #credentialsExpired#,
+            password = #password#,
+			sendMess = #sendMess#,
+			chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+			updatedBy = #updatedBy#,
+			lastModifyTime = #lastModifyTime#,
+			ishotelBlackList =#ishotelBlackList# 
+        where userid = #userId#
+    ]]>
+	</update>
+
+	<update id="changePassword" parameterClass="Map">
+    <![CDATA[
+        update b2buser SET password = #password# where userid = #userId#
+    ]]>
+	</update>
+
+	<update id="updateUserSessionKeyPwd" parameterClass="user">
+		update B2BUser set sessionKey=#sessionKey#, password=#password#, lastLoginTime=#lastLoginTime#,initStatus=#initStatus#,
+		chainCode=REPLACE(REPLACE(#chainCode#,' ',''),' ',''),
+		updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime# where userId=#userId#
+    </update>
+
+	<update id="updateUserAccountSet" parameterClass="user">
+		update B2BUser set
+		alipayAccount=#alipayAccount#,
+		hasInvoice=#hasInvoice#,
+		hotelInvoiceType=#hotelInvoiceType#,
+		otherInvoiceType=#otherInvoiceType#,
+		sendMess = #sendMess#,
+		updatedBy = #updatedBy#,
+		lastModifyTime = #lastModifyTime#
+		where userId=#userId#
+    </update>
+
+	<update id="updateB2bUserStatus" parameterClass="Map">
+		UPDATE b2buser SET initStatus = #initStatus# WHERE userId = #userId#
+	</update>
+
+	<select id="getUserSessionKey" resultClass="user">
+		select userId, sessionKey,chainCode from B2BUser
+    </select>
+
+	<select id="getB2BUsers" resultMap="userResult">
+    <![CDATA[
+        select * from b2buser ORDER BY UPPER(username)
+    ]]>
+	</select>
+
+	<select id="getAllB2BUser" resultClass="userVO">
+	  <![CDATA[
+		SELECT * FROM b2buser WHERE delFlag = 0 ORDER BY UPPER(username)
+	  ]]>
+	</select>
+
+	<select id="getB2BUser" resultMap="userResult">
+    <![CDATA[
+        select * from b2buser where userid=#userId#
+    ]]>
+	</select>
+
+	<select id="getUserByUsername" resultMap="userResult">
+    <![CDATA[
+      
+        SELECT * FROM  b2buser where username=#username#
+    ]]>
+	</select>
+
+	<select id="getUserPassword" resultClass="java.lang.String">
+    <![CDATA[
+        select password from b2buser where username=#username#
+    ]]>
+	</select>
+
+	<select id="getB2BUserByCompanyId" resultClass="user">
+    <![CDATA[
+        select userId,username,createdTime from b2buser where companyId=#companyId# order by username
+    ]]>
+	</select>
+
+	<select id="getSessionKeyByChainCode" resultClass="String">
+		select sessionKey from B2BUser where chainCode =#chainCode#
+    </select>
+
+	<!-- MC应用添加 -->
+	<select id="getAllCheckedHotelRoleOfUser" resultClass="roleVO">
+		select userId,roleId,hotelId from userrole where userId = #userId#
+	</select>
+
+	<select id="getHotelIdOfUser" resultClass="String">
+		select ur.hotelId from userrole ur where userId =#userId# AND hotelId IS NOT NULL
+    </select>
+
+	<select id="getHotelUserRole" resultClass="String" parameterClass="Map">
+		select ur.roleid from userrole ur where userId =#userId# and roleId = #roleId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				hotelId = #hotelId#  
+           </isNotEmpty>
+			<isEmpty prepend="AND" property="hotelId">
+				hotelId IS NULL
+           </isEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getUserByHotelId" resultMap="userResult">
+		SELECT t1.* FROM b2buser t1 INNER JOIN userrole t2 ON t1.userId=t2.userId AND t2.hotelId=#hotelId# WHERE t1.companyId = '1'
+    </select>
+
+	<select id="getHotelCodeOfUser" resultClass="String">
+		select h.hotelCode from userrole ur, hotel h where ur.hotelId=h.hotelId and userId =#userId# AND hotelId IS NOT NULL
+    </select>
+
+	<select id="getUserRoles" resultClass="role">
+    <![CDATA[
+        select r.roleid, r.name, r.description from role r, userrole ur where (ur.roleid = r.roleid) and ur.userid=#userId#
+    ]]>
+	</select>
+
+	<select id="getCheckedRoleOfUser" resultClass="roleVO" parameterClass="Map">
+		select r.roleId, r.cnName as roleCnName,
+		case
+		WHEN ur.userId IS NULL
+		THEN 0 else 1
+		END as checked, null as hotelId, null as hotelName,
+		(SELECT displayName from menu
+		WHERE menuId = m.parentId) as roleCategory
+		from role r
+		left join userrole ur on r.roleid = ur.roleId
+		left join menu m on m.menuId = r.roleId
+		where r.usescope in
+		<iterate property="usageList" open="(" close=")" conjunction=",">
+			#usageList[]#
+       </iterate>
+		and (userId = #userId# OR userId IS NULL)
+	</select>
+
+	<select id="getHotelRoleOfUser" resultClass="roleVO" parameterClass="Map">
+		select r.roleId, r.cnName as roleCnName, ur.userId,
+		case
+		WHEN ur.userId IS NULL
+		THEN 0 else 1
+		END as checked,
+		h.hotelId, h.hotelName
+		from role r
+		left join userrole ur on r.roleid= ur.roleId
+		left join hotel h on ur.hotelId = h.hotelId
+		where r.usescope in
+		<iterate property="usageList" open="(" close=")" conjunction=",">
+			#usageList[]#
+       </iterate>
+		and (userId = #userId# OR userId IS NULL)
+		and (h.hotelId = #hotelId# OR h.hotelId IS NULL)
+	</select>
+
+	<select id="searchB2BUserCount" resultClass="Integer">
+		SELECT count(u.userId)
+		FROM b2buser u LEFT JOIN employee e ON u.employeeId = e.employeeId WHERE 1=1
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="username">
+				u.username LIKE CONCAT('%',#username#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="companyId">
+				u.companyId = #companyId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="companyName">
+				u.companyName LIKE CONCAT('%',#companyName#,'%')
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="name">
+				e.name LIKE CONCAT('%',#name#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="mobile">
+				e.mobile LIKE CONCAT('%',#mobile#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dept">
+				e.dept = #dept# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="title">
+				e.title = #title#
+           </isNotEmpty>
+
+		</dynamic>
+	</select>
+
+	<select id="searchB2BUsers" resultClass="userVO">
+
+		SELECT u.userId,u.username,ei.name,u.password,u.createdTime,u.islocak,u.lastLoginTime,e.employeeId,e.telNo,e.mobile,e.email,ei.dept,ei.title,e.qq,CASE sub.num
+		WHEN 1 THEN '1'
+		ELSE '0'
+		END AS adminFlag,
+		u.ishotelBlackList
+		FROM b2buser u LEFT JOIN employee e ON u.employeeId = e.employeeId
+		LEFT JOIN employee_i18n ei ON ei.employeeId=e.employeeId AND LANGUAGE=#language#
+		LEFT JOIN
+		(
+		SELECT ur.userid,COUNT(*) AS num FROM userrole ur WHERE ur.roleId IN ('1','3') GROUP BY ur.userid
+		) sub
+		ON u.userid = sub.userid
+		WHERE 1=1
+
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="username">
+				u.username LIKE CONCAT('%',#username#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="companyId">
+				u.companyId = #companyId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="companyName">
+				u.companyName LIKE CONCAT('%',#companyName#,'%')
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="name">
+				e.name LIKE CONCAT('%',#name#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="mobile">
+				e.mobile LIKE CONCAT('%',#mobile#,'%')
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dept">
+				e.dept = #dept# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="title">
+				e.title = #title#
+           </isNotEmpty>
+
+		</dynamic>
+		<include refid="pageSqlUserSQL"/>
+	</select>
+	
+	<insert id="saveCHannelUserRole" parameterClass="userRoleChannel">
+    <![CDATA[
+        insert into userrolechannel (MId,userid, roleId, channelId, createdBy, createdTime, delFlag) 
+        values (REPLACE(UUID(), '-', ''),#userId#, #roleId#, #channelId#, #createdBy#, #createdTime#, #delFlag#)
+    ]]>
+	</insert>
+	
+	<delete id="deleteCHannelUserRole" parameterClass="Map">
+		delete from userrolechannel where userId =#userId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roleId">
+				roleId = #roleId# 
+           </isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelId">
+				channelId = #channelId#  
+           </isNotEmpty>
+			<isEmpty prepend="AND" property="channelId">
+				channelId IS NULL
+           </isEmpty>
+		</dynamic>
+	</delete>
+	
+	<delete id="removeUserRoleChannelByRoleId">
+		delete from userrolechannel where roleId = #roleId# 
+	</delete>
+	
+	<delete id="removeUserRoleChannelByUserId">
+		delete from userrolechannel where userId = #userId# 
+	</delete>
+	
+	<!-- MC应用添加 -->
+	<select id="getUserIdByRoleId" resultClass="String">
+		select distinct userId from userrole where roleId = #roleId#
+	</select>
+	
+	
+	<select id="getChecekedChannelRoleOfUser" resultClass="userRoleChannel">
+		select MId,userId,roleId,channelId from userrolechannel where userId = #userId#
+	</select>
+	
+	<select id="getCheckedChannelRoleByUserRole" resultClass="userRoleChannel" parameterClass="userRole">
+		select MId,userId,roleId,channelId from userrolechannel where userId = #userId# and roleId=#roleId#
+	</select>
+	
+	<select id="getChannelIdListByUserId" resultClass="String">
+		select ur.channelId from userrolechannel ur where userId =#userId# AND channelId IS NOT NULL
+	</select>
+	<delete id="deleteUserRoleChannels" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from userrolechannel where userid = #userId#
+    ]]>
+	</delete>
+	
+	<update id="updateIsLive" parameterClass="user">
+    <![CDATA[
+        update b2buser SET 
+            version = #version#,
+			updatedBy = #updatedBy#,
+			lastModifyTime = #lastModifyTime# ,
+			isLive = #isLive#,
+			ishotelBlackList=#ishotelBlackList#
+        where userid = #userId#
+    ]]>
+	</update>
+
+	<select id="getHotelsByUserId" resultClass="hotel">
+    <![CDATA[
+        select h.hotelId,h.hotelCode from userrole ur, hotel h where ur.hotelId=h.hotelId and ur.userId =#userId# AND h.hotelId IS NOT NULL
+    ]]>
+	</select>
+	
+	<select id="getUserRolesByUserId" resultClass="userRole">
+    <![CDATA[
+         SELECT * 
+         FROM userrole  
+         WHERE delFlag =0 and userid=#userid#
+    ]]>
+	</select>
+	
+	<select id="findUserPassword" resultClass="userPasswordVO">
+		select * from userPassword where userId = #userId# and delFlag=0
+	</select>
+	
+	<select id="getUserInfo" resultClass="userPasswordVO">
+		SELECT b.*,u.* FROM userPassword u INNER JOIN b2buser b ON u.`userId`=b.`userId` where u.`delFlag`=0 and b.`userId`=#userId#
+	</select>
+	
+	<insert id="addUserPassword" parameterClass="userPasswordVO">
+		INSERT INTO `userpassword`(`userId`,`password1`,`password2`,`password3`,`password4`,`passwordFailNumber`,`passwordlastModifyTime`,`passwordFaillastModifyTime`,`createdBy`,`updatedBy`, `lastModifyTime`,`delFlag`)
+		VALUES (#userId#,#password1#,#password2#,#password3#,#password4#,#passwordFailNumber#,#passwordlastModifyTime#,#passwordFaillastModifyTime#,#createdBy#,#updatedBy#, #lastModifyTime#,#delFlag#)
+	</insert>
+	
+	<select id="getUserPasswordInfo" resultClass="userPasswordVO">
+		SELECT b.userid,b.`islocak`,b.`passwordIsInit`,u.* FROM userPassword u INNER JOIN b2buser b ON u.`userId`=b.`userId` where u.`delFlag`=0 and u.userId=#userId#
+	</select>
+	
+	<update id="updateUserPassword" parameterClass="userPasswordVO">
+		UPDATE userPassword 
+		SET 
+		password1=#password1#,
+		password2=#password2#,
+		password3=#password3#,
+		password4=#password4#,
+		passwordFailNumber=#passwordFailNumber#,
+		passwordFaillastModifyTime=#passwordFaillastModifyTime#,
+		passwordlastModifyTime=#passwordlastModifyTime#
+		WHERE userId=#userId#
+	</update>
+	
+	<update id="updateLocak"  parameterClass="Map">
+		UPDATE b2buser  SET  islocak=#islocak# WHERE userId=#userId#
+	</update>
+	
+	<update id="updatePassFailNumber"  parameterClass="Map">
+		UPDATE userPassword  SET  passwordFailNumber=#passwordFailNumber# WHERE userid=#userId#
+	</update>
+	
+	<update id="updatePasswordIsInit"  parameterClass="Map">
+		UPDATE b2buser  SET  passwordIsInit=#passwordIsInit# WHERE userId=#userId#
+	</update>
+	
+	<select id="getUserByLoginName" resultClass="userVO">
+		SELECT  b.`username`,b.`userId`, b.`createdTime` ,b.`islocak`,b.`isLive`, e.`email` FROM b2buser b  LEFT JOIN employee e  ON b.`employeeId` = e.`employeeId` 
+		WHERE b.`username` = #username# 
+	</select>
+	
+</sqlMap>

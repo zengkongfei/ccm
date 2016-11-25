@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SmsSendSQL">
+
+	<typeAlias alias="smsSend" type="com.ccm.api.model.sms.SmsSend" />
+	<typeAlias alias="orderEmailConfirm" type="com.ccm.api.model.order.OrderEmailConfirm"/>
+
+	<sql id="pageSqlSmsSendSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+	<resultMap id="smsSendResult" class="smsSend">
+
+		<result property="smsSendId" column="smsSendId" />
+		<result property="smsType" column="smsType" />
+		<result property="mobileNumber" column="mobileNumber" />
+		<result property="smsContent" column="smsContent" />
+		<result property="verifyCode" column="verifyCode" />
+		<result property="bizId" column="bizId" />
+		<result property="source" column="source" />
+		<result property="contentType" column="contentType" />
+		<result property="bodycontent" column="bodycontent" />
+		<result property="title" column="title" />
+		<result property="sendTime" column="sendTime" jdbcType="DATETIME" />
+
+
+	</resultMap>
+
+
+	<insert id="addSmsSend" parameterClass="smsSend">
+    <![CDATA[
+        insert into smsSend
+                (smsSendId, smsType, mobileNumber,smsContent, verifyCode, bizId, sendTime, resultCode, resultMsg,source,contentType,bodycontent,title)
+        values (#smsSendId#, #smsType#, #mobileNumber#,#smsContent#,#verifyCode#,#bizId#,#sendTime#, #resultCode#, #resultMsg#,#source#,#contentType#,#bodycontent#,#title#)
+    ]]>
+	</insert>
+
+	<update id="updateSmsSend" parameterClass="smsSend">
+    <![CDATA[
+        update smsSend SET 
+            smsType = #smsType#,  
+            mobileNumber    = #mobileNumber#,      
+            smsContent = #smsContent#,
+            verifyCode = #verifyCode#,
+            resultCode   = #resultCode#, 
+            bizId = #bizId#,
+            sendTime = #sendTime#,
+            source = #source#,
+            resultMsg = #resultMsg# 
+        where smsSendId = #smsSendId#
+    ]]>
+	</update>
+
+	<select id="getSmsSend" resultMap="smsSendResult" parameterClass="java.lang.String">
+    <![CDATA[
+        select * from smsSend where smsSendId=#smsSendId#
+    ]]>
+	</select>
+
+	<select id="getSmsSendNumByMobile" resultClass="Integer">
+    <![CDATA[
+        SELECT count(*) FROM smssend WHERE DATE(sendTime) = CURDATE() AND mobileNumber=#mobile#
+    ]]>
+	</select>
+
+	<select id="getSmsSendNumByCondition" resultClass="Integer">
+    <![CDATA[
+        SELECT count(*) FROM smssend WHERE mobileNumber =#mobileNumber# AND smsType=#smsType# 
+		AND TIME_TO_SEC(TIMEDIFF(NOW(),sendTime)) < #sec#
+    ]]>
+	</select>
+
+	<delete id="deleteSmsSend" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from smsSend where smsSendId = #smsSendId#
+    ]]>
+	</delete>
+
+	<select id="searchSmsSend" resultMap="smsSendResult">
+		select * from smsSend where 1=1
+		<dynamic prepend="AND">
+
+			<isNotEmpty prepend="AND" property="smsType">
+				smsType = #smsType# 
+           </isNotEmpty>
+
+
+			<isNotEmpty prepend="AND" property="mobileNumber">
+				mobileNumber = #mobileNumber# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="bizId">
+				bizId = #bizId# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="verifyCode">
+				verifyCode = #verifyCode# 
+           </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="resultCode">
+				resultCode = #resultCode# 
+           </isNotEmpty>
+
+		</dynamic>
+	</select>
+	
+	<select id="searchOrderEmailConfirm" resultClass="orderEmailConfirm">
+		SELECT 
+		  s.`smsSendId`, 
+		  m.`channel` AS channelCode,
+		  mo.`hotelCode`,
+		  m.`masterId`,
+		  s.`mobileNumber` as sta,
+		  s.`sendTime`,
+		  s.`smsContent` AS emailAddress,
+		  s.`resultCode`
+		FROM
+		  MASTER m 
+		  INNER JOIN master_order mo 
+		    ON m.masterId = mo.masterId 
+		    AND m.pcrec != "0" 
+		  INNER JOIN smssend s 
+		    ON m.`masterId` = s.`bizId` 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				mo.`hotelCode` in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCodes">
+				m.`channel` in
+				<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+			    </iterate>
+			</isNotEmpty>    
+			<isNotEmpty prepend="AND" property="statusList">
+				s.`mobileNumber` in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="masterId">
+				m.`masterId` = #masterId#
+           	</isNotEmpty>
+           	<isNotEmpty prepend="AND" property="emailAddress">
+				s.`smsContent` LIKE CONCAT('%',#emailAddress#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            s.`sendTime` >= #startDate#
+		          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        s.`sendTime` < #endDate#
+			      ]]>
+			</isNotEmpty>
+			and s.source IS NULL 
+		</dynamic>
+		order by s.`sendTime` desc
+		<include refid="pageSqlSmsSendSQL"/>
+	</select>
+	
+	<select id="searchOrderEmailConfirmCount" resultClass="Integer">
+		SELECT count(*) FROM
+		  MASTER m 
+		  INNER JOIN master_order mo 
+		    ON m.masterId = mo.masterId 
+		    AND m.pcrec != "0" 
+		  INNER JOIN smssend s 
+		    ON m.`masterId` = s.`bizId` 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				mo.`hotelCode` in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCodes">
+				m.`channel` in
+				<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+			    </iterate>
+			</isNotEmpty>    
+			<isNotEmpty prepend="AND" property="statusList">
+				s.`mobileNumber` in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="masterId">
+				m.`masterId` = #masterId#
+           	</isNotEmpty>
+           	<isNotEmpty prepend="AND" property="emailAddress">
+				s.`smsContent` LIKE CONCAT('%',#emailAddress#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            s.`sendTime` >= #startDate#
+		          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        s.`sendTime` < #endDate#
+			      ]]>
+			</isNotEmpty>
+			and s.source IS NULL 
+		</dynamic>
+	</select>
+	<select id="searchHotelInterfaceEmail" resultClass="orderEmailConfirm">
+		SELECT 
+		  s.`smsSendId`, 
+		  s.source AS channelCode,
+		  s.bizId hotelCode,
+		  "" masterId,
+		  "" as sta,
+		  s.`sendTime`,
+		  s.`smsContent` AS emailAddress,
+		  s.`resultCode`
+		FROM smssend s 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				s.bizId in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+           	<isNotEmpty prepend="AND" property="emailAddress">
+				s.`smsContent` LIKE CONCAT('%',#emailAddress#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            s.`sendTime` >= #startDate#
+		          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        s.`sendTime` < #endDate#
+			      ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="emailType">
+			      <![CDATA[
+			        s.`contentType` = #emailType#
+			      ]]>
+			</isNotEmpty>
+		</dynamic>
+		order by s.`sendTime` desc
+		<include refid="pageSqlSmsSendSQL"/>
+	</select>
+	
+	<select id="countHotelInterfaceEmail" resultClass="Integer">
+		SELECT count(*) FROM smssend s 
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				s.bizId in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+           	<isNotEmpty prepend="AND" property="emailAddress">
+				s.`smsContent` LIKE CONCAT('%',#emailAddress#,'%')
+           	</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            s.`sendTime` >= #startDate#
+		          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        s.`sendTime` < #endDate#
+			      ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="emailType">
+			      <![CDATA[
+			        s.`contentType` = #emailType#
+			      ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	
+	<select id="searchHotelInterfaceLog" resultClass="orderEmailConfirm">
+		SELECT s.`smsSendId`,
+			  s.bizId AS hotelCode,
+			  s.`sendTime`,
+			  s.`smsType`,
+			  s.`resultCode` ,
+			  CASE WHEN s.smsType='email' THEN s.`smsContent` 
+			       WHEN s.smsType='SMSREMIND' THEN s.`mobileNumber` END AS emailAddress,
+			  CASE WHEN s.smsType='email' AND s.resultCode=1  THEN 'SUCCESS' 
+			       WHEN s.smsType='SMSREMIND' AND s.resultCode=0 THEN 'SUCCESS' 
+			  ELSE 'FAIL'  END AS sta
+			FROM smssend s
+			WHERE  s.bizId IS NOT NULL   AND s.bizId != '' 
+		  <dynamic>
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				s.bizId in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+
+           	<isNotEmpty prepend="AND" property="emailType">
+	           	<isEqual property="emailType" compareValue="email">
+	           		s.smsType='email' AND s.source=#source#
+	           	</isEqual>
+	           	<isEqual property="emailType" compareValue="SMSREMIND">
+	           		s.smsType='SMSREMIND'
+	           	</isEqual>
+           	</isNotEmpty>
+           	
+           	<isEmpty prepend="AND" property="emailType">
+           		((s.smsType='email' AND s.source='INGERFACE') OR ( s.smsType='SMSREMIND'))
+           	</isEmpty>
+           	
+			<isNotEmpty prepend="AND" property="startDate">
+	          <![CDATA[
+	            s.`sendTime` >= #startDate#
+	          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+		      <![CDATA[
+		        s.`sendTime` < #endDate#
+		      ]]>
+			</isNotEmpty>
+		</dynamic>
+		order by s.`sendTime` desc
+		<include refid="pageSqlSmsSendSQL"/>
+	</select>
+	
+	
+	<select id="countHotelInterfaceLog" resultClass="Integer">
+		SELECT count(*)
+		FROM smssend s 
+		WHERE  s.bizId IS NOT NULL 
+		  AND s.bizId != '' 
+		  <dynamic>
+			<isNotEmpty prepend="AND" property="hotelCodes">
+				s.bizId in
+				<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+			    </iterate>
+			</isNotEmpty>
+
+           	<isNotEmpty prepend="AND" property="emailType">
+	           	<isEqual property="emailType" compareValue="email">
+	           		s.smsType='email' AND s.source=#source#
+	           	</isEqual>
+	           	<isEqual property="emailType" compareValue="SMSREMIND">
+	           		s.smsType='SMSREMIND'
+	           	</isEqual>
+           	</isNotEmpty>
+           	
+           	<isEmpty prepend="AND" property="emailType">
+           		((s.smsType='email' AND s.source='INGERFACE') OR ( s.smsType='SMSREMIND'))
+           	</isEmpty>
+           	
+			<isNotEmpty prepend="AND" property="startDate">
+	          <![CDATA[
+	            s.`sendTime` >= #startDate#
+	          ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+		      <![CDATA[
+		        s.`sendTime` < #endDate#
+		      ]]>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	
+	
+	
+	
+	
+	
+</sqlMap>

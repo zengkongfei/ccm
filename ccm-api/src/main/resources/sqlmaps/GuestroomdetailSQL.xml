@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Guestroomdetail" >
+
+  <typeAlias alias="guestroomdetail" type="com.ccm.api.model.guestroom.Guestroomdetail" />
+
+  <insert id="addGuestroomdetail" parameterClass="guestroomdetail" >
+    INSERT INTO guestroomdetail( roomDetailId, guestRoomId, hall, floor, roomNo, bedCount, roomStatus, 
+      roomSize, createdTime, lastModifyTime)
+     VALUES ( #roomdetailid#, #guestroomid#, #hall#, #floor#, #roomno#, #bedcount#, #roomstatus#, 
+      #roomsize#, #createdtime#, #lastmodifytime#)
+  </insert>
+
+  <update id="updateGuestroomdetail" parameterClass="guestroomdetail" >
+    UPDATE guestroomdetail   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="roomdetailid" prepend="," >
+        <![CDATA[  
+        roomDetailId = #roomdetailid#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="guestroomid" prepend="," >
+        <![CDATA[  
+        guestRoomId = #guestroomid#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="hall" prepend="," >
+        <![CDATA[  
+        hall = #hall#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="floor" prepend="," >
+        <![CDATA[  
+        floor = #floor#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="roomno" prepend="," >
+        <![CDATA[  
+        roomNo = #roomno#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bedcount" prepend="," >
+        <![CDATA[  
+        bedCount = #bedcount#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="roomstatus" prepend="," >
+        <![CDATA[  
+        roomStatus = #roomstatus#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="roomsize" prepend="," >
+        <![CDATA[  
+        roomSize = #roomsize#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="createdtime" prepend="," >
+        <![CDATA[  
+        createdTime = #createdtime#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lastmodifytime" prepend="," >
+        <![CDATA[  
+        lastModifyTime = #lastmodifytime#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE roomDetailId = #roomdetailid#  
+  </update>
+
+</sqlMap>

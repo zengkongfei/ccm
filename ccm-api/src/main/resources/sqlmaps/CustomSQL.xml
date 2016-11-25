@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CustomSQL">
+
+	<typeAlias alias="custom" type="com.ccm.api.model.hotel.Custom" />
+	<typeAlias alias="customReportRecord" type="com.ccm.api.model.hotel.vo.CustomReportRecord" />
+	
+	<sql id="pageSqlCustomSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="addCustom" parameterClass="custom">
+    <![CDATA[
+        insert into custom (customId,hotelId,name,type,corpIATANo,accessCode,createdTime,delFlag,createdBy,
+        business,mobile,fax,address,email,originalCreditLimit,minLimit,bookingManagment,channelId,profileID,defGuaranteeId,defCancelId,
+        autoDeposit,transactionCode,traceDept) 
+        values (#customId#,#hotelId#,#name#,REPLACE(REPLACE(#type#,' ',''),'　',''),#corpIATANo#,REPLACE(REPLACE(#accessCode#,' ',''),'　',''),#createdTime#,#delFlag#,#createdBy#,
+        #business#,#mobile#,#fax#,#address#,#email#,#originalCreditLimit#,#minLimit#,#bookingManagment#,#channelId#,#profileID#,#defGuaranteeId#,#defCancelId#,
+        #autoDeposit#,REPLACE(REPLACE(#transactionCode#,' ',''),'　',''),REPLACE(REPLACE(#traceDept#,' ',''),'　',''))
+     ]]>
+	</insert>
+
+	<update id="updateCustomDelFlag" parameterClass="Map">
+		update custom SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where customId = #customId#
+    </update>
+
+	<!-- only update business fields -->
+	<update id="updateCustom" parameterClass="custom">
+		update custom SET
+		lastModifyTime = #lastModifyTime#,updatedBy = #updatedBy#,
+		name = #name#,
+		type = REPLACE(REPLACE(#type#,' ',''),'　',''),
+		corpIATANo = #corpIATANo#,
+		accessCode=REPLACE(REPLACE(#accessCode#,' ',''),'　',''),
+		business=#business#,
+		mobile=#mobile#,
+		fax=#fax#,
+		address=#address#,
+		email=#email#,
+		originalCreditLimit=#originalCreditLimit#,
+		minLimit=#minLimit#,
+		bookingManagment=#bookingManagment#,
+		channelId=#channelId#,
+		profileID=#profileID#,
+		defGuaranteeId=#defGuaranteeId#,
+		defCancelId=#defCancelId#,
+		autoDeposit=#autoDeposit#,
+		transactionCode=REPLACE(REPLACE(#transactionCode#,' ',''),'　',''),
+		traceDept=REPLACE(REPLACE(#traceDept#,' ',''),'　','')
+		where customId = #customId#
+	</update>
+
+	<update id="updateCustomCumulative" parameterClass="Map">
+		UPDATE custom SET
+		income=#income#
+		where customId = #customId#
+    </update>
+    
+    <update id="updateProfileMessage" parameterClass="Map">
+		UPDATE custom SET
+		profileMessage=#profileMessage#
+		where customId = #customId#
+    </update>
+    
+    <update id="updateTotalRoomRev" parameterClass="custom">
+		UPDATE custom SET
+		totalRoomRev=#totalRoomRev#
+		where customId = #customId#
+    </update>
+    
+	<select id="getCustom" resultClass="custom">
+    <![CDATA[
+        select * from custom where customId = #customId# and delFlag=0
+    ]]>
+	</select>
+
+	<select id="getCustoms" resultClass="custom">
+    <![CDATA[
+        select * from custom WHERE delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getCustomByHotelId" resultClass="custom" parameterClass="String">
+		select * from custom where hotelId=#hotelId# and delFlag=0
+	</select>
+
+	<select id="getCustomByObj" resultClass="custom">
+		SELECT * FROM custom where delFlag=0
+		<isNotEmpty prepend="AND" property="hotelId">
+			hotelId = #hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="delFlag">
+			delFlag = #delFlag#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="name">
+			name = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			type = #type#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="corpIATANo">
+			corpIATANo =
+			#corpIATANo# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessCode">
+			accessCode=#accessCode#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="profileID">
+			profileID=#profileID#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="defGuaranteeId">
+			defGuaranteeId=#defGuaranteeId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="defCancelId">
+			defCancelId=#defCancelId#
+		</isNotEmpty>
+	</select>
+
+	<select id="countCustom" resultClass="Integer">
+		SELECT count(*) from custom
+		WHERE delFlag = 0 AND hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="name">
+			name = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			type = #type# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="corpIATANo">
+			corpIATANo = #corpIATANo# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessCode">
+			accessCode=#accessCode#
+		</isNotEmpty>
+	</select>
+
+	<select id="searchCustom" resultClass="custom">
+		SELECT * from custom
+		WHERE delFlag = 0 AND hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="name">
+			name = #name#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="type">
+			type = #type# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="corpIATANo">
+			corpIATANo = #corpIATANo# 
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="accessCode">
+			accessCode=#accessCode#
+		</isNotEmpty>
+		<include refid="pageSqlCustomSQL"/>
+	</select>
+	
+	<select id="searchCustomById" resultClass="custom">
+		SELECT
+		customId,hotelId,name,type,corpIATANo,accessCode,delFlag,createdTime,createdBy,lastModifyTime,updatedBy,business,mobile,
+		fax,address,email,originalCreditLimit,totalRoomRev,income,minLimit,bookingManagment,channelId,profileID,defGuaranteeId,defCancelId
+		from custom
+		WHERE delFlag = 0 AND customId=#customId#
+	</select>
+	
+	<select id="queryBookingDepositReport" resultClass="customReportRecord">
+		SELECT 
+		c.customid,g.chainCode,bclb.hotelCode,c.name,c.corpIATANo,c.accessCode,c.delFlag,cl.originalCreditLimit,cl.minlimit,cl.income,cl.totalRoomRev,bclb.totalRoomRev as childtotalRoomRev,
+		CASE WHEN cl.originalCreditLimit IS NULL THEN NULL ELSE
+		(IFNULL(cl.originalCreditLimit,0)-IFNULL(cl.minLimit,0)+IFNULL(cl.income,0)-IFNULL(cl.totalRoomRev,0)) END AS balance from Custom c 
+			INNER JOIN  creditlimit cl 
+			ON c.channelId=cl.channelId
+			AND cl.delFlag=0
+			AND c.delFlag=0
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				c.hotelId in
+				<iterate open="(" close=")" conjunction="," property="hotelIdList">
+							<![CDATA[ #hotelIdList[]# ]]>
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accessCodeList">
+				c.accessCode in
+				<iterate open="(" close=")" conjunction="," property="accessCodeList">
+							<![CDATA[ #accessCodeList[]# ]]>
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accessCode">
+				c.accessCode=#accessCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				c.name = #name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="corpIATANo">
+				c.corpIATANo = #corpIATANo# 
+			</isNotEmpty>
+			INNER JOIN hotelcreditlimitbinding bclb ON cl.creditLimitId=bclb.creditLimitId
+			AND cl.delFlag=0
+			AND bclb.delflag=0
+			AND c.hotelId=bclb.hotelId
+			AND c.channelId=bclb.channelId
+			inner join hotel h
+			on c.delflag=0
+			and c.hotelId=h.hotelId
+			INNER JOIN CHAIN g
+			ON g.chainId=h.chainId
+			<include refid="pageSqlCustomSQL"/>
+	</select>
+	
+	<select id="getBookingDepositReportCount" resultClass="Integer">
+			SELECT count(*) from Custom c 
+			INNER JOIN  creditlimit cl 
+			ON c.channelId=cl.channelId
+			AND cl.delFlag=0
+			AND c.delFlag=0
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				c.hotelId in
+				<iterate open="(" close=")" conjunction="," property="hotelIdList">
+							<![CDATA[ #hotelIdList[]# ]]>
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accessCodeList">
+				c.accessCode in
+				<iterate open="(" close=")" conjunction="," property="accessCodeList">
+							<![CDATA[ #accessCodeList[]# ]]>
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="accessCode">
+				c.accessCode=#accessCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="name">
+				c.name = #name#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="corpIATANo">
+				c.corpIATANo = #corpIATANo# 
+			</isNotEmpty>
+			INNER JOIN hotelcreditlimitbinding bclb ON cl.creditLimitId=bclb.creditLimitId
+			AND cl.delFlag=0
+			AND bclb.delflag=0
+			AND c.hotelId=bclb.hotelId
+			AND c.channelId=bclb.channelId
+	</select>
+	
+	
+	<select id="searchCustomByHotelIdAndAccessCode" resultClass="custom" parameterClass="Map">
+    <![CDATA[
+        SELECT * FROM custom WHERE delFlag = 0 AND accessCode=#accessCode#  AND hotelId=#hotelId# 
+    ]]>
+	</select>
+	
+	<select id="searchCustomByHotelIdAndChannelId" resultClass="custom" parameterClass="Map">
+    <![CDATA[
+        SELECT * FROM custom WHERE delFlag = 0 AND channelId=#channelId#  AND hotelId=#hotelId# 
+    ]]>
+	</select>
+</sqlMap>

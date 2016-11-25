@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<OTA_HotelRatePlanNotifRQ xmlns="http://www.opentravel.org/OTA/2003/05" TimeStamp="$timeStamp" Version="$version" TransactionIdentifier="$echoToken">
+	<RatePlans ChainCode="$chainCode" HotelCode="$hotelCode">
+		<RatePlan CurrencyCode="$currencyCode" RatePlanCode="$rateCode">
+			<DestinationSystemsCode>
+				<DestinationSystemCode>$channelCode</DestinationSystemCode>
+			</DestinationSystemsCode>
+			<Rates>
+				#if ($rtav == 1)
+				<Rate Status="$status" InvCode="$rtCode" Start="$start" End="$end" CurrencyCode="$currencyCode"/>
+				#else
+				<Rate InvCode="$rtCode" Start="$start" End="$end" CurrencyCode="$currencyCode">
+					<BaseByGuestAmts>
+					#foreach( $ral in $baseByGuestAmts )
+						<BaseByGuestAmt NumberOfGuests="$ral.numberOfUnits" AgeQualifyingCode="10" AmountBeforeTax="$ral.baseAmount" AmountAfterTax="$ral.amountAfterTax" />
+					#end
+					</BaseByGuestAmts>
+					<AdditionalGuestAmounts>
+					#foreach( $aral in $additionalGuestAmounts )
+						<AdditionalGuestAmount Amount="$aral.baseAmount" CurrencyCode="$currencyCode" AgeQualifyingCode="10" />
+					#end
+					</AdditionalGuestAmounts>
+				</Rate>
+				#end
+			</Rates>
+		</RatePlan>
+	</RatePlans>
+</OTA_HotelRatePlanNotifRQ>

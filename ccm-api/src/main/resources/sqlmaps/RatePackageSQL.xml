@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RatePackageSQL">
+	<typeAlias alias="ratePackage" type="com.ccm.api.model.ratePlan.RatePackage" />
+	
+	<insert id="addRatePackage" parameterClass="ratePackage">
+		INSERT INTO rate_package
+            (ratePackageId, ratePlanId, packageId, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#ratePackageId#, #ratePlanId#, #packageId#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)
+	</insert>
+	
+	<select id="getRatePackage" resultClass="ratePackage">
+		SELECT * FROM rate_package WHERE ratePackageId=#value#
+    </select>
+    
+    <select id="getRatePackageByRatePlanId" resultClass="ratePackage">
+		SELECT t1.*,t2.packageName,t3.packageCode FROM rate_package t1 
+		 					  LEFT JOIN package_i18n t2 ON t1.packageId = t2.packageId
+		                            AND t2.delFlag = 0 AND t2.language = #language# 
+		                            left join package t3 ON t1.packageId = t3.packageId
+		WHERE t1.ratePlanId=#ratePlanId# AND t1.delFlag = 0 
+    </select>
+    
+     <select id="getSvcTaxPackageByRatePlanId" resultClass="package">
+		SELECT t3.* FROM rate_package t1 
+		                            INNER JOIN package t3 ON t1.packageId = t3.packageId
+		WHERE t1.ratePlanId=#ratePlanId# AND t1.delFlag = 0 and t3.delFlag= 0 and t3.issvcortax =1
+    </select>
+    
+    <update id="updateRatePackage" parameterClass="ratePackage">
+    	UPDATE rate_package
+			SET ratePackageId = #ratePackageId#, ratePlanId = #ratePlanId#, packageId = #packageId#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE ratePackageId = #ratePackageId#
+    </update>
+    
+    <delete id="deleteRatePackageByRatePlanId">
+	    DELETE
+			FROM rate_package
+		WHERE ratePlanId = #ratePlanId#
+    </delete>
+    
+   	<select id ="getSvcOrTaxFromRateDetail" resultClass="package" parameterClass="Map">
+		SELECT abc.* FROM (	  
+							SELECT rp.rateplanId,t3.* FROM room_package t1 
+						        INNER JOIN package t3 ON t1.packageId = t3.packageId
+					                AND t3.delFlag= 0 
+					                AND t3.issvcortax =1
+							AND  t1.delFlag = 0 
+							INNER JOIN rate_plan rp 
+							ON rp.delFlag=0	
+							INNER JOIN rate_detail rd 
+							ON rd.delFlag=0 
+							AND rd.ratePlanId=rp.ratePlanId
+							INNER JOIN hotel h 
+							ON h.delflag=0
+							<isNotEmpty prepend="AND" property="hotelId">
+								h.hotelId =#hotelId#
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="hotelCode">
+								h.hotelCode=#hotelCode#
+							</isNotEmpty>
+							
+							INNER JOIN room_type rt ON
+							rt.delflag=0
+							AND h.hotelId=rt.hotelId	
+							AND rt.roomtypecode = #roomTypeCode#
+							INNER JOIN room_rate rr ON rd.rateDetailId=rr.rateDetailId
+							AND t1.roomRateId=rr.roomRateId     
+							AND rr.roomTypeId=rt.roomTypeId
+							AND rr.delFlag=0
+							<isNotEmpty prepend="AND" property="isApplyToSunday">
+								rd.isApplyToSunday=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToMonDay">
+								rd.isApplyToMonDay=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToTuesday">
+								 rd.isApplyToTuesday=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToWednesday">
+								 rd.isApplyToWednesday=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToThursday">
+								 rd.isApplyToThursday=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToFriday">
+								 rd.isApplyToFriday=1
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="isApplyToSaturday">
+								 rd.isApplyToSaturday=1
+							</isNotEmpty>
+							 <![CDATA[ AND rd.effectiveDate <=#stayDate# ]]>
+							 <![CDATA[ AND rd.expireDate>=#stayDate# ]]>
+							) abc
+							INNER JOIN rate_plan mrp ON mrp.delFlag=0
+							AND (abc.rateplanId=mrp.ratePlanId OR abc.rateplanId=mrp.inheritRatePlanId)
+							AND mrp.ratePlanId=#ratePlanId#
+	</select>
+</sqlMap>

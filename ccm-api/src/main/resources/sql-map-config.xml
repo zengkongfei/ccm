@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMapConfig PUBLIC "-//ibatis.apache.org//DTD SQL Map Config 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-config-2.dtd">
+
+<sqlMapConfig>
+	<settings enhancementEnabled="true" maxTransactions="20" maxRequests="32" maxSessions="10" />
+
+	<!-- Identify all SQL Map XML files to be loaded by this SQL map. Relative to classpath -->
+	<sqlMap resource="sqlmaps/LookupSQL.xml" />
+	<sqlMap resource="sqlmaps/RoleSQL.xml" />
+	<sqlMap resource="sqlmaps/UserSQL.xml" />
+	<sqlMap resource="sqlmaps/EmployeeSQL.xml" />
+	<sqlMap resource="sqlmaps/RefundSQL.xml" />
+	<sqlMap resource="sqlmaps/RoleMenuSQL.xml" />
+	<sqlMap resource="sqlmaps/RoleChannelSQL.xml" />
+	
+	<sqlMap resource="sqlmaps/HotelSQL.xml" />
+	<sqlMap resource="sqlmaps/Hoteli18nSQL.xml" />
+	<sqlMap resource="sqlmaps/ChainSQL.xml" />
+	<sqlMap resource="sqlmaps/BrandSQL.xml" />
+	<sqlMap resource="sqlmaps/CustomSQL.xml" />
+	<sqlMap resource="sqlmaps/CreditLimitSQL.xml" />
+	<sqlMap resource="sqlmaps/HotelCreditLimitBindingSQL.xml" />
+	<sqlMap resource="sqlmaps/CustomLogSQL.xml" />
+	<sqlMap resource="sqlmaps/RateCustomRelationshipSQL.xml" />
+	<sqlMap resource="sqlmaps/HotelPackageSQL.xml"/>
+	<sqlMap resource="sqlmaps/HotelGuaranteeSQL.xml"/>
+	<sqlMap resource="sqlmaps/HotelCancelSQL.xml"/>
+	<sqlMap resource="sqlmaps/SpecialOfferSQL.xml"/>
+	<sqlMap resource="sqlmaps/FeedBackSQL.xml"/>
+	<sqlMap resource="sqlmaps/HotelSwitchSQL.xml"/>
+	
+	<sqlMap resource="sqlmaps/DictCodeSQL.xml" />
+	<sqlMap resource="sqlmaps/CodeListMappingSQL.xml" />
+	<sqlMap resource="sqlmaps/MenuSQL.xml" />
+	<sqlMap resource="sqlmaps/MenuUrlSQL.xml" />
+	<sqlMap resource="sqlmaps/PictureSQL.xml" />
+	<sqlMap resource="sqlmaps/PessimisticLockSQL.xml" />
+	<sqlMap resource="sqlmaps/TextfileSQL.xml" />
+
+	<sqlMap resource="sqlmaps/SmsSendSQL.xml" />
+	<sqlMap resource="sqlmaps/SmsTemplateSQL.xml" />
+
+	<sqlMap resource="sqlmaps/ConstantSQL.xml" />
+	<sqlMap resource="sqlmaps/GuestRoomSQL.xml" />
+
+	<sqlMap resource="sqlmaps/ChannelHotelSQL.xml" />
+	<sqlMap resource="sqlmaps/ChannelguestroomSQL.xml" />
+	<sqlMap resource="sqlmaps/GuestroomamenitySQL.xml" />
+	<sqlMap resource="sqlmaps/GuestroomdetailamenitySQL.xml" />
+	<sqlMap resource="sqlmaps/GuestroomdetailSQL.xml" />
+	<sqlMap resource="sqlmaps/GuestroomI18nSQL.xml" />
+	<sqlMap resource="sqlmaps/RateplanSQL.xml" />
+	<sqlMap resource="sqlmaps/RatePlanTemplateSQL.xml" />	
+	<sqlMap resource="sqlmaps/ChannelgoodsSQL.xml" />
+	<sqlMap resource="sqlmaps/ChannelSQL.xml" />
+	<sqlMap resource="sqlmaps/DynamicPackageSQL.xml" />
+
+	<sqlMap resource="sqlmaps/TaobaoOrderSQL.xml" />
+
+	<sqlMap resource="sqlmaps/RoomQuotaSQL.xml" />
+	<sqlMap resource="sqlmaps/RsvtypeSQL.xml" />
+	<sqlMap resource="sqlmaps/RmstaSQL.xml" />
+	<sqlMap resource="sqlmaps/BookChannelSQL.xml" />
+	<sqlMap resource="sqlmaps/MasterSQL.xml" />
+	<sqlMap resource="sqlmaps/OrderPaySQL.xml" />
+	<sqlMap resource="sqlmaps/MasterChangesLogSQL.xml" />
+	<sqlMap resource="sqlmaps/RateRestrictionSQL.xml" />
+
+	<sqlMap resource="sqlmaps/RsvtypeOnlineSQL.xml" />
+	<sqlMap resource="sqlmaps/AdsMessageSQL.xml" />
+	<sqlMap resource="sqlmaps/AdsMessageErrSQL.xml" />
+	<sqlMap resource="sqlmaps/AdsOrderMessageSQL.xml" />
+	<sqlMap resource="sqlmaps/ChainannelRateIdMapperSQL.xml" />
+	<sqlMap resource="sqlmaps/OnlineUserSQL.xml" />
+
+	<sqlMap resource="sqlmaps/SendMsgLogSQL.xml" />
+	<sqlMap resource="sqlmaps/ReceiveMsgLogSQL.xml" />
+	<sqlMap resource="sqlmaps/SendReqResSQL.xml" />
+	<sqlMap resource="sqlmaps/ReceiveReqResSQL.xml" />
+	<sqlMap resource="sqlmaps/ReceivePmsLogSQL.xml" />
+	<sqlMap resource="sqlmaps/RatepmsSQL.xml" />
+	<sqlMap resource="sqlmaps/RsvtypeDetailSQL.xml" />
+	<sqlMap resource="sqlmaps/AdsToTBLogSQL.xml" />
+	<sqlMap resource="sqlmaps/OTALogSQL.xml" />
+		
+	<sqlMap resource="sqlmaps/PositionSQL.xml" />
+	<sqlMap resource="sqlmaps/RoomTypeSQL.xml" />
+	<sqlMap resource="sqlmaps/RoomTypeTemplateSQL.xml" />
+	<sqlMap resource="sqlmaps/HotelMCSQL.xml" />
+	<sqlMap resource="sqlmaps/CancelPolicySQL.xml" />
+	<sqlMap resource="sqlmaps/GuaranteePolicySQL.xml" />
+	<sqlMap resource="sqlmaps/PackageSQL.xml" />
+	<sqlMap resource="sqlmaps/SourceSQL.xml" />
+	<sqlMap resource="sqlmaps/MarketSQL.xml" />
+	<sqlMap resource="sqlmaps/RatePackageSQL.xml" />
+	<sqlMap resource="sqlmaps/RateCancelRelationshipSQL.xml" />
+	<sqlMap resource="sqlmaps/RateGuaranteeRelationshipSQL.xml" />
+	<sqlMap resource="sqlmaps/RateAmountSQL.xml" />
+	<sqlMap resource="sqlmaps/RoomPackageSQL.xml" />
+	<sqlMap resource="sqlmaps/RoomRateSQL.xml" />
+	<sqlMap resource="sqlmaps/RateDetailSQL.xml" />
+	<sqlMap resource="sqlmaps/PriceCalcSQL.xml" />
+	<sqlMap resource="sqlmaps/HotelEmailMapperSQL.xml" />
+	<sqlMap resource="sqlmaps/RestrictionCalcSQL.xml" />
+	
+	<sqlMap resource="sqlmaps/ParamInterfaceSQL.xml" />
+	<sqlMap resource="sqlmaps/LogInfoSQL.xml" />
+	<sqlMap resource="sqlmaps/OverbookingGroupSQL.xml"/>
+	<sqlMap resource="sqlmaps/RsvtypeChannelSQL.xml"/>
+	<sqlMap resource="sqlmaps/RsvchanBlockSQL.xml"/>
+	<sqlMap resource="sqlmaps/MasterSendLogSQL.xml"/>
+	<sqlMap resource="sqlmaps/CitySQL.xml"/>
+	<sqlMap resource="sqlmaps/FaxSendSQL.xml"/>
+	<sqlMap resource="sqlmaps/HotelReceivepmsSQL.xml"/>
+	
+	<sqlMap resource="sqlmaps/SysCfgSQL.xml"/>
+	<sqlMap resource="sqlmaps/ShijiCareSQL.xml"/>
+	<sqlMap resource="sqlmaps/MasterPmsSQL.xml"/>
+	<!-- 保留房及自由销售房量使用情况报表 -->
+	<sqlMap resource="sqlmaps/UsageSQL.xml"/>
+	<sqlMap resource="sqlmaps/ChannelHotelMD5InfoSQL.xml"/>
+	<sqlMap resource="sqlmaps/FaxSendTimeSQL.xml"/>
+	
+</sqlMapConfig>

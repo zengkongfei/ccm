@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Guestroomdetailamenity" >
+
+  <typeAlias alias="guestroomdetailamenity" type="com.ccm.api.model.guestroom.Guestroomdetailamenity" />
+
+  <insert id="addGuestroomdetailamenity" parameterClass="guestroomdetailamenity" >
+    INSERT INTO guestroomdetailamenity( guestRoomDetailAmenityId, roomDetailId, codeValue)
+     VALUES ( #guestroomdetailamenityid#, #roomdetailid#, #codevalue#)
+  </insert>
+
+  <update id="updateGuestroomdetailamenity" parameterClass="guestroomdetailamenity" >
+    UPDATE guestroomdetailamenity   
+    <dynamic prepend="SET" >
+      <!--
+      <isNotNull property="guestroomdetailamenityid" prepend="," >
+        <![CDATA[  
+        guestRoomDetailAmenityId = #guestroomdetailamenityid#  
+        ]]>  
+      </isNotNull>
+      -->
+      <isNotNull property="roomdetailid" prepend="," >
+        <![CDATA[  
+        roomDetailId = #roomdetailid#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="codevalue" prepend="," >
+        <![CDATA[  
+        codeValue = #codevalue#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE guestRoomDetailAmenityId = #guestroomdetailamenityid#  
+  </update>
+
+</sqlMap>

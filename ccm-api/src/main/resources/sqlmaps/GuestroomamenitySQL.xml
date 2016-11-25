@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Guestroomamenity" >
+
+  <typeAlias alias="guestroomamenity" type="com.ccm.api.model.guestroom.Guestroomamenity" />
+  
+	<resultMap id="guestroomAmenityMap" class="com.ccm.api.model.guestroom.Guestroomamenity">
+		<result property="codeNo" column="codeNo" columnIndex="1" />
+		<result property="guestroomamenityId" column="guestroomamenityId" columnIndex="2" />
+	</resultMap>
+	
+ 	<select id="getRoomAmenityByGRID" resultMap="guestroomAmenityMap">
+    <![CDATA[
+        select codeNo,guestroomamenityId from guestroomamenity where guestroomid=#guestroomid# and delFlag=0
+    ]]>
+    </select>
+
+  <insert id="addGuestroomamenity" parameterClass="guestroomamenity" >
+    INSERT INTO guestroomamenity( guestRoomAmenityId, guestRoomId, codeNo,delFlag)
+     VALUES ( #guestroomamenityId#, #guestroomid#, #codeNo#,#delFlag#)
+  </insert>
+
+  <update id="updateGuestroomamenityDelFlag" parameterClass="java.util.HashMap" >
+    UPDATE guestroomamenity   
+    <dynamic prepend="SET" >
+      <isNotNull property="delFlag" prepend="," >
+        <![CDATA[  
+        delFlag = #delFlag#  
+        ]]>  
+      </isNotNull>
+    </dynamic>
+     WHERE guestRoomAmenityId = #guestroomamenityId#  
+  </update>
+
+</sqlMap>

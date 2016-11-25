@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelSwitchSQL">
+
+	<typeAlias alias="hotelSwitch" type="com.ccm.api.model.hotel.HotelSwitch" />
+
+	<sql id="pageSqlHotelSwitchSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="addHotelSwitch" parameterClass="hotelSwitch">
+    <![CDATA[
+        insert into hotel_switch (hsId,hotelId,hotelCode,chainId,chainCode,
+        						  isHardCancel,isGenerates,isUploadRateHeader,isMonitorADSPending,
+        						  createdTime,createdBy,updatedBy,lastModifyTime,delFlag,isAcceptRavr,isAcceptRavl,isMask,isDiscount) 
+        values (#hsId#,#hotelId#,#hotelCode#,#chainId#,#chainCode#,
+        #isHardCancel#,#isGenerates#,#isUploadRateHeader#,#isMonitorADSPending#,
+        #createdTime#,#createdBy#,#updatedBy#,#lastModifyTime#,#delFlag#,#isAcceptRavr#,#isAcceptRavl#,#isMask#,#isDiscount#
+    	)
+     ]]>
+	</insert>
+	<!-- 逻辑删除 -->
+	<update id="updateHotelSwitchDelFlag" parameterClass="Map">
+		update hotel_switch SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where hsId = #hsId#
+    </update>
+	<!-- update HotelSwitch by hotelId -->
+	<update id="updateHotelSwitch" parameterClass="hotelSwitch">
+		update hotel_switch SET 
+		hotelId = #hotelId#,hotelCode = #hotelCode#,chainId = #chainId#,chainCode = #chainCode#,
+		isHardCancel = #isHardCancel#,isGenerates=#isGenerates#,
+		isUploadRateHeader=#isUploadRateHeader#,isMonitorADSPending=#isMonitorADSPending#,
+		isAcceptRavr=#isAcceptRavr#,isAcceptRavl=#isAcceptRavl#,isMask=#isMask#,isDiscount=#isDiscount#
+		where hotelId = #hotelId#
+	</update>
+	
+ 	<!-- update HotelSwitch by hotelId -->
+	<update id="updateByHotelId" parameterClass="hotelSwitch">
+		update hotel_switch SET
+		isHardCancel = #isHardCancel#,isGenerates=#isGenerates#,isUploadRateHeader=#isUploadRateHeader#
+		,isMonitorADSPending=#isMonitorADSPending#
+		,isAcceptRavr=#isAcceptRavr#,isAcceptRavl=#isAcceptRavl#,isMask=#isMask#,isDiscount=#isDiscount#
+		where hotelId = #hotelId#
+	</update>
+	
+	<select id="getHotelSwitch" resultClass="hotelSwitch">
+        select hsId,hotelId,hotelCode,chainId,chainCode,
+        isHardCancel,isGenerates,isUploadRateHeader,isMonitorADSPending,
+        createdTime,createdBy,updatedBy,lastModifyTime
+        ,isAcceptRavr,isAcceptRavl,isMask,isDiscount
+        from hotel_switch 
+        WHERE delFlag = 0 
+			<isNotEmpty prepend="AND" property="hsId">
+				hsId = #hsId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				hotelId = #hotelId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainId">
+				chainId = #chainId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isHardCancel">
+				isHardCancel = #isHardCancel# 
+		    </isNotEmpty>
+		    	<isNotEmpty prepend="AND" property="isGenerates">
+				isGenerates = #isGenerates# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isUploadRateHeader">
+				isUploadRateHeader = #isUploadRateHeader#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="isMonitorADSPending">
+				isMonitorADSPending = #isMonitorADSPending#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isMask">
+				isMask = #isMask#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="createdTime">
+           	<![CDATA[
+            	createdTime>=#createdTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyTime">
+           	<![CDATA[
+            	lastModifyTime>=#lastModifyTime#
+            ]]>
+			</isNotEmpty>
+		order by createdTime desc
+		<include refid="pageSqlHotelSwitchSQL"/>
+	</select>
+
+	<select id="countHotelSwitch" resultClass="Integer">
+		SELECT count(*) from hotel_switch
+		WHERE delFlag = 0 
+			<isNotEmpty prepend="AND" property="hsId">
+				hsId = #hsId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelId">
+				hotelId = #hotelId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainId">
+				chainId = #chainId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isHardCancel">
+				isHardCancel = #isHardCancel# 
+		    </isNotEmpty>
+		    	<isNotEmpty prepend="AND" property="isGenerates">
+				isGenerates = #isGenerates# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isUploadRateHeader">
+				isUploadRateHeader = #isUploadRateHeader#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="isMonitorADSPending">
+				isMonitorADSPending = #isMonitorADSPending#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="isMask">
+				isMask = #isMask#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="createdTime">
+           	<![CDATA[
+            	createdTime>=#createdTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyTime">
+           	<![CDATA[
+            	lastModifyTime>=#lastModifyTime#
+            ]]>
+			</isNotEmpty>
+	</select>
+	
+	<select id="getByHotelId" resultClass="hotelSwitch" parameterClass="java.lang.String">
+		SELECT * FROM hotel_switch WHERE hotelId=#hotelId#;
+	</select>
+
+</sqlMap>

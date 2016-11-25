@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="BrandSQL">
+    <typeAlias alias="brandvo" type="com.ccm.api.model.hotel.vo.BrandVO"/>
+    <typeAlias alias="brand" type="com.ccm.api.model.hotel.Brand"/>
+    <typeAlias alias="brandI18n" type="com.ccm.api.model.hotel.BrandI18n"/>
+    
+       
+    <sql id="pageSqlBrandSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="addBrand" parameterClass="brand">
+        insert into brand (brandId,chainId,brandCode,createdBy,createdTime,delFlag) 
+        values (#brandId#,#chainId#,
+        REPLACE(REPLACE(#brandCode#,' ',''),'　',''),
+        #createdBy#,#createdTime#,#delFlag#)
+    </insert>
+    
+    <insert id="addBrandI18n" parameterClass="brandI18n">
+        insert into brand_i18n (brandMId,brandId,language,brandName,
+        	createdBy,createdTime,delFlag) 
+        values (#brandMId#,#brandId#,#language#,#brandName#,
+        	#createdBy#,#createdTime#,#delFlag#)
+    </insert>
+    
+    <update id="updateBrand" parameterClass="brand">
+        update brand SET
+			chainId = #chainId#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where brandId = #brandId#
+    </update>
+    
+    <update id="updateBrandI18n" parameterClass="brandI18n">
+        update brand_i18n SET
+			brandName = #brandName#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where brandMId = #brandMId#
+    </update>
+    
+    <update id="deleteBrand" parameterClass="brand">
+        update brand SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where brandId = #brandId#
+    </update>
+    
+    <update id="deleteBrandI18n" parameterClass="brandI18n">
+        update brand_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where brandMId = #brandMId#
+    </update>
+    
+    <update id="deleteBrandI18nByBrandId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update brand_i18n SET delFlag = 1
+         WHERE brandId = #brandId#
+    ]]>
+	</update>
+    
+    
+    <select id="getBrandByCode" resultClass="brandvo">
+    	SELECT * FROM `brand` b,`brand_i18n` bi
+		WHERE b.`brandId` = bi.`brandId`
+		AND b.`delFlag` = 0
+		AND bi.`delFlag` = 0
+		AND b.`brandCode` = #brandCode#
+		AND bi.`language` = #language#
+    </select>
+    
+  	<select id="getBrandById" resultClass="brandvo">
+  		SELECT * FROM `brand` b,`brand_i18n` bi
+		WHERE b.`brandId` = bi.`brandId`
+		AND b.`delFlag` = 0
+		AND bi.`delFlag` = 0
+		AND b.`brandId` = #brandId#
+		AND bi.`language` = #language#
+    </select>
+
+    <select id="searchBrand" resultClass="brandvo">
+    	SELECT * FROM `brand` b,`brand_i18n` bi,`chain_i18n` ci
+		WHERE b.`brandId` = bi.`brandId`
+		and b.`chainId` = ci.`chainId`
+		AND b.`delFlag` = 0
+		AND bi.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND bi.`language` = #language#
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainId">
+				b.chainId = #chainId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandCode">
+				b.brandCode = #brandCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandName">
+				bi.brandName like CONCAT('%',#brandName#,'%')
+	        </isNotEmpty>
+        </dynamic>
+         <include refid="pageSqlBrandSQL"/>
+    </select>
+
+    <select id="searchBrandCount" resultClass="Integer"> 
+    	SELECT count(*) FROM `brand` b,`brand_i18n` bi,`chain_i18n` ci
+		WHERE b.`brandId` = bi.`brandId`
+		and b.`chainId` = ci.`chainId`
+		AND b.`delFlag` = 0
+		AND bi.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND bi.`language` = #language#
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainId">
+				b.chainId = #chainId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandCode">
+				b.brandCode = #brandCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="brandName">
+				bi.brandName like  CONCAT('%',#brandName#,'%')
+	        </isNotEmpty> 
+        </dynamic>
+    </select>
+    
+    <select id="getAllBrandByChainId" resultClass="brandvo">
+    	SELECT * FROM `brand` b,`brand_i18n` bi,`chain_i18n` ci
+		WHERE b.`brandId` = bi.`brandId`
+		and b.`chainId` = ci.`chainId`
+		AND b.`delFlag` = 0
+		AND bi.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND b.`chainId` = #chainId#
+		AND bi.`language` = #language#
+		AND ci.`language` = #language#
+    </select>
+    
+    <select id="getBrandI18ns" resultClass="brandI18n" parameterClass="Map">
+		select * from brand_i18n bi
+		        where bi.brandId =#brandId#
+		          AND bi.delFlag = 0
+		order by brandMId
+	</select>
+</sqlMap>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelCreditLimitBindingSQL">
+
+	<typeAlias alias="hotelCreditLimitBinding" type="com.ccm.api.model.hotel.HotelCreditLimitBinding" />
+	
+	<sql id="pageSqlHotelCreditLimitBindingSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<select id="findHotelsCreditLimit"  parameterClass="java.lang.String" resultClass="hotelCreditLimitBinding">
+		select * from hotelcreditlimitbinding where creditLimitId=#creditLimitId# and delflag=0
+	</select>
+	
+	<insert id="addHotelCreditLimitBinding" parameterClass="hotelCreditLimitBinding">
+    <![CDATA[
+          INSERT INTO hotelcreditlimitbinding (
+		    bindingId,
+		    channelId,
+		    channelCode,
+		    creditLimitId,
+		    hotelId,
+		    hotelCode,
+		    delFlag,
+		    createdBy,
+		    createdTime
+	  		) 
+		  VALUES
+		    (#bindingId#,
+		    #channelId#,
+		    #channelCode#,
+		    #creditLimitId#,
+		    #hotelId#,
+		    #hotelCode#,
+		    #delFlag#,
+		    #createdBy#,
+		    #createdTime#)
+     ]]>
+	</insert>
+
+	<update id="removeBindingHotel" parameterClass="Map">
+    <![CDATA[
+    	update hotelcreditlimitbinding set delFlag=1,lastModifyTime=now() 
+         where hotelId =#hotelId# and channelId=#channelId# and delFlag=0
+    ]]>
+	</update>
+
+	<update id="removeBindingHotels" parameterClass="java.lang.String">
+    <![CDATA[
+    	update hotelcreditlimitbinding set delFlag=1 ,lastModifyTime=now() 
+         where creditLimitId=#creditLimitId# and delFlag=0
+    ]]>
+	</update>
+	
+	<update id="updateTotalRoomRevOfHotelCreditLimit" parameterClass="hotelCreditLimitBinding">
+		<![CDATA[update hotelcreditlimitbinding set totalRoomRev=totalRoomRev + #variable# 	where hotelId=#hotelId# and channelId=#channelId# and delflag=0]]>
+	</update>
+	
+	<select id="checkExisted" parameterClass="Map" resultClass="hotelCreditLimitBinding">
+		SELECT * FROM hotelcreditlimitbinding WHERE channelId=#channelId# AND hotelId=#hotelId# and delflag=0
+	</select>
+	<select id="findHotelIds"  resultClass="java.lang.String">
+		SELECT hotelid FROM hotelcreditlimitbinding WHERE creditLimitId=#creditLimitId# and delflag=0
+	</select>
+</sqlMap>

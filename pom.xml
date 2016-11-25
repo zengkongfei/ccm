@@ -1,0 +1,473 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.ccm</groupId>
+	<artifactId>ccm</artifactId>
+	<packaging>pom</packaging>
+	<version>${project.release.version}</version>
+	<name>ccm website application</name>
+	<url>http://www.ccm.com</url>
+
+	<prerequisites>
+		<maven>2.2.1</maven>
+	</prerequisites>
+
+	<build>
+		<defaultGoal>install</defaultGoal>
+		<plugins>
+			<!-- prefent aspectj problems when running eclipse:eclipse -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<ajdtVersion>none</ajdtVersion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.appfuse.plugins</groupId>
+				<artifactId>appfuse-maven-plugin</artifactId>
+				<version>${appfuse.version}</version>
+				<configuration>
+					<genericCore>${amp.genericCore}</genericCore>
+					<fullSource>${amp.fullSource}</fullSource>
+				</configuration>
+				<!-- Dependency needed by appfuse:gen-model to connect to database. -->
+				<!-- See http://issues.appfuse.org/browse/APF-868 to learn more. -->
+				<dependencies>
+					<dependency>
+						<groupId>${jdbc.groupId}</groupId>
+						<artifactId>${jdbc.artifactId}</artifactId>
+						<version>${jdbc.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+					<encoding>UTF-8</encoding>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<modules>
+		<module>ccm-wsvo</module>
+		<module>ccm-api</module>
+		<module>ccm-mc</module>
+	</modules>
+
+
+	<!-- Dependencies calculated by AppFuse when running full-source plugin -->
+	<dependencies>
+		<dependency>
+			<groupId>${jdbc.groupId}</groupId>
+			<artifactId>${jdbc.artifactId}</artifactId>
+			<version>${jdbc.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>${commons.lang.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>${log4j.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>mail</artifactId>
+					<groupId>javax.mail</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jms</artifactId>
+					<groupId>javax.jms</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxtools</artifactId>
+					<groupId>com.sun.jdmk</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jmxri</artifactId>
+					<groupId>com.sun.jmx</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>${aspectj.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock</artifactId>
+			<version>${jmock.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jmock</groupId>
+			<artifactId>jmock-junit4</artifactId>
+			<version>${jmock.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${spring.version}</version>
+			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-config</artifactId>
+			<version>${spring.security.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.subethamail</groupId>
+			<artifactId>subethasmtp-wiser</artifactId>
+			<version>${wiser.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.quartz-scheduler</groupId>
+			<artifactId>quartz</artifactId>
+			<version>1.8.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
+			<exclusions>
+				<exclusion>
+					<groupId>xml-apis</groupId>
+					<artifactId>xml-apis</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-discovery</groupId>
+			<artifactId>commons-discovery</artifactId>
+			<version>0.5</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-core</artifactId>
+			<version>5.7.0</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>spring-context</artifactId>
+					<groupId>org.springframework</groupId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jms</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+  		  	<groupId>com.itextpdf</groupId>
+    		<artifactId>itextpdf</artifactId>
+    		<version>5.5.1</version>
+		</dependency>
+		<dependency>
+   	 		<groupId>com.itextpdf</groupId>
+    		<artifactId>itext-asian</artifactId>
+    		<version>5.2.0</version>
+		</dependency>
+	</dependencies>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<artifactId>maven-changes-plugin</artifactId>
+				<version>2.3</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-checkstyle-plugin</artifactId>
+				<configuration>
+					<consoleOutput>true</consoleOutput>
+					<configLocation>https://svn.java.net/svn/appfuse~svn/trunk/www/checkstyle.xml</configLocation>
+					<failsOnError>false</failsOnError>
+					<maxAllowedViolations>3</maxAllowedViolations>
+				</configuration>
+				<version>2.6</version>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>cobertura-maven-plugin</artifactId>
+				<configuration>
+					<instrumentation>
+						<excludes>
+							<exclude>**/model/*.class</exclude>
+						</excludes>
+					</instrumentation>
+				</configuration>
+				<version>2.4</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.7</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-jxr-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-pmd-plugin</artifactId>
+				<configuration>
+					<linkXRef>true</linkXRef>
+					<targetJdk>1.5</targetJdk>
+				</configuration>
+				<version>2.5</version>
+			</plugin>
+			<plugin>
+				<artifactId>maven-surefire-report-plugin</artifactId>
+				<version>2.7.1</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<profiles>
+		<profile>
+			<id>local</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<env></env>
+				<project.release.version>1.0-SNAPSHOT</project.release.version>
+				<incrementService>http://localhost:8081/</incrementService>
+				<pictureUploadPath>/sharenfs/ccm_pic/resources</pictureUploadPath>
+				<pictureUrlContext>/resources</pictureUrlContext>
+				<pictureFormerPath>/sharenfs/uploadPicture</pictureFormerPath>
+				<projectDomain>http://ccmtest.localhost.com/</projectDomain>
+				<app_key>1021754351</app_key>
+				<app_secret>sandboxe4c603aad72a46dac2a3192ac</app_secret>
+				<app_partner>2088101568358171</app_partner>
+				<app_sign_key>uxt01uurwxvstkxpmleeok76ezicp8k4</app_sign_key>
+				<sms.softwareSerialNo></sms.softwareSerialNo>
+				<sms.key></sms.key>
+				<jdbc.url>jdbc:mysql://10.2.11.68:3306/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true</jdbc.url>
+				<jdbc.username>root</jdbc.username>
+				<jdbc.password>password</jdbc.password>
+				<ows.reservation.wsdl>http://203.81.25.50:8000/Col_switch_ws/Reservation.asmx</ows.reservation.wsdl>
+				<generalAvailability.wsdl>http://203.81.25.50:8000/Col_switch_ws/Availability.asmx?op=Availability</generalAvailability.wsdl>
+				<ows.timeout>600000</ows.timeout>
+				<ows.channnelCode>TAOBAO</ows.channnelCode>
+				<ows.transactionID>000099</ows.transactionID><!-- http://10.2.11.23/GetProductCode.aspx -->
+				<onlineProductCodeUrl>http://coloxitest1.chinaonline.net.cn:8000/TaobaoBridge/GetProductCode.aspx</onlineProductCodeUrl>
+				<!-- <mailDefaultTo>chinaonlinets@shijinet.com.cn</mailDefaultTo>
+				<mail.host>smtp.exmail.qq.com</mail.host>
+				<mail.username>ccmtest@lesuke.com</mail.username>
+				<mail.password>china88</mail.password>
+				<mail.default.from>ccmtest@lesuke.com</mail.default.from> -->
+				
+				<mail.host>smtpdm.aliyun.com</mail.host>
+				<mail.username>booking@notice.chinaonline.net.cn</mail.username>
+				<mail.password>80780uhjuehhnRRav</mail.password>
+				<mail.default.from>booking@notice.chinaonline.net.cn</mail.default.from>
+				
+				
+				<exceptionMonitorApp>CcmLocalMC</exceptionMonitorApp>
+				<fax.username>chinaonline@gfax.cn</fax.username>
+				<fax.password>chinaOnline2016</fax.password>
+				<fax.deskey>f6439bd3</fax.deskey>
+				<fax.format>json</fax.format>
+				<fax.url>http://api.gfax.cn:8088</fax.url>
+			</properties>
+		</profile>
+		<profile>
+			<id>qa</id>
+			<properties>
+				<env></env>
+				<db.name>mc</db.name>
+				<project.release.version>1.0-SNAPSHOT</project.release.version>
+				<incrementService>http://10.64.50.10:8081/incrementTest/</incrementService>
+				<pictureUploadPath>/sharenfs/ccm_pic/resources</pictureUploadPath>
+				<pictureUrlContext>/resources</pictureUrlContext>
+				<projectDomain>http://10.2.11.11:9999</projectDomain>
+				<app_key>1021754351</app_key>
+				<app_secret>sandboxe4c603aad72a46dac2a3192ac</app_secret> 
+				<app_partner>2088101568358171</app_partner>
+				<app_sign_key>uxt01uurwxvstkxpmleeok76ezicp8k4</app_sign_key>
+				<sms.softwareSerialNo>6SDK-EMY-6688-JGUTS</sms.softwareSerialNo>
+				<sms.key>302060</sms.key>
+				<jdbc.url>jdbc:mysql://10.2.11.68/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true</jdbc.url>
+				<jdbc.username>root</jdbc.username>
+				<jdbc.password>password</jdbc.password>
+				<priceAvailAndPriceMonitor.cronExpression>0 0 6 ? * MON</priceAvailAndPriceMonitor.cronExpression>
+				<ows.reservation.wsdl>http://203.81.25.50:8000/Col_switch_ws/Reservation.asmx</ows.reservation.wsdl>
+				<generalAvailability.wsdl>http://203.81.25.50:8000/Col_switch_ws/Availability.asmx?op=Availability</generalAvailability.wsdl>
+				<ows.timeout>600000</ows.timeout>
+				<ows.channnelCode>TAOBAO</ows.channnelCode>
+				<ows.transactionID>000099</ows.transactionID>
+				<onlineProductCodeUrl>http://coloxitest1.chinaonline.net.cn:8000/TaobaoBridge/GetProductCode.aspx</onlineProductCodeUrl>
+				<mailDefaultTo>chinaonlinets@shijinet.com.cn</mailDefaultTo>
+			</properties>
+		</profile>
+
+		<profile>
+			<id>production</id>
+			<properties>
+				<env></env>
+				<db.name>mctbtest</db.name>
+				<project.release.version>1.0</project.release.version>
+				<incrementService>http://10.72.1.2:8080/increment/</incrementService>
+				<pictureUploadPath>/sharenfs/ccm_pic/resources</pictureUploadPath>
+				<pictureUrlContext>/resources</pictureUrlContext>
+				<projectDomain>http://tb.chinaonline.net.cn</projectDomain>
+				<app_key>21754351</app_key>
+				<app_secret>e275e7de4c603aad72a46dac2a3192ac</app_secret>
+				<app_partner>2088101568358171</app_partner>
+				<app_sign_key>uxt01uurwxvstkxpmleeok76ezicp8k4</app_sign_key>
+				<sms.softwareSerialNo>6SDK-EMY-6688-JGUTS</sms.softwareSerialNo>
+				<sms.key>302060</sms.key>
+				<jdbc.url>jdbc:mysql://10.64.48.9/${db.name}?createDatabaseIfNotExist=true&amp;amp;useUnicode=true&amp;amp;characterEncoding=utf-8&amp;amp;autoReconnect=true</jdbc.url>
+				<jdbc.username>root</jdbc.username>
+				<jdbc.password>chinaOnline</jdbc.password>
+				<priceAvailAndPriceMonitor.cronExpression>0 0 6 ? * MON</priceAvailAndPriceMonitor.cronExpression>
+				<ows.reservation.wsdl>http://switch.chinaonline.net.cn/Col_switch_ws/Reservation.asmx</ows.reservation.wsdl>
+				<generalAvailability.wsdl>http://switch.chinaonline.net.cn/Col_switch_ws/Availability.asmx</generalAvailability.wsdl>
+				<ows.timeout>600000</ows.timeout>
+				<ows.channnelCode>TAOBAO</ows.channnelCode>
+				<ows.transactionID>000099</ows.transactionID>
+				<onlineProductCodeUrl>http://10.64.34.9/TaobaoBridge/GetProductCode.aspx</onlineProductCodeUrl>
+				<mailDefaultTo>chinaonlinets@shijinet.com.cn</mailDefaultTo>
+			</properties>
+		</profile>
+	</profiles>
+
+	<properties>
+
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<buildNumber>${maven.build.timestamp}</buildNumber>
+		<ccm.build.timestamp>${maven.build.timestamp}</ccm.build.timestamp>
+		<!-- Application settings -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<copyright.year>2011</copyright.year>
+		<dao.framework>ibatis</dao.framework>
+		<web.framework>struts</web.framework>
+		<amp.genericCore>true</amp.genericCore>
+		<amp.fullSource>true</amp.fullSource>
+		<db.name>mc</db.name>
+
+		<!-- Framework dependency versions -->
+		<appfuse.version>2.1.0</appfuse.version>
+		<commons.fileupload.version>1.2.1</commons.fileupload.version>
+		<commons.io.version>2.0.1</commons.io.version>
+		<displaytag.version>1.2</displaytag.version>
+		<spring.version>4.3.2.RELEASE</spring.version>
+		<struts.version>2.3.15.1</struts.version>
+
+		<!-- Testing dependency versions -->
+		<cargo.version>1.0.6</cargo.version>
+		<jmock.version>2.5.1</jmock.version>
+		<jsp.version>2.1</jsp.version>
+		<junit.version>4.12</junit.version>
+		<servlet.version>2.5</servlet.version>
+		<wiser.version>1.2</wiser.version>
+
+		<!-- WebTest dependency versions -->
+		<webtest.version>3.0</webtest.version>
+
+		<!-- Database settings -->
+		<dbunit.dataTypeFactoryName>org.dbunit.ext.mysql.MySqlDataTypeFactory</dbunit.dataTypeFactoryName>
+		<dbunit.operation.type>CLEAN_INSERT</dbunit.operation.type>
+		<hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
+		<jdbc.groupId>mysql</jdbc.groupId>
+		<jdbc.artifactId>mysql-connector-java</jdbc.artifactId>
+		<jdbc.version>5.1.14</jdbc.version>
+		<jdbc.driverClassName>com.mysql.jdbc.Driver</jdbc.driverClassName>
+
+		<!-- Properties calculated by AppFuse when running full-source plugin -->
+		<aspectj.version>1.6.10</aspectj.version>
+		<commons.beanutils.version>1.8.3</commons.beanutils.version>
+		<commons.collections.version>3.2.1</commons.collections.version>
+		<commons.dbcp.version>1.3</commons.dbcp.version>
+		<commons.lang.version>2.6</commons.lang.version>
+		<compass.version>2.2.0</compass.version>
+		<cxf.version>3.1.7</cxf.version>
+		<dwr.version>2.0.3</dwr.version>
+		<ehcache.version>2.3.1</ehcache.version>
+		<ehcache.web.version>2.0.3</ehcache.web.version>
+		<ibatis.version>2.3.4.726</ibatis.version>
+		<javamail.version>1.4.3</javamail.version>
+		<jpa.version>2.0-cr-1</jpa.version>
+		<jstl.version>1.1.2</jstl.version>
+		<log4j.version>1.2.16</log4j.version>
+		<sitemesh.version>2.4.2</sitemesh.version>
+		<slf4j.version>1.6.1</slf4j.version>
+		<spring.security.version>4.1.3.RELEASE</spring.security.version>
+		<struts.menu.version>2.4.3</struts.menu.version>
+		<urlrewrite.version>3.1.0</urlrewrite.version>
+		<velocity.version>1.7</velocity.version>
+		<perf4j.version>0.9.16</perf4j.version>
+		<maven.test.skip>true</maven.test.skip>
+
+		<skipTests>true</skipTests>
+	</properties>
+
+	<distributionManagement>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<url>http://10.2.11.70:8081/nexus/content/repositories/ccm</url>
+		</snapshotRepository>
+		<repository>
+			<id>releases</id>
+			<url>http://118.145.23.167:8081/nexus/content/repositories/ccm</url>
+		</repository>
+	</distributionManagement>
+
+
+</project>

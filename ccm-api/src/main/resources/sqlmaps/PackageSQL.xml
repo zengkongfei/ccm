@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PackageSQL">
+	<typeAlias alias="packagevo" type="com.ccm.api.model.ratePlan.vo.PackageVO" />
+	<typeAlias alias="package" type="com.ccm.api.model.ratePlan.Package" />
+	<typeAlias alias="packageI18n" type="com.ccm.api.model.ratePlan.PackageI18n" />
+	
+    <sql id="pageSqlPackageSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<select id="getPackages" resultClass="packagevo">
+		SELECT * FROM `package` p,`package_i18n` pi
+		WHERE p.`packageId` = pi.`packageId`
+		AND p.`delFlag` = 0
+		AND pi.`delFlag` = 0
+		order by p.packageCode
+	</select>
+
+	<select id="getAllPackages" resultClass="packagevo">
+		SELECT * FROM `package` p left join `package_i18n` pi 
+				   on p.`packageId` = pi.`packageId` and pi.`delFlag` = 0 and pi.`language` = #language#
+		WHERE p.`delFlag` = 0
+		order by p.packageCode
+	</select>
+
+	<insert id="addPackage" parameterClass="package">
+		insert into package (packageId,isExtraCharge,packageCode,calculation,isApplyToMonday,
+		isApplyToTuesday,isApplyToWednesday,isApplyToThursday,isApplyToFriday,
+		isApplyToSaturday,isApplyToSunday,beginDate,endDate,rule,issvcortax,
+		basicType,percent,amount,
+		createdBy,createdTime,delFlag)
+		values (#packageId#,#isExtraCharge#,
+		REPLACE(REPLACE(#packageCode#,' ',''),'　',''),
+		#calculation#,#isApplyToMonday#,
+		#isApplyToTuesday#,#isApplyToWednesday#,#isApplyToThursday#,#isApplyToFriday#,
+		#isApplyToSaturday#,#isApplyToSunday#,#beginDate#,#endDate#,#rule#,#issvcortax#,
+		#basicType#,#percent#,#amount#,
+		#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+
+	<insert id="addPackageI18n" parameterClass="packageI18n">
+		insert into package_i18n (packageMId,packageId,language,packageName,description,message,
+		createdBy,createdTime,delFlag)
+		values (#packageMId#,#packageId#,#language#,#packageName#,#description#,#message#,
+		#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+
+	<update id="updatePackage" parameterClass="package">
+		update package SET
+		isExtraCharge = #isExtraCharge#
+		,calculation = #calculation#
+		,isApplyToMonday = #isApplyToMonday#
+		,isApplyToTuesday = #isApplyToTuesday#
+		,isApplyToWednesday = #isApplyToWednesday#
+		,isApplyToThursday = #isApplyToThursday#
+		,isApplyToFriday = #isApplyToFriday#
+		,isApplyToSaturday = #isApplyToSaturday#
+		,isApplyToSunday = #isApplyToSunday#
+		,beginDate = #beginDate#
+		,endDate = #endDate#
+		,rule = #rule#
+		,issvcortax = #issvcortax#
+		,basicType = #basicType#
+		,percent = #percent#
+		,amount = #amount#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where packageId = #packageId#
+    </update>
+
+	<update id="updatePackageI18n" parameterClass="packageI18n">
+		update package_i18n SET
+		packageName = #packageName#
+		,description = #packageName#
+		,message = #message#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where packageMId = #packageMId#
+    </update>
+
+	<update id="deletePackage" parameterClass="package">
+		update package SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where packageId = #packageId#
+    </update>
+
+	<update id="deletePackageI18n" parameterClass="packageI18n">
+		update package_i18n SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where packageMId = #packageMId#
+    </update>
+
+	<update id="deletePackageI18nByPackageId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update package_i18n SET delFlag = 1
+         WHERE packageId = #packageId#
+    ]]>
+	</update>
+
+	<select id="getPackageByCode" resultClass="packagevo">
+		SELECT * FROM `package` p left join `package_i18n` pi on p.`packageId` = pi.`packageId`
+			 	  AND pi.`delFlag` = 0  AND pi.`language` = #language# 
+		WHERE p.`delFlag` = 0
+		AND p.`packageCode` = #packageCode#
+    </select>
+
+	<select id="getPackageById" resultClass="packagevo">
+		SELECT * FROM `package` p left join `package_i18n` pi on p.`packageId` = pi.`packageId`
+				  AND pi.`delFlag` = 0 AND pi.`language` = #language# 
+		WHERE p.`delFlag` = 0
+		AND p.`packageId` = #packageId#
+    </select>
+
+	<select id="searchPackage" resultClass="packagevo">
+		SELECT * FROM `package` p,`package_i18n` pi
+		WHERE p.`packageId` = pi.`packageId`
+		AND p.`delFlag` = 0
+		AND pi.`delFlag` = 0
+		AND pi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="packageCode">
+				p.packageCode = #packageCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="packageName">
+				pi.packageName like CONCAT('%',#packageName#,'%')
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="calculation">
+				p.calculation = #calculation#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="rule">
+				p.rule = #rule#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="basicType">
+				p.basicType = #basicType#
+	        </isNotEmpty>
+		</dynamic>
+		order by p.packageCode
+		 <include refid="pageSqlPackageSQL"/>
+	</select>
+
+	<select id="searchPackageCount" resultClass="Integer">
+		SELECT count(*) FROM `package` p,`package_i18n` pi
+		WHERE p.`packageId` = pi.`packageId`
+		AND p.`delFlag` = 0
+		AND pi.`delFlag` = 0
+		AND pi.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="packageCode">
+				p.packageCode = #packageCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="packageName">
+				pi.packageName like CONCAT('%',#packageName#,'%')
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="calculation">
+				p.calculation = #calculation#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="rule">
+				p.rule = #rule#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="basicType">
+				p.basicType = #basicType#
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getRatePlanPackageByRatePlanId" resultClass="packagevo">
+		SELECT p.*,hpi.*,rp.ratePlanId FROM rate_package rp
+		INNER JOIN package p ON rp.`packageId` = p.`packageId` AND p.`delFlag` = 0
+		LEFT JOIN rate_plan r ON rp.ratePlanId=r.ratePlanId and r.delFlag=0
+		LEFT JOIN hotel_package hp ON rp.packageId=hp.packageId AND hp.hotelId=r.hotelId AND hp.delFlag=0
+		LEFT JOIN hotel_package_i18n hpi ON hpi.hotelPackageId=hp.hotelPackageId AND hpi.delFlag = 0 AND hpi.`language` = #language#
+		WHERE rp.`delFlag` = 0 AND rp.`ratePlanId` in
+		<iterate open="(" close=")" conjunction="," property="ratePlanIds">
+			#ratePlanIds[]# 
+		</iterate>
+	</select>
+
+	<select id="getRoomTypePackageByRateDetailId" resultClass="packagevo">
+		SELECT p.*,hpi.*,rr.roomTypeId FROM room_rate rr
+		inner join room_package rp on rr.`roomRateId` = rp.`roomRateId`
+		inner join package p on rp.`packageId` = p.`packageId`
+		LEFT JOIN room_type rt ON rr.roomTypeId=rt.roomTypeId and rt.delFlag=0
+		LEFT JOIN hotel_package hp ON rp.packageId=hp.packageId AND hp.hotelId=rt.hotelId AND hp.delFlag=0
+		LEFT JOIN hotel_package_i18n hpi ON hpi.hotelPackageId=hp.hotelPackageId AND hpi.delFlag = 0 AND hpi.`language` = #language#
+		WHERE rr.`delFlag` = 0
+		AND rp.`delFlag` = 0
+		AND p.`delFlag` = 0
+		AND rr.`rateDetailId` = #rateDetailId#
+    </select>
+
+	<select id="getRoomTypeSvcOrTaxByRateDetailId" resultClass="packagevo">
+		SELECT p.*,hpi.*,rr.roomTypeId FROM room_rate rr
+		inner join room_package rp on rr.`roomRateId` = rp.`roomRateId`
+		inner join package p on rp.`packageId` = p.`packageId`
+		LEFT JOIN room_type rt ON rr.roomTypeId=rt.roomTypeId and rt.delFlag=0
+		LEFT JOIN hotel_package hp ON rp.packageId=hp.packageId AND hp.hotelId=rt.hotelId AND hp.delFlag=0
+		LEFT JOIN hotel_package_i18n hpi ON hpi.hotelPackageId=hp.hotelPackageId AND hpi.delFlag = 0 AND hpi.`language` = #language#
+		WHERE rr.`delFlag` = 0
+		AND rp.`delFlag` = 0
+		AND p.`delFlag` = 0
+		AND	p.issvcortax=1
+		AND rr.`rateDetailId` = #rateDetailId#
+    </select>
+    
+	<select id="getPackageI18ns" resultClass="packageI18n" parameterClass="Map">
+		select * from package_i18n pi
+		where pi.packageId =#packageId#
+		AND pi.delFlag = 0
+		order by packageMId
+	</select>
+
+	<select id="getPackageByObj" resultClass="packagevo">
+		select DISTINCT p.* from dynamic_package dp
+		inner join package p on dp.packageId=p.packageId and p.delFlag=0
+		where dp.delFlag=0
+		<isNotEmpty prepend="AND" property="hotelId">
+			dp.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="channelId">
+			dp.channelId=#channelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageCode">
+			p.packageCode=#packageCode#
+		</isNotEmpty>
+	</select>
+
+	<select id="getPackageVoByObjLang" resultClass="packagevo">
+		select DISTINCT p.*,hpi.* from dynamic_package dp
+		inner join package p on dp.packageId=p.packageId and p.delFlag=0
+		left join hotel_package hp on dp.hotelId=hp.hotelId and dp.packageId=hp.packageId and hp.delFlag=0
+		left join hotel_package_i18n hpi on hpi.hotelPackageId=hp.hotelPackageId and hpi.delFlag = 0 and hpi.`language` = #language#
+		where dp.delFlag=0
+		<isNotEmpty prepend="AND" property="hotelId">
+			dp.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="channelId">
+			dp.channelId=#channelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageCode">
+			p.packageCode=#packageCode#
+		</isNotEmpty>
+	</select>
+</sqlMap>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/data/mongo
+		http://www.springframework.org/schema/data/mongo/spring-mongo.xsd">
+	
+	<mongo:mongo-client id="mongo"  host="${mongodb.jdbc.ip}" port="${mongodb.jdbc.port}" credentials="${mongodb.jdbc.username}:${mongodb.jdbc.password}@${mongodb.jdbc.dbname}">
+		<!-- autoConnectRetry：这个控制是否在连接时，会自动重试，2.13驱动已经【废弃】，请使用connectTimeout代替它 -->
+		<!-- connectTimeout：在建立（打开）套接字连接时的超时时间（ms）。默认值为10,000 -->
+		<!--  auto-connect-retry="true"-->
+		<mongo:client-options connections-per-host="100" threads-allowed-to-block-for-connection-multiplier="50" />
+	</mongo:mongo-client>
+	
+	<mongo:db-factory id="mongoDbFactory" dbname="${mongodb.jdbc.dbname}" mongo-ref="mongo"/>
+	
+	<bean id="mongoTemplate" class="org.springframework.data.mongodb.core.MongoTemplate">
+	    <constructor-arg name="mongoDbFactory" ref="mongoDbFactory" />
+	</bean>
+</beans>

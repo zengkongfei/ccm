@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Hoteli18nSQL">
+
+	<typeAlias alias="hoteli18n" type="com.ccm.api.model.hotel.HotelI18n" />
+
+	<select id="getHotelI18n" resultClass="hoteli18n">
+    <![CDATA[
+        select * from hotel_i18n where hotelMId=#hotelMId# 
+    ]]>
+	</select>
+
+	<select id="getHotelI18ns" resultClass="hoteli18n">
+		select * from hotel_i18n 
+				where hotelId=#hotelId#
+		          AND delFlag = 0
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="languageCode">
+				languageCode = #languageCode#  
+           </isNotEmpty>
+		</dynamic>
+		order by hotelMId
+	</select>
+
+	<delete id="deleteHotelI18n" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from hotel_i18n where hotelMId = #hotelMId#
+    ]]>
+	</delete>
+
+	<update id="deleteHotelI18nByHotelId" parameterClass="java.lang.String">
+    <![CDATA[
+    	UPDATE hotel_i18n SET delFlag = 1
+    	 WHERE hotelId = #hotelId#
+    ]]>
+	</update>
+
+	<insert id="addHotelI18n" parameterClass="hoteli18n">
+    <![CDATA[
+        insert into hotel_i18n (hotelMId, hotelId, hotelUsedName, languageCode,hotelName,hotelShortName,address,description,business,createdBy,createdTime,delFlag) 
+        values (#hotelMId#, #hotelId#, #hotelUsedName#, #languageCode#,#hotelName#,#hotelShortName#,#address#,#description#,#business#,#createdBy#,#createdTime#,#delFlag#)
+     ]]>
+	</insert>
+
+	<update id="updateHotelI18n" parameterClass="hoteli18n">
+    <![CDATA[
+        update hotel_i18n SET
+        	hotelUsedName = #hotelUsedName#,
+        	hotelName=#hotelName#,
+        	hotelShortName=#hotelShortName#,
+            address = #address#,
+            description=#description#,
+            updatedBy=#updatedBy#,
+            lastModifyTime=#lastModifyTime#,
+            business=#business#
+        where hotelMId = #hotelMId#
+    ]]>
+	</update>
+
+
+</sqlMap>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SmsTemplateSQL">
+
+    <typeAlias alias="smsTemplate" type="com.ccm.api.model.sms.SmsTemplate"/>
+    <resultMap id="smsTemplateResult" class="smsTemplate">
+        <result property="templateId" column="templateId"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="language" column="language"/>
+        <result property="smsType" column="smsType"/> 
+        <result property="templateDesc" column="templateDesc"/>
+        <result property="templateContent" column="templateContent"/>
+        <result property="delFlag" column="delFlag"/>          
+        <result property="createdTime" column="createdTime" jdbcType="DATETIME"/>       
+     </resultMap>
+
+
+    <insert id="addSmsTemplate" parameterClass="smsTemplate">
+    <![CDATA[
+        insert into smsTemplate
+                (templateId, hotelCode, language, smsType, templateDesc,templateContent, delFlag,  createdTime)
+        values (#templateId#, 
+        	REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+        	#language#, #smsType#, #templateDesc#,#templateContent#,#delFlag#,#createdTime#)
+    ]]>
+    </insert>
+
+    <update id="updateSmsTemplate" parameterClass="smsTemplate">
+    <![CDATA[
+        update smsTemplate SET 
+        	hotelCode = REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+        	language = #language#,
+            smsType = #smsType#,  
+            templateDesc    = #templateDesc#,      
+            templateContent = #templateContent#,
+            delFlag = #delFlag#,
+            createdTime = #createdTime#
+        where templateId = #templateId#
+    ]]>
+    </update>
+
+    <select id="getSmsTemplate" resultMap="smsTemplateResult" parameterClass="java.lang.String">
+    <![CDATA[
+        select * from smsTemplate where templateId=#templateId#
+    ]]>
+    </select>
+    
+     <delete id="deleteSmsTemplate" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from smsTemplate where templateId = #templateId#
+    ]]>
+    </delete>
+    
+
+   <select id="searchSmsTemplate"  resultMap="smsTemplateResult">
+         select * from smsTemplate where delFlag   = 0 
+         <dynamic prepend="AND">
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode   = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="language">
+              language   = #language# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="smsType">
+              smsType   = #smsType# 
+           </isNotEmpty>
+        </dynamic>
+    </select>
+  
+</sqlMap>

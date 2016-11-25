@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RsvtypeChannelSQL">
+	<typeAlias alias="rsvtypeChannel" type="com.ccm.api.model.rsvtype.RsvtypeChannel" />
+	<typeAlias alias="rsvtype" type="com.ccm.api.model.rsvtype.Rsvtype" />
+	
+		<resultMap id="getRsvtypeMC" class="rsvtype" groupBy="rsvtypeId">
+			<result property="rsvtypeId" column="rsvtypeId"></result>
+			<result property="date" column="date"></result>
+			<result property="type" column="type"></result>
+			<result property="hotelCode" column="hotelCode"></result>
+			<result property="unavailable" column="unavailable"></result>
+			<result property="available" column="available"></result>
+			<result property="overBooking" column="overBooking"></result>
+			<result property="totalOBSold" column="totalOBSold"></result>
+			<result property="rcList" resultMap="RsvtypeChannelSQL.rsvtypeChannelMap" column="rsvtypeId"/>
+		</resultMap>  
+	
+		<resultMap class="rsvtypeChannel" id="rsvtypeChannelMap">
+	   		<result property="rsvtypeChannelId" column="rsvtypeChannelId"></result>
+			<result property="channelId" column="channelId"></result>
+			<result property="allotment" column="allotment"></result>
+			<result property="allotmentSold" column="allotmentSold"></result>
+			<result property="freeSell" column="freeSell"></result>
+			<result property="obSold" column="obSold"></result>
+			<result property="sold" column="sold"></result>
+			<result property="hasBlock" column="hasBlock"></result>
+			<result property="cutOffDays" column="cutOffDays"></result>
+			<result property="cutOffDate" column="cutOffDate"></result>
+			<result property="ratePlanCodes" column="ratePlanCodes"></result>
+	    </resultMap>
+    
+	<insert id="addRsvtypeChannel" parameterClass="rsvtypeChannel">
+		INSERT INTO rsvtype_channel
+            (rsvtypeChannelId, channelId, allotment, allotmentSold, freeSell, obSold, sold, rsvtypeId,hasBlock,cutOffDays,cutOffDate,ratePlanCodes)
+		VALUES (#rsvtypeChannelId#, #channelId#, #allotment#, #allotmentSold#, #freeSell#, #obSold#, #sold#, #rsvtypeId#,#hasBlock#,#cutOffDays#,#cutOffDate#,#ratePlanCodes#)
+	</insert>
+
+	<select id="getRsvtypeChannelAilable" resultClass="rsvtypeChannel">
+		SELECT * FROM rsvtype_channel WHERE
+		channelId = (SELECT channelId FROM channel WHERE channelCode = #channelCode# AND delFlag = 0)
+		AND rsvtypeid IN
+		<iterate property="rsvtypeIds" open="(" close=")" conjunction=",">
+			#rsvtypeIds[]#
+		</iterate>
+	</select>
+	
+	<select id="getRsvtypeChannelAilableById" resultClass="rsvtypeChannel">
+	 	select * from rsvtype_channel where rsvtypeId=#rsvtypeId# 
+		 <iterate prepend="AND"  property="channelIdSet" open="(" close=")" conjunction="OR">
+		          channelId=#channelIdSet[]#
+		</iterate>
+	</select>
+	
+	<select id="getRsvtypeChannelByChannelIdRsvtypeId" resultClass="rsvtypeChannel">
+		SELECT 
+	      rsvtypeChannelId,
+	      rsvtypeId,
+	      channelId,
+	      allotment,
+	      allotmentSold,
+	      freeSell,
+	      obSold,
+	      sold,
+	      hasBlock,
+	      cutOffDays,
+	      cutOffDate,
+	      ratePlanCodes
+	    FROM
+	      rsvtype_channel 
+	   WHERE 1=1 <iterate prepend="AND"  property="channelIds" open="(" close=")" conjunction="OR">
+				  channelId=#channelIds[]#
+			   </iterate>
+			   <iterate prepend="AND"  property="rsvtypeIdList" open="(" close=")" conjunction="OR">
+				  rsvtypeId=#rsvtypeIdList[]#
+			   </iterate>
+    </select>
+	
+	<select id="getRsvtypeByChannelIdsRoomTypeCodes" resultMap="getRsvtypeMC">		
+	    SELECT 
+		  t1.rsvtypeId,
+		  t1.date,
+		  t1.type,
+		  t1.hotelCode,
+		  t1.unavailable,
+		  t1.available,
+		  t1.overBooking,
+		  t1.totalOBSold,
+		  t2.rsvtypeChannelId,
+		  t2.channelId,
+		  t2.allotment,
+		  t2.allotmentSold,
+		  t2.freeSell,
+		  t2.obSold,
+		  t2.sold,
+		  t2.hasBlock,
+	      t2.cutOffDays,
+	      t2.cutOffDate,
+	      t2.ratePlanCodes
+		FROM
+		  (SELECT rsvtypeId,
+		  DATE,
+		  TYPE,
+		  hotelCode,
+		  unavailable,
+		  available,
+		  overBooking,
+		  totalOBSold FROM rsvtype WHERE hotelCode = #hotelCode# 
+		   <iterate prepend="AND"  property="roomTypeCodes" open="(" close=")" conjunction="OR">
+		          type=#roomTypeCodes[]#
+		   </iterate>
+		  AND `date`<![CDATA[>=]]>#startDate#
+		  AND `date`<![CDATA[<=]]>#endDate#) t1 
+		  LEFT JOIN 
+		    (SELECT 
+		      rsvtypeChannelId,
+		      rsvtypeId,
+		      channelId,
+		      allotment,
+		      allotmentSold,
+		      freeSell,
+		      obSold,
+		      sold,
+		      hasBlock,
+	      	  cutOffDays,
+	      	  cutOffDate,
+	      	  ratePlanCodes
+		    FROM
+		      rsvtype_channel 
+		    WHERE 1=1 <iterate prepend="AND"  property="channelIds" open="(" close=")" conjunction="OR">
+					  channelId=#channelIds[]#
+				   </iterate> ) t2 
+		    ON t1.rsvtypeId = t2.rsvtypeId 
+		    ORDER BY `type`,`date` 
+	</select>
+	
+	<select id="getRsvtypeChannel" resultClass="rsvtypeChannel">
+		select * from rsvtype_channel
+		where rsvtypeChannelId = #rsvtypeChannelId#
+	</select>
+	
+	<select id="getRsvtypeChannelByRsvIdAndChannelId" resultClass="rsvtypeChannel">
+		select * from rsvtype_channel
+		where rsvtypeId = #rsvtypeId# and channelId=#channelId#
+	</select>
+
+	<update id="updateRsvtypeChannel" parameterClass="rsvtypeChannel">
+		UPDATE rsvtype_channel
+		SET rsvtypeChannelId = #rsvtypeChannelId#, channelId = #channelId#, allotment = #allotment#, allotmentSold = #allotmentSold#, freeSell = #freeSell#, obSold = #obSold#, sold = #sold#,
+		cutOffDays=#cutOffDays#,hasBlock=#hasBlock#,cutOffDate=#cutOffDate#,ratePlanCodes=#ratePlanCodes#
+		WHERE rsvtypeChannelId = #rsvtypeChannelId#
+	</update>
+	
+	<update id="updateAllotmentToRsvtypeChannel" parameterClass="rsvtypeChannel">
+		UPDATE rsvtype_channel
+		SET allotment = #allotment#, allotmentSold = #allotmentSold#,
+		cutOffDays=#cutOffDays#,hasBlock=#hasBlock#,cutOffDate=#cutOffDate#,ratePlanCodes=#ratePlanCodes# 
+		WHERE rsvtypeChannelId = #rsvtypeChannelId#
+	</update>
+	
+	<select id="getRsvChannelCountByHeaderDetail" resultClass="rsvtypeChannel">
+		SELECT rsv_ch.* FROM rsvtype rsv 
+		  INNER JOIN rsvtype_channel rsv_ch 
+		    ON rsv.`rsvtypeId` = rsv_ch.`rsvtypeId` 
+		    AND rsv.delFlag = '0'
+		    AND rsv_ch.channelId = #channelId#
+		    AND rsv.type=#roomType#
+		    AND rsv.date=#inventoryDate# 
+		    AND rsv.hotelCode = #hotelCode#
+	</select>
+	
+	<insert id="addBatchRsvtypeChannel" parameterClass="java.util.List">
+	    <![CDATA[
+		        INSERT INTO rsvtype_channel
+				(rsvtypeChannelId, channelId, allotment, allotmentSold, freeSell, obSold, sold, rsvtypeId,hasBlock,cutOffDays,cutOffDate,ratePlanCodes)
+		        values
+	    ]]>
+		<iterate conjunction=",">
+	      <![CDATA[
+	          (
+			  #list[].rsvtypeChannelId#, #list[].channelId#, #list[].allotment#, #list[].allotmentSold#,
+			  #list[].freeSell#, #list[].obSold#, #list[].sold#, #list[].rsvtypeId#, #list[].hasBlock#, #list[].cutOffDays#, #list[].cutOffDate#, #list[].ratePlanCodes#
+			  
+	          )
+	      ]]>
+		</iterate>
+	</insert>
+	
+	<delete id="deleteRsvtypeChannel">
+			DELETE FROM rsvtype_channel WHERE channelId=#channelId# AND rsvtypeid=#rsvtypeId# 
+	</delete>
+	
+	<update id="updateRsvtypeChannelForDeduct" parameterClass="rsvtypeChannel">
+		UPDATE rsvtype_channel
+		<dynamic prepend="SET">
+			<isNotNull property="allotmentSold" prepend=",">
+		        <![CDATA[  
+		        	allotmentSold = IFNULL(allotmentSold,0)+#allotmentSold#
+		        ]]>
+			</isNotNull>
+			<isNotNull property="sold" prepend=",">
+		        <![CDATA[  
+		        	sold = IFNULL(sold,0)+#sold#
+		        ]]>
+			</isNotNull>
+			<isNotNull property="obSold" prepend=",">
+		        <![CDATA[  
+		         	obSold = IFNULL(obSold,0)+#obSold#
+		        ]]>
+			</isNotNull>
+		</dynamic>
+		WHERE rsvtypeChannelId = #rsvtypeChannelId# and channelId=#channelId#
+	</update>
+	
+	<update id="updateRsvtypeForDeduct" parameterClass="rsvtype">
+		<![CDATA[
+		update rsvtype set
+		updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		,totalOBSold=IFNULL(totalOBSold,0)+#totalOBSold#
+		where hotelCode = #hotelCode#
+		and date=#date#
+		and type = #type#
+		]]>
+	</update>
+	
+</sqlMap>

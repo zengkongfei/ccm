@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ParamInterfaceSQL">
+
+	<typeAlias alias="paramInterface" type="com.ccm.api.model.common.ParamInterface" />
+
+	<insert id="addParamInterface" parameterClass="paramInterface">
+    <![CDATA[
+        insert into param_interface (paramInterfaceId, urlId, fieldName, fieldValue, fieldDesc, foreignTable, createdTime) 
+        values (#paramInterfaceId#, #urlId#, #fieldName#, #fieldValue#, #fieldDesc#, #foreignTable#, #createdTime#)
+    ]]>
+	</insert>
+
+	<delete id="deleteParamInterface">
+    <![CDATA[
+        delete from param_interface where paramInterfaceId=#paramInterfaceId#
+    ]]>
+	</delete>
+
+	<update id="updateParamInterface" parameterClass="paramInterface">
+    <![CDATA[
+        update param_interface set urlId = #urlId# 
+		lastModifyTime = #lastModifyTime# 
+        where paramInterfaceId=#paramInterfaceId#
+    ]]>
+	</update>
+
+	<update id="updateParamInterfaceDelFlag" parameterClass="paramInterface">
+    <![CDATA[
+        update param_interface set delFlag=#delFlag#
+        where paramInterfaceId=#paramInterfaceId#
+    ]]>
+	</update>
+
+	<select id="getParamInterface" resultClass="paramInterface">
+		SELECT * from param_interface where paramInterfaceId=#paramInterfaceId#
+	</select>
+
+	<select id="getParamInterfaces" resultClass="paramInterface">
+		SELECT * from param_interface
+	</select>
+
+	<select id="getParamInterfaceByObj" resultClass="paramInterface">
+		SELECT * from param_interface where urlId=#urlId#
+		<isNotEmpty prepend="AND" property="fieldName">
+			fieldName=#fieldName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fieldValue">
+			fieldValue=#fieldValue#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="urlId">
+			urlId=#urlId#
+		</isNotEmpty>
+	</select>
+	
+	<select id="getParamInterfaceByObj_i18n" resultClass="paramInterface" parameterClass="Map">
+		SELECT p.`paramInterfaceId`,p.`urlId`,
+ 			 p.`fieldName`,p.`fieldValue`,pi.`fieldDesc`,p.`foreignTable`,
+  			 p.`createdTime`, p.`lastModifyTime`,p.`delFlag`   
+		from param_interface p INNER JOIN param_interface_i18n pi ON p.`paramInterfaceId` = pi.`paramInterfaceId` 
+		where pi.`language`=#language# AND p.urlId=#urlId#
+		<isNotEmpty prepend="AND" property="fieldName">
+			p.fieldName=#fieldName#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="fieldValue">
+			p.fieldValue=#fieldValue#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="urlId">
+			p.urlId=#urlId#
+		</isNotEmpty>
+	</select>
+	<select id="getCodeBySql" resultClass="String" remapResults="true">
+		select $sql$ $param$
+	</select>
+</sqlMap>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoleMenuSQL">
+
+	<typeAlias alias="roleMenu" type="com.ccm.api.model.user.RoleMenu" />
+	<insert id="addRoleMenu" parameterClass="RoleMenu">
+	    <![CDATA[
+	        insert into rolemenu (menuId,roleId,createdBy, createdTime, delFlag) 
+	        values ( #menuId#,#roleId#,#createdBy#, #createdTime#, #delFlag#)
+	    ]]>
+	</insert>
+	
+	<delete id="removeRoleMenuByRoleId">
+	    <![CDATA[
+	        delete from rolemenu where roleId=#roleId#
+	    ]]>
+		</delete>
+		
+		<select id="getMenuByShowRoles" resultClass="roleMenu">
+		<![CDATA[
+         SELECT DISTINCT 
+		rm.roleId,
+		  m.menuId
+		FROM
+		  (
+		    menu m 
+		    INNER JOIN menu_i18n mi 
+		      ON mi.menuId = m.menuId
+		  ),
+		  rolemenu rm ,
+		  role r
+		WHERE m.menuId = rm.menuId 
+		  AND rm.roleId=r.roleId
+		  AND r.delFlag = 0
+		  AND r.isShow=1
+		  AND m.delFlag = 0
+		  AND rm.delFlag =0
+		  AND m.authFlag = 1 
+		  AND mi.language =#language#
+		  ]]>
+	</select>
+</sqlMap>

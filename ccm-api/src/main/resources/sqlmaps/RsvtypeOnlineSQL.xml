@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RsvtypeOnlineSQL">
+	<typeAlias alias="rsvtypeOnline" type="com.ccm.api.model.rsvtype.RsvtypeOnline" />
+	
+	<insert id="addRsvtypeOnline" parameterClass="rsvtypeOnline">
+	    <![CDATA[
+	        INSERT INTO rsvtype_online
+            (rsvtypeOnlineId,chainCode, hotelCode, roomTypeCode, rateCode, channelGoodsCode, DATE, available, rate,actionCode)
+			VALUES (#rsvtypeOnlineId#,
+				REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+				REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+				REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''), 
+				REPLACE(REPLACE(#rateCode#,' ',''),'　',''), 
+				REPLACE(REPLACE(#channelGoodsCode#,' ',''),'　',''), 
+				#date#, #available#, #rate#,#actionCode#)
+	     ]]>
+	</insert>
+	
+	<select id="searchRsvtypeOnline" resultClass="rsvtypeOnline">
+		select * FROM rsvtype_online 
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty> 
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>           
+            <isNotEmpty prepend="AND" property="channelGoodsCode">
+              channelGoodsCode = #channelGoodsCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="roomTypeCode">
+              roomTypeCode = #roomTypeCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="rateCode">
+              rateCode = #rateCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="date">
+              DATE = #date#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="checkInDate">
+			 date<![CDATA[>=]]> #checkInDate#
+		   </isNotEmpty>
+           <isNotEmpty prepend="AND" property="checkOutDate">
+			 date<![CDATA[<]]> #checkOutDate#
+		   </isNotEmpty>
+        </dynamic>
+	</select>
+	
+	<delete id="deleteRsvtypeOnline" >
+        DELETE FROM rsvtype_online WHERE rsvtypeOnlineId = #rsvtypeOnlineId# 
+	</delete>
+	
+	<update id="updateRsvtypeOnline" parameterClass="rsvtypeOnline">
+		UPDATE rsvtype_online
+			SET roomTypeCode = REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''), 
+				rateCode = REPLACE(REPLACE(#rateCode#,' ',''),'　',''),
+				channelGoodsCode = REPLACE(REPLACE(#channelGoodsCode#,' ',''),'　',''),
+			 available = #available#, rate = #rate#,actionCode=#actionCode#
+		WHERE rsvtypeOnlineId = #rsvtypeOnlineId#
+    </update>
+    
+    <update id="updateAvailable" parameterClass="rsvtypeOnline">
+		UPDATE rsvtype_online
+			SET available = #available#
+		WHERE hotelCode = REPLACE(REPLACE(#hotelCode#,' ',''),'　','') 
+		  and roomTypeCode = REPLACE(REPLACE(#roomTypeCode#,' ',''),'　','') 
+		  and DATE = #date#  
+	</update>
+	
+	<select id="getRsvtypeOnlineByGid" resultClass="rsvtypeOnline">
+		select * FROM rsvtype_online 
+		where channelGoodsCode = #channelGoodsCode#
+		AND DATE >= CURDATE()
+		<isNotEmpty prepend="AND" property="date">
+			DATE <![CDATA[<=]]> #date#
+		</isNotEmpty>
+		ORDER BY DATE
+	</select>
+</sqlMap>

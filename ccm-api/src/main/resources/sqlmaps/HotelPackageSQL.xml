@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelPackageSQL">
+	<typeAlias alias="packagevo" type="com.ccm.api.model.ratePlan.vo.PackageVO"/>
+	<typeAlias alias="rateplan" type="com.ccm.api.model.channel.Rateplan" />
+	<typeAlias alias="roomType" type="com.ccm.api.model.roomType.RoomType" />
+	<typeAlias alias="dynamicPackage" type="com.ccm.api.model.channel.DynamicPackage" />
+	<typeAlias alias="hotelPackage" type="com.ccm.api.model.hotel.HotelPackage" />
+	<typeAlias alias="hotelPackageI18n" type="com.ccm.api.model.hotel.HotelPackageI18n" />
+	<typeAlias alias="hotelPackageVO" type="com.ccm.api.model.hotel.vo.HotelPackageVO" />
+		
+    <sql id="pageSqlHotelPackageSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addHotelPackage" parameterClass="hotelPackage">
+		INSERT INTO hotel_package(hotelPackageId, hotelId, packageId, createdTime, createdBy, delFlag, sortNum)
+		VALUES (#hotelPackageId#, #hotelId#, #packageId#, #createdTime#,#createdBy#,#delFlag#,#sortNum#)
+	</insert>
+	
+	<insert id="addHotelPackageI18n" parameterClass="hotelPackageI18n">
+		INSERT INTO hotel_package_i18n(hotelPackageMId,hotelPackageId,language,packageName,description,createdBy,createdTime,delFlag) 
+		VALUES(#hotelPackageMId#,#hotelPackageId#,#language#,#packageName#,#description#,#createdBy#,#createdTime#,#delFlag#)
+	</insert>
+	
+	<update id="updaetHotelPackage" parameterClass="hotelPackage">
+		UPDATE hotel_package hp set hp.updatedBy = #updatedBy#,hp.lastModifyTime = #lastModifyTime#,hp.sortNum = #sortNum#
+		WHERE hp.hotelPackageId = #hotelPackageId# 
+	</update>
+	
+	<update id="updateHotelPackageI18n" parameterClass="hotelPackageI18n">
+		update hotel_package_i18n hpi SET
+		hpi.packageName = #packageName#
+		,hpi.description = #description#
+		,hpi.updatedBy = #updatedBy#
+		,hpi.lastModifyTime = #lastModifyTime#
+		where hotelPackageMId = #hotelPackageMId#
+	</update>
+	
+	<update id="deleteHotelPackageById">
+		update hotel_package hp SET hp.delFlag = 1 
+		 where hp.hotelPackageId = #hotelPackageId#
+	</update>
+
+	<update id="deleteHotelPackageByHotelId">
+		update hotel_package hp SET hp.delFlag = 1 
+		where hp.hotelId = #hotelId#
+    </update>
+    
+    <update id="deleteHotelPackageI18nById">
+    	update hotel_package_i18n hi set hi.delFlag = 1 
+    	where hi.hotelPackageId = #hotelPackageId#
+    </update>
+    
+	<select id="getHotelPackageById" resultClass="hotelPackageVO">
+    <![CDATA[
+        select hp.*,hpi.*,h.hotelCode,p.packageCode from hotel_package hp
+           left join hotel h on hp.hotelId = h.hotelId AND h.delFlag = 0
+           left join package p on hp.packageId = p.packageId AND p.delFlag = 0
+           left join hotel_package_i18n hpi on hp.hotelPackageId = hpi.hotelPackageId
+                 and hpi.language = #language# and hpi.delFlag = 0
+        where hp.hotelPackageId = #hotelPackageId# and hp.delFlag = 0
+    ]]>
+	</select>
+	
+	<select id="getHotelPackageI18ns" resultClass="hotelPackageI18n" parameterClass="Map">
+		select * from hotel_package_i18n hpi 
+		        where hpi.hotelPackageId = #hotelPackageId#
+		          AND hpi.`delFlag` = 0
+		order by hotelPackageMId
+	</select>
+	
+	<select id="getHotelPackageByHotelId" resultClass="hotelPackageVO">
+    <![CDATA[
+        select hp.hotelId,h.hotelCode,hpi.*,GROUP_CONCAT(p.packageId) as packageIds,GROUP_CONCAT(p.packageCode) as packageCodes 
+          from hotel_package hp
+           left join hotel h on hp.hotelId = h.hotelId AND h.delFlag = 0
+           left join package p on hp.packageId = p.packageId AND p.delFlag = 0
+           left join hotel_package_i18n hpi on hp.hotelPackageId = hpi.hotelPackageId
+                 and hpi.language = #language# and hpi.delFlag = 0
+        where hp.hotelId = #hotelId# and hp.delFlag = 0
+        group by hp.hotelId
+    ]]>
+	</select>
+
+	<select id="getHotelPackageByObj" resultClass="hotelPackageVO" >
+        select hp.*,hpi.*,h.hotelCode,p.packageCode from hotel_package hp
+           left join hotel h on hp.hotelId = h.hotelId AND h.delFlag = 0
+           left join package p on hp.packageId = p.packageId AND p.delFlag = 0
+           left join hotel_package_i18n hpi on hp.hotelPackageId = hpi.hotelPackageId
+                 and hpi.language = #language# and hpi.delFlag = 0
+        where hp.delFlag = 0
+        <isNotEmpty prepend="AND" property="hotelId">
+			hp.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelPackageId">
+			hp.hotelPackageId = #hotelPackageId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageId">
+			hp.packageId = #packageId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageIds">
+			hp.packageId in
+			<iterate open="(" close=")" conjunction="," property="packageIdList">
+				#packageIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="searchHotelPackage" resultClass="hotelPackageVO" >
+		SELECT hp.*,hpi.*,h.hotelCode,p.packageCode
+		  FROM hotel_package hp
+		  LEFT JOIN hotel h ON hp.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN package p ON hp.packageId = p.packageId AND p.delFlag = 0
+		  LEFT JOIN hotel_package_i18n hpi on hp.hotelPackageId = hpi.hotelPackageId
+                 and hpi.language = #language# and hpi.delFlag = 0
+		WHERE hp.delFlag = 0  
+		  AND hp.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="packageIds">
+			hp.packageId in
+			<iterate open="(" close=")" conjunction="," property="packageIdList">
+				#packageIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="issvcortax">
+				p.issvcortax = #issvcortax#
+	    </isNotEmpty>
+		ORDER BY hp.sortNum,p.packageCode
+		<include refid="pageSqlHotelPackageSQL"/>
+	</select>
+
+	<select id="countHotelPackage" resultClass="Integer" >
+		SELECT count(*) FROM hotel_package hp
+		  LEFT JOIN hotel h ON hp.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN package p ON hp.packageId = p.packageId AND p.delFlag = 0
+		  LEFT JOIN hotel_package_i18n hpi on hp.hotelPackageId = hpi.hotelPackageId
+                 and hpi.language = #language# and hpi.delFlag = 0
+		WHERE hp.delFlag = 0 
+		  AND hp.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="packageIds">
+			hp.packageId in
+			<iterate open="(" close=")" conjunction="," property="packageIdList">
+				#packageIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="issvcortax">
+				p.issvcortax = #issvcortax#
+	    </isNotEmpty>
+	</select>
+	
+	<select id="getDontUseHotelPackage" resultClass="packagevo" parameterClass="Map">
+		SELECT * FROM `package` p,`package_i18n` pi 
+				WHERE p.`packageId` = pi.`packageId`
+				  AND p.`delFlag` = 0
+				  AND pi.`delFlag` = 0
+				  AND pi.`language` = #language#
+				  AND NOT EXISTS(
+						SELECT 1 FROM hotel_package hp 
+								WHERE hp.`delFlag` = 0 
+						 	      AND hp.`hotelId` = #hotelId#
+						 	      AND hp.`packageId` = p.`packageId`
+				  )
+	</select>
+	
+	<select id="getUseRatePackage" resultClass="rateplan" parameterClass="Map">
+		SELECT r.* FROM rate_plan r,hotel h
+				  WHERE r.`hotelId` = h.`hotelId`
+				    AND h.`hotelId` = #hotelId#
+				    AND r.`delFlag` = 0
+				    AND h.`delFlag` = 0
+				    AND EXISTS(
+						SELECT 1 FROM rate_package rp 
+								WHERE rp.`ratePlanId` = r.`ratePlanId`
+					              AND rp.`packageId` = #packageId#
+					              AND rp.`delFlag` = 0
+				  	)
+	</select>
+	
+	<select id="getUseRoomPackage" resultClass="roomType" parameterClass="Map">
+		SELECT * FROM room_type rt , hotel h 
+				WHERE rt.`hotelId` = h.`hotelId`
+				AND h.`hotelId` = #hotelId#
+				AND rt.`delFlag` = 0
+				AND h.`delFlag` = 0
+				AND EXISTS(
+					SELECT 1 FROM rate_plan r,rate_detail rd,room_rate rr,room_package rp 
+							WHERE r.`ratePlanId` = rd.`ratePlanId` 
+							  AND rd.`rateDetailId` = rr.`rateDetailId`
+							  AND rr.`roomRateId` = rp.`roomRateId` 
+							  AND rr.`roomTypeId` = rt.`roomTypeId` 
+							  AND rp.`packageId` = #packageId#
+							  AND r.`delFlag` = 0
+							  AND rd.`delFlag` = 0
+							  AND rr.`delFlag` = 0
+							  AND rp.`delFlag` = 0
+				)																		
+	</select>
+	
+	<select id="getUseDynamicPackage" resultClass="dynamicPackage" parameterClass="Map">
+		SELECT dp.* FROM dynamic_package dp,hotel h ,package p
+				   WHERE dp.`hotelId` = #hotelId# AND dp.`packageId` = #packageId# 
+					 AND dp.`delFlag` = 0
+					 AND h.`delFlag` = 0
+					 AND p.`delFlag` = 0														
+	</select>
+</sqlMap>

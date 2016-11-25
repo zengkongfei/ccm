@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PositionSQL">
+    <typeAlias alias="positionvo" type="com.ccm.api.model.hotel.vo.PositionVO"/>
+    <typeAlias alias="position" type="com.ccm.api.model.hotel.Position"/>
+    <typeAlias alias="positionI18n" type="com.ccm.api.model.hotel.PositionI18n"/>
+    		
+    <sql id="pageSqlPositionSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="addPosition" parameterClass="position">
+        insert into position (positionId,hotelId,pointCode,longitude,latitude,createdBy,createdTime,delFlag) 
+        values (#positionId#,#hotelId#,#pointCode#,#longitude#,#latitude#,#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+    
+    <insert id="addPositionI18n" parameterClass="positionI18n">
+        insert into position_i18n (relativePositionMId,positionId,languageCode,name,description,
+        	createdBy,createdTime,delFlag) 
+        values (#relativePositionMId#,#positionId#,#languageCode#,#name#,#description#,
+        	#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+    
+    <update id="updatePosition" parameterClass="position">
+        update position SET
+			pointCode = #pointCode#
+			,hotelId = #hotelId#
+			,longitude = #longitude#
+			,latitude = #latitude#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where positionId = #positionId#
+    </update>
+    
+    <update id="updatePositionI18n" parameterClass="positionI18n">
+        update position_i18n SET
+			name = #name#
+			,description = #description#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where relativePositionMId = #relativePositionMId#
+    </update>
+    
+    <update id="deletePosition" parameterClass="position">
+        update position SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where positionId = #positionId#
+    </update>
+    
+    <update id="deletePositionI18n" parameterClass="positionI18n">
+        update position_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where relativePositionMId = #relativePositionMId#
+    </update>
+    
+    <update id="deletePositionI18nByPositionId" parameterClass="java.lang.String">
+    <![CDATA[
+        update position_i18n SET delFlag = 1
+         where positionId = #positionId#
+    ]]>
+	</update>
+    
+  	<select id="getPositionById" resultClass="positionvo">
+  		SELECT * FROM `position` p left join `position_i18n` pin 
+  			on p.`positionId` = pin.`positionId` AND pin.`delFlag` = 0 AND pin.languageCode = #languageCode#
+		WHERE p.`delFlag` = 0
+		AND p.`positionId` = #positionId#
+    </select>
+
+    <select id="searchPosition" resultClass="positionvo">
+    	SELECT * FROM `position` p,`position_i18n` pin
+		WHERE p.`positionId` = pin.`positionId`
+		AND p.`delFlag` = 0
+		AND pin.`delFlag` = 0
+		AND pin.languageCode = #languageCode#
+		AND p.hotelId = #hotelId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="pointCode">
+				p.pointCode = #pointCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="name">
+				pin.name like  CONCAT('%',#name#,'%')
+	        </isNotEmpty>
+        </dynamic>
+        <include refid="pageSqlPositionSQL"/>
+    </select>
+
+    <select id="searchPositionCount" resultClass="Integer">  
+    	SELECT count(*) FROM `position` p,`position_i18n` pin
+		WHERE p.`positionId` = pin.`positionId`
+		AND p.`delFlag` = 0
+		AND pin.`delFlag` = 0
+		AND pin.languageCode = #languageCode#
+		AND p.hotelId = #hotelId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="pointCode">
+				p.pointCode = #pointCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="name">
+				pin.name like  CONCAT('%',#name#,'%')
+	        </isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <select id="getAllPosition" resultClass="positionvo">
+    	SELECT * FROM `position` p,`position_i18n` pin
+		WHERE p.`positionId` = pin.`positionId`
+		AND p.`delFlag` = 0
+		AND pin.`delFlag` = 0
+		AND pin.languageCode = #languageCode#
+		AND p.hotelId = #hotelId#
+    </select>
+    
+    <select id="getPositionI18ns" resultClass="positionI18n" parameterClass="Map">
+		select * from position_i18n pin
+		        where pin.positionId =#positionId#
+		          AND pin.delFlag = 0
+		order by relativePositionMId
+	</select>
+</sqlMap>

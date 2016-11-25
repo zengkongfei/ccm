@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:aop="http://www.springframework.org/schema/aop" 
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+       	http://www.springframework.org/schema/context 
+       	http://www.springframework.org/schema/context/spring-context.xsd 
+       	http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="true">
+
+	<!-- Activates scanning of @Autowired -->
+	<context:annotation-config />
+
+	<!-- Activates scanning of @Repository and @Service -->
+	<context:component-scan base-package="com.ccm.api">
+		<context:include-filter type="aspectj" expression="com.ccm.mc.webapp.filter.*" />
+	</context:component-scan>
+	<!-- <bean id="logAspect" class="com.ccm.api.log.aop.LogAspect" /> -->
+	<!-- <aop:config> -->
+		<!-- 切入点 -->
+	<!-- <aop:pointcut expression="execution(* com.ccm.api.dao..*.*(..))" id="logPointcut" /> -->
+		<!-- 切面： 将哪个对象中的哪个方法，织入到哪个切入点 -->
+	<!-- <aop:aspect ref="logAspect">
+			<aop:before method="saveLog" pointcut-ref="logPointcut" />
+			<aop:after-throwing method="throwAdvice" pointcut-ref="logPointcut" arg-names="jp,e" throwing="e"/>
+		</aop:aspect>
+	</aop:config>
+	-->
+
+</beans>

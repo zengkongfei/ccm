@@ -1,0 +1,57 @@
+<decorators defaultdir="/decorators">
+	<excludes>
+		<pattern>/index.jsp*</pattern>
+		<pattern>/login*</pattern>
+		<pattern>/40*.jsp</pattern>
+		<pattern>/pages/watch.jsp*</pattern>
+
+		<pattern>/upload*</pattern>
+
+		<pattern>/ckeditor/*</pattern>
+
+		<pattern>/common/*.jsp</pattern>
+
+		<pattern>/picture_*</pattern>
+		
+		<pattern>/user_showUserName.do*</pattern>
+		<pattern>/hotelAdmin_showUserName.do*</pattern>
+		<pattern>/hotelUser_showUserName.do*</pattern>
+		<pattern>/channelAdmin_showUserName.do*</pattern>
+		<pattern>/convert_edit.do*</pattern>
+		<pattern>/convert_showCurChainHotels.do*</pattern>
+		<pattern>/cMap_edit.do*</pattern>
+		<pattern>/channelGoods_edit.do*</pattern>
+		<pattern>/channelGoods_channelRoomType.do*</pattern>
+		<pattern>/product_toSetOnOff.do*</pattern>
+		<pattern>/upDownLog_detail.do*</pattern>
+		<pattern>/adsBeq_handSend.do*</pattern>	
+		<pattern>/orderEmailConfirm_ajaxDetail.do*</pattern>
+		<pattern>/sendOTALog_detail.do*</pattern>
+		<pattern>/pmsLog_pie.do*</pattern>
+		<pattern>/channelOrder_channelOrderPie.do*</pattern>
+		<pattern>/channelOrder_channelOrderBar.do*</pattern>
+		<pattern>/privacyStatement.jsp</pattern>
+		<pattern>/order_changesLog.do*</pattern>
+		<pattern>/channelBookIng_changesLog.do*</pattern>
+		
+		<pattern>/pages/user/forgetPwd.jsp</pattern>
+		
+		<pattern>/pages/order/orderEdit.jsp</pattern>
+	</excludes>
+
+	<decorator name="default" page="default.jsp">
+		<pattern>/403.jsp</pattern>
+		<pattern>/404.jsp</pattern>
+	</decorator>
+
+	<decorator name="main" page="mainDecorator.jsp">
+		<pattern>/*</pattern>
+	</decorator>
+	
+	<decorator name="userManager" page="userManagerDecor.jsp">
+		<pattern>/user_manager.do*</pattern>
+		<pattern>/user_changePwd.do*</pattern>
+		<pattern>/user_changeEmail.do*</pattern>
+	</decorator>
+
+</decorators>

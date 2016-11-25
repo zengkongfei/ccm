@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CreditLimitSQL">
+
+	<typeAlias alias="creditLimit" type="com.ccm.api.model.hotel.CreditLimit" />
+	<typeAlias alias="creditLimitVO" type="com.ccm.api.model.hotel.vo.CreditLimitVO" />
+	<typeAlias alias="hotelCreditLimitBinding" type="com.ccm.api.model.hotel.HotelCreditLimitBinding" />
+	<sql id="pageSqlCreditLimitSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+		</isNotEmpty>
+	</sql>
+
+	<insert id="addCreditLimit" parameterClass="creditLimit">
+    	<![CDATA[
+		  INSERT INTO creditLimit (
+		  creditLimitId,
+		  groupName,
+		  channelId,
+		  channelCode,
+		  originalCreditLimit,
+		  minLimit,
+		  minLimitPct,
+		  emailLimit,
+		  emailLimitPct,
+		  hasSentMinLimit,
+		  hasSentEmailLimit,
+		  hotelEmail,
+		  channelEmail,
+		  createdTime,
+		  createdBy,
+		  delFlag
+		)VALUE(
+		  #creditLimitId#,
+		  #groupName#,
+		  #channelId#,
+		  #channelCode#,
+		  #originalCreditLimit#,
+		  #minLimit#,
+		  #minLimitPct#,
+		  #emailLimit#,
+		  #emailLimitPct#,
+		  0,
+		  0,
+		  #hotelEmail#,
+		  #channelEmail#,
+		  #createdTime#,
+		  #createdBy#,
+		  #delFlag#
+		)
+		]]>
+	</insert>
+	
+	<select id="getCreditLimitByDetail" parameterClass="hotelCreditLimitBinding" resultClass="creditLimit">
+		<![CDATA[ SELECT cl.* FROM creditLimit cl INNER JOIN hotelcreditlimitbinding hclb  ON 
+					cl.creditLimitId=hclb.creditLimitId
+					AND hclb.channelId=cl.channelId
+					AND hclb.channelId=#channelId#
+					AND hclb.hotelId=#hotelId#
+					AND cl.delFlag=0
+					AND hclb.delflag=0]]>
+	</select>
+	
+	<update id="updateCreditLimit" parameterClass="creditLimit">
+		update creditLimit
+			set
+				minLimitPct = #minLimitPct#,
+				emailLimitPct = #emailLimitPct#,
+				hasSentMinLimit = 0,
+		  		hasSentEmailLimit = 0
+			<isNotNull property="groupName" prepend=",">
+		        <![CDATA[  
+		        groupName = #groupName#
+		        ]]>
+			</isNotNull>
+			<isNotNull property="channelId" prepend=",">
+		        <![CDATA[  
+		        channelId = #channelId#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="channelCode" prepend=",">
+		        <![CDATA[  
+		        channelCode = #channelCode#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="originalCreditLimit" prepend=",">
+		        <![CDATA[  
+		        originalCreditLimit = #originalCreditLimit#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="minLimit" prepend=",">
+		        <![CDATA[  
+		        minLimit = #minLimit#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="emailLimit" prepend=",">
+		        <![CDATA[  
+		        emailLimit = #emailLimit#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="income" prepend=",">
+		        <![CDATA[  
+		        income = #income#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="hotelEmail" prepend=",">
+		        <![CDATA[  
+		        hotelEmail = #hotelEmail#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="channelEmail" prepend=",">
+		        <![CDATA[  
+		        channelEmail = #channelEmail#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="lastModifyTime" prepend=",">
+		        <![CDATA[  
+		        lastModifyTime = #lastModifyTime#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="updatedBy" prepend=",">
+		        <![CDATA[  
+		        updatedBy = #updatedBy#  
+		        ]]>
+			</isNotNull>
+		where creditLimitId=#creditLimitId#
+	</update>
+	
+	<update id="updateSentSwitchOfCreditLimit" parameterClass="creditLimit">
+		 update creditLimit
+		 <dynamic prepend="SET">
+		<isNotNull property="hasSentMinLimit" prepend=","> 
+			<![CDATA[
+				hasSentMinLimit=#hasSentMinLimit#
+			 ]]>
+		</isNotNull>
+		<isNotNull property="hasSentEmailLimit" prepend=","> 
+			<![CDATA[
+				hasSentEmailLimit=#hasSentEmailLimit#
+			 ]]>
+		</isNotNull>
+		</dynamic>
+		where creditLimitId=#creditLimitId#
+	</update>
+	
+	<update id="updateTotalRoomRevOfCreditLimit" parameterClass="creditLimit">
+		<![CDATA[ update creditLimit set totalRoomRev=totalRoomRev + #variable# where creditLimitId=#creditLimitId#]]>
+	</update>
+	
+	<update id="removeCreditLimit" parameterClass="java.lang.String">
+    <![CDATA[
+    	update creditLimit set delFlag=1,lastModifyTime=now()
+         where creditLimitId =#creditLimitId# 
+    ]]>
+	</update>
+	
+	<select id="getCreditLimitVOList" resultClass="creditLimitVO">
+		SELECT GROUP_CONCAT(h.`hotelCode`) AS hotelCodes,c.* FROM creditlimit c INNER JOIN hotelcreditlimitbinding h ON c.`creditLimitId`=h.`creditLimitId` 
+		WHERE c.`delFlag`=0 AND h.`delflag`=0
+		<isNotEmpty property="groupName">
+			and c.groupName=#groupName#
+		</isNotEmpty>
+		<isNotEmpty property="hotelId">
+			and c.`creditLimitId` in (SELECT h.`creditLimitId` FROM hotelcreditlimitbinding h WHERE h.`hotelId`=#hotelId# AND h.`delflag` = 0) 
+		</isNotEmpty>
+		<isNotEmpty property="channelId">
+			and c.channelId=#channelId#
+		</isNotEmpty>
+		GROUP BY c.`creditLimitId`
+		<include refid="pageSqlCreditLimitSQL" />
+	</select>
+	
+	<select id="getCreditLimitVOCount" resultClass="java.lang.Integer">
+	SELECT COUNT(a.creditLimitId) FROM (
+		SELECT  c.`creditLimitId` FROM creditlimit c 
+	  INNER JOIN hotelcreditlimitbinding h 
+	    ON c.`creditLimitId` = h.`creditLimitId` 
+	WHERE c.`delFlag` = 0 
+	  AND h.`delflag` = 0 
+		<isNotEmpty property="groupName">
+			and c.groupName=#groupName#
+		</isNotEmpty>
+		<isNotEmpty property="hotelId">
+			and h.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty property="channelId">
+			and c.channelId=#channelId#
+		</isNotEmpty>
+		  GROUP BY c.`creditLimitId`
+		 ) a
+	</select>
+	
+	<select id="getCreditLimitVO" resultClass="creditLimitVO">
+		SELECT * from creditlimit where creditLimitId=#creditLimitId# and `delFlag` = 0 
+	</select>
+	
+	
+</sqlMap>

@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SpecialOfferSQL">
+	<typeAlias alias="specialOfferVO" type="com.ccm.api.model.hotel.vo.SpecialOfferVO" />
+	<typeAlias alias="specialOffer" type="com.ccm.api.model.hotel.SpecialOffer" />
+	<typeAlias alias="specialOfferI18n" type="com.ccm.api.model.hotel.SpecialOfferI18n" />
+			
+    <sql id="pageSqlSpecialOfferSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addSpecialOffer" parameterClass="specialOffer">
+		INSERT INTO special_offer(specialOfferId,hotelId,beginTime,endTime,createdBy,createdTime,delFlag) 
+			 VALUES (#specialOfferId#,#hotelId#,#beginTime#,#endTime#,#createdBy#,#createdTime#,#delFlag#); 
+    </insert>
+
+	<insert id="addSpecialOfferI18n" parameterClass="specialOfferI18n">
+		INSERT INTO special_offer_i18n(specialOfferMId,specialOfferId,language,summary,detail,createdBy,createdTime,delFlag)
+			 VALUES(#specialOfferMId#,#specialOfferId#,#language#,#summary#,#detail#,#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+
+	<update id="updateSpecialOffer" parameterClass="specialOffer">
+		update special_offer SET
+		hotelId = #hotelId#
+		,beginTime = #beginTime#
+		,endTime = #endTime#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where specialOfferId = #specialOfferId#
+    </update>
+
+	<update id="updateSpecialOfferI18n" parameterClass="specialOfferI18n">
+		update special_offer_i18n SET
+		summary = #summary#
+		,detail = #detail#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where specialOfferMId = #specialOfferMId#
+	</update>
+
+	<update id="deleteSpecialOffer" parameterClass="specialOffer">
+		update special_offer SET
+		delFlag = 1
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where specialOfferId = #specialOfferId#
+    </update>
+
+	<update id="deleteSpecialOfferI18n" parameterClass="specialOfferI18n">
+		update special_offer_i18n SET
+		delFlag = 1
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where specialOfferMId = #specialOfferMId#
+    </update>
+    
+    <update id="deleteSpecialOfferI18nBySpecialOfferId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update special_offer_i18n set delFlag = 1
+         where specialOfferId = #specialOfferId#
+    ]]>
+	</update>
+
+	<select id="getSpecialOffer" resultClass="specialOffer">
+		SELECT * FROM `special_offer` s
+		WHERE s.`delFlag` = 0
+		AND s.`specialOfferId` = #specialOfferId#
+    </select>
+
+	<select id="getSpecialOfferById" resultClass="specialOfferVO" parameterClass="Map">
+		SELECT * FROM `special_offer` s,`special_offer_i18n` si
+		WHERE s.`specialOfferId` = si.`specialOfferId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND s.`specialOfferId` = #specialOfferId#
+		AND si.`language` = #language#
+    </select>
+
+	<select id="searchSpecialOffer" resultClass="specialOfferVO">
+		SELECT * FROM `special_offer` s,`special_offer_i18n` si
+		WHERE s.`specialOfferId` = si.`specialOfferId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND si.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				s.hotelId = #hotelId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="beginTime">
+				s.beginTime <![CDATA[>=]]> #beginTime#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="endTime">
+				s.endTime <![CDATA[<=]]> #endTime#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="summary">
+				si.summary like CONCAT('%',#summary#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		<include refid="pageSqlSpecialOfferSQL"/>
+	</select>
+
+	<select id="searchSpecialOfferCount" resultClass="Integer">
+		SELECT count(*) FROM `special_offer` s,`special_offer_i18n` si
+		WHERE s.`specialOfferId` = si.`specialOfferId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND si.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				s.hotelId = #hotelId#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="beginTime">
+				s.beginTime <![CDATA[>=]]> #beginTime#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="endTime">
+				s.endTime <![CDATA[<=]]> #endTime#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="summary">
+				si.summary like CONCAT('%',#summary#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getAllSpecialOfferByHotelId" resultClass="specialOfferVO">
+		SELECT * FROM `special_offer` s,`special_offer_i18n` si
+		WHERE s.`specialOfferId` = si.`specialOfferId`
+		AND s.`delFlag` = 0
+		AND si.`delFlag` = 0
+		AND si.`language` = #language#
+		AND s.`hotelId` = #hotelId#
+	</select>
+
+	<select id="getSpecialOfferI18ns" resultClass="specialOfferI18n" parameterClass="Map">
+		select * from special_offer_i18n si 
+		        where si.specialOfferId=#specialOfferId#
+		          AND si.`delFlag` = 0
+		order by specialOfferMId
+	</select>
+</sqlMap>

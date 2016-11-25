@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GDSPublisherRequest xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" UserID="COL$Expedia"
+	Password="H57w3aRgy6" Type="AvailabilityRestrictionMessage" Profile="COL"
+	Destination="http://10.90.6.105/ADSListner/Default.aspx">
+	<FIDELIO_AvailUpdateNotifRQ echoToken="AUYPRCZDFVPBG9K5ROM8"
+		timeStamp="2013-02-18T11:03:11.38+08:00" version="3.0"
+		xmlns="http://www.micros.com/2002A">
+		<Properties>
+			<Property chainCode="COL" hotelCode="INTZJ">
+				<AvailUpdateSegments>
+					<AvailUpdateSegment roomTypeCode="1KBDS"
+						rateCode="WHL02" actionCode="MinLenStay" lengthOfStay="1">
+						<TargetGDS>LESUKE</TargetGDS>
+						<TimeSpan start="2013-04-18T00:00:00" end="2013-04-18T00:00:00"
+							duration="0" />
+					</AvailUpdateSegment>
+					<AvailUpdateSegment roomTypeCode="1KBDS"
+						rateCode="WHL02" actionCode="MinStayThrough" lengthOfStay="1">
+						<TargetGDS>LESUKE</TargetGDS>
+						<TimeSpan start="2013-04-18T00:00:00" end="2013-04-18T00:00:00"
+							duration="0" />
+					</AvailUpdateSegment>
+					<AvailUpdateSegment roomTypeCode="1KBDS"
+						rateCode="WHL02" actionCode="Open">
+						<TargetGDS>LESUKE</TargetGDS>
+						<TimeSpan start="2013-04-18T00:00:00" end="2013-04-18T00:00:00"
+							duration="0" />
+					</AvailUpdateSegment>
+				</AvailUpdateSegments>
+			</Property>
+		</Properties>
+	</FIDELIO_AvailUpdateNotifRQ>
+</GDSPublisherRequest>

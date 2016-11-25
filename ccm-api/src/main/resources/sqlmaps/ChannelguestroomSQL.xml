@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Channelguestroom">
+
+	<typeAlias alias="channelguestroom" type="com.ccm.api.model.channel.Channelguestroom" />
+
+	<insert id="addChannelguestroom" parameterClass="channelguestroom">
+		INSERT INTO channelguestroom( channelguestroomId, channelId, guestRoomId, channelRoomTypeCode,
+		addTime, delTime, createdTime, lastModifyTime,matchStatus,outerId)
+		VALUES ( #channelguestroomId#, #channelid#, #guestroomid#, 
+		REPLACE(REPLACE(#channelroomtypecode#,' ',''),'　',''),
+		#addtime#, #deltime#, #createdtime#, #lastmodifytime#,#matchStatus#,#outerId#)
+  </insert>
+
+	<update id="updateChannelguestroom" parameterClass="channelguestroom">
+		UPDATE channelguestroom
+		<dynamic prepend="SET">
+			<isNotNull property="channelid" prepend=",">
+        <![CDATA[  
+        channelId = #channelid#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="guestroomid" prepend=",">
+        <![CDATA[  
+        guestRoomId = #guestroomid#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="channelroomtypecode" prepend=",">
+        <![CDATA[  
+        channelRoomTypeCode = REPLACE(REPLACE(#channelroomtypecode#,' ',''),'　','')  
+        ]]>
+			</isNotNull>
+			<isNotNull property="addtime" prepend=",">
+        <![CDATA[  
+        addTime = #addtime#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="deltime" prepend=",">
+        <![CDATA[  
+        delTime = #deltime#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="createdtime" prepend=",">
+        <![CDATA[  
+        createdTime = #createdtime#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="lastmodifytime" prepend=",">
+        <![CDATA[  
+        lastModifyTime = #lastmodifytime#  
+        ]]>
+			</isNotNull>
+			<isNotNull property="matchStatus" prepend=",">
+        <![CDATA[  
+        matchStatus = #matchStatus# 
+        ]]>
+			</isNotNull>
+		</dynamic>
+		WHERE channelguestroomId = #channelguestroomId#
+	</update>
+
+	<select id="getChannelguestroomByGRID" resultClass="channelguestroom">
+    <![CDATA[
+        select * from channelguestroom 
+        where guestroomid=#guestroomid# 
+    ]]>
+	</select>
+
+	<select id="getChannelGuestRoomByRidOuterId" resultClass="channelguestroom">
+		select * from channelguestroom cgr
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="outerId">
+				outerId=#outerId#
+		</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelroomtypecode">
+				channelroomtypecode=#channelroomtypecode#
+		</isNotEmpty>
+		</dynamic>
+	</select>
+
+</sqlMap>

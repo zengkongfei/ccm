@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="EmployeeSQL">
+    
+    <typeAlias alias="employee" type="com.ccm.api.model.user.Employee"/>
+    <typeAlias alias="employeeI18n" type="com.ccm.api.model.user.EmployeeI18n"/>
+    
+    <select id="getEmployee" resultClass="employee">
+    <![CDATA[
+        select * from employee where employeeId=#employeeId# 
+    ]]>
+    </select>
+    
+    <insert id="addEmployee" parameterClass="employee">
+    <![CDATA[
+        insert into employee (employeeId, companyId, name, sex,
+           dept, title, telNo, mobile, fax, qq, email, address, contactType, zipCode,
+           createdTime,contactFlag,delFlag) 
+        values (#employeeId#, #companyId#, #name#, #sex#, 
+           #dept#, #title#, #telNo#,
+            #mobile#, #fax#, #qq#, #email#, #address#, #contactType#, #zipCode#,#createdTime#,#contactFlag#,#delFlag#);
+     ]]>
+    </insert>
+    
+    <insert id="addEmployeeI18n" parameterClass="employeeI18n">
+    <![CDATA[
+        INSERT INTO employee_i18n(employee_I18nMId,employeeId,dept,title,name,language) 
+        values (#employeeI18n_MId#, #employeeId#, #dept#, #title#, #name#, #language#);
+     ]]>
+    </insert>
+    
+      <update id="updateEmployee" parameterClass="employee">
+    <![CDATA[
+        update employee SET         
+            companyId = #companyId#,
+            name = #name#,          
+            sex = #sex#,
+            dept = #dept#,
+            title = #title#,
+            telNo = #telNo#,
+            mobile = #mobile#,
+            fax = #fax#,
+            qq = #qq#,
+            email = #email#,
+            address = #address#,
+            contactType = #contactType#,
+            zipCode = #zipCode#,        
+            contactFlag = #contactFlag#,
+            delFlag = #delFlag#
+        where employeeId = #employeeId#
+    ]]>
+    </update>
+    
+    <delete id="deleteEmployee" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from employee where employeeId = #employeeId#
+    ]]>
+    </delete>
+    
+    
+     <select id="getCompanyContacts" resultClass="employee">
+    <![CDATA[
+        select * from employee where companyId=#companyId#  and delFlag = 0 and  contactFlag = 1 order by createdTime desc
+    ]]>
+    </select>
+    
+	<delete id="deleteEmployeeI18n" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from employee_i18n where employeeId = #employeeId#
+    ]]>
+	</delete>
+	
+	<select id="getEmployeeI18n" resultClass="employeeI18n" parameterClass="Map">
+		select * from employee_i18n 
+				where employeeId=#employeeId#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="language">
+				language = #language#  
+           </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="getEmployee_i18n" resultClass="employee" parameterClass="Map">
+		SELECT e.`employeeId`,e.`companyId`,ei.`name`,e.`sex`,ei.`dept`,ei.`title`,e.`telNo`,e.`mobile`,
+			e.`fax`,e.`qq`,e.`email`,e.`address`,e.`contactType`,e.`zipCode`,e.`createdTime`,e.`contactFlag`,e.`delFlag`
+		FROM employee e LEFT JOIN employee_i18n ei ON e.`employeeId`=ei.`employeeId` WHERE e.`employeeId`=#employeeId# and ei.language=#language#;
+	</select>
+
+</sqlMap>

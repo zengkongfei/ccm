@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DictCodeSQL">
+
+	<typeAlias alias="dictCode" type="com.ccm.api.model.common.DictCode" />
+
+	<typeAlias alias="dictionary" type="com.ccm.api.model.common.Dictionary" />
+
+	<typeAlias alias="dictCodeChannelCodeNameVO" type="com.ccm.api.model.common.vo.DictCodeChannelCodeNameVO" />
+
+	<resultMap id="dccnv" class="com.ccm.api.model.common.vo.DictCodeChannelCodeNameVO">
+		<result property="codeName" column="codeName" columnIndex="1" />
+		<result property="codeNo" column="codeNo" columnIndex="2" />
+	</resultMap>
+
+	<select id="getDictionaryByDictId" resultClass="dictionary">
+    <![CDATA[
+      select * from dictionary where dictId = #dictId#
+    ]]>
+	</select>
+
+	<select id="getDictionaryByDictType" resultClass="dictionary">
+		select d.dictId,d.dataTable,d.dictName,d.dictType,d.lableFeild,d.querySql,di.remark,d.valueFeild
+		 from dictionary d, dictionary_i18n di 
+		 where d.dictId = di.dictId  AND di.language=#language# AND dictType in
+		<iterate open="(" close=")" conjunction="," property="dictTypes">
+			#dictTypes[]# 
+		</iterate>
+	</select>
+
+	<select id="getDictionaryByDictName" resultClass="dictionary">
+    <![CDATA[
+      select * from dictionary where dictName = #dictName#
+    ]]>
+	</select>
+
+	<select id="getDictCodeByDictId" resultClass="dictCode" parameterClass="Map">
+		select
+		<isNotEmpty property="dataTable">
+			<isNotEmpty property="lableFeild">$lableFeild$ </isNotEmpty>
+			from
+			<isNotEmpty property="querySql">$querySql$ </isNotEmpty>
+			and
+		</isNotEmpty>
+		<isEmpty property="dataTable">
+			 d.`codeId`,di.`codeLabel`,d.`codeNo`,d.`dictId`,null hotelId from dictcode d  INNER JOIN dictcode_i18n di  ON d.`codeId` = di.`codeId`
+			 WHERE di.`language`=#language# and
+        </isEmpty>
+		dictId = #dictId#
+	</select>
+
+	<select id="searchByDictName" resultClass="dictCode" parameterClass="Map">
+    <![CDATA[
+      	SELECT dc.codeId,dci.codeLabel,dc.codeNo,dc.dictId 
+  	  FROM(dictcode dc INNER JOIN dictionary d ON d.dictId = dc.dictId) 
+      INNER JOIN dictcode_i18n dci ON dc.codeId = dci.codeId 
+      WHERE dictName = #dictName#
+      AND dci.language = #language# 
+      ORDER BY codeno 
+      
+    ]]>
+	</select>
+
+	<select id="searchByCodeNo" resultClass="dictCode" parameterClass="Map">
+    <![CDATA[
+         select dc.* from dictcode dc 
+      inner join dictionary d on d.dictId = dc.dictId
+      where d.dictName = #dictName# and dc.codeno  = #codeNo# 
+      order by codeno
+    ]]>
+	</select>
+
+	<select id="searchCodeByChannelDictName" resultClass="dictCodeChannelCodeNameVO" parameterClass="Map">
+    <![CDATA[
+         SELECT t2.codeLabel,t1.codeName,t2.codeNo FROM codelistmapping t1 
+	INNER JOIN dictcode t2 ON t1.codeId = t2.codeId
+	INNER JOIN (SELECT dictId FROM dictionary WHERE dictName = #dictName#)t3 ON t2.dictId = t3.dictId 
+	INNER JOIN (SELECT channelId FROM channel WHERE channelCode = #channelCode# )t4 ON t1.channelId = t4.channelId
+
+    ]]>
+	</select>
+
+	<select id="searchChannelCodeNoByChannel" resultMap="dccnv" parameterClass="Map">
+    <![CDATA[
+         SELECT t1.codeName,t2.codeNo FROM codelistmapping t1 
+	INNER JOIN dictcode t2 ON t1.codeId = t2.codeId
+	INNER JOIN (SELECT dictId FROM dictionary WHERE dictName = #dictName#)t3 ON t2.dictId = t3.dictId 
+	INNER JOIN (SELECT channelId FROM channel WHERE channelCode = #channelCode# )t4 ON t1.channelId = t4.channelId
+
+    ]]>
+	</select>
+
+	<select id="searchCodeMapByPms" resultMap="dccnv" >
+		SELECT t1.codeName,t2.codeNo FROM codelistmapping t1
+		INNER JOIN
+		<isNotEmpty property="dataTable">
+			(select
+			<isNotEmpty property="lableFeild">$lableFeild$ </isNotEmpty>
+			from
+			<isNotEmpty property="querySql">$querySql$ </isNotEmpty>
+			)
+		</isNotEmpty>
+		<isEmpty property="dataTable">
+			dictcode 
+        </isEmpty>
+		t2 ON t1.codeId = t2.codeId
+		INNER JOIN (SELECT dictId FROM dictionary WHERE dictName = #dictName#)t3 ON t2.dictId = t3.dictId
+		<isNotEmpty property="channelId" prepend="AND">
+			t1.channelId=#channelId#
+		</isNotEmpty>
+		<isNotEmpty property="hotelId" prepend="AND">
+			t1.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty property="ccm2external" prepend="AND">
+			ccm2external=#ccm2external#
+		</isNotEmpty>
+		<isNotEmpty property="external2ccm" prepend="AND">
+			external2ccm=#external2ccm#
+		</isNotEmpty>
+	</select>
+	
+	<select id="searchRoomCodeMapByPms" resultMap="dccnv" >
+		SELECT 
+		  t1.codeName,
+		  t2.codeNo 
+		FROM
+		  codelistmapping t1 
+		  INNER JOIN 
+		    (SELECT 
+		      roomTypeId codeId,
+		      roomTypeCode codeNo,
+		      NULL codeLabel,
+		      hotelId,
+		      dictId 
+		    FROM
+		      room_type 
+		    WHERE delFlag = 0 
+		      AND hotelId = #hotelId#     )        
+		       t2 ON t1.codeId = t2.codeId  
+		        INNER JOIN (SELECT dictId FROM dictionary WHERE dictName = 'roomTypeCode' ) t3 
+		        ON t2.dictId = t3.dictId      AND    t1.hotelId=#hotelId#        
+		        <isNotEmpty property="ccm2external" prepend="AND">
+					ccm2external=#ccm2external#
+				</isNotEmpty>
+				<isNotEmpty property="external2ccm" prepend="AND">
+					external2ccm=#external2ccm#
+				</isNotEmpty>
+	</select>
+
+</sqlMap>

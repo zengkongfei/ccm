@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoomTypeSQL">
+	<typeAlias alias="roomTypevo" type="com.ccm.api.model.roomType.vo.RoomTypeVO" />
+	<typeAlias alias="roomType" type="com.ccm.api.model.roomType.RoomType" />
+	<typeAlias alias="roomTypeI18n" type="com.ccm.api.model.roomType.RoomTypeI18n" />
+	<typeAlias alias="amenity" type="com.ccm.api.model.roomType.Amenity" />
+	
+    <sql id="pageSqlRoomTypeSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addRoomType" parameterClass="roomType">
+		insert into room_type (roomTypeId,hotelId,roomTypeCode,roomCategory,bedTypeCode,physicalRooms,roomClassificationCode,window_type,
+		maxOccupancy,area,floor,bed_type,bed_size,internet, picId,has_receipt,receipt_type,createdBy,createdTime,delFlag,roomTypeTemplateId,
+		sortNum)
+		values (#roomTypeId#,#hotelId#,
+		REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''),
+		#roomCategory#,#bedTypeCode#,#physicalRooms#,#roomClassificationCode#,#window_type#,
+		#maxOccupancy#,#area#,#floor#,#bed_type#,#bed_size#,#internet#,#picId#,#has_receipt#,#receipt_type#,#createdBy#,#createdTime#,
+		#delFlag#,#roomTypeTemplateId#,#sortNum#);
+    </insert>
+
+	<insert id="addRoomTypeI18n" parameterClass="roomTypeI18n">
+		insert into room_type_i18n (roomTypeMId,roomTypeId,language,roomTypeName, babyName, guide,description,receipt_other_type_desc,receipt_info,
+		createdBy,createdTime,delFlag)
+		values (#roomTypeMId#,#roomTypeId#,#language#,#roomTypeName#,#babyName#,#guide#,#description#,#receipt_other_type_desc#,#receipt_info#,
+		#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+
+	<insert id="addAmenity" parameterClass="amenity">
+		insert into amenity (amenityId,roomTypeId,amenityType,createdBy,createdTime,delFlag)
+		values (#amenityId#,#roomTypeId#,#amenityType#,#createdBy#,#createdTime#,#delFlag#);
+    </insert>
+
+	<delete id="deleteAmenity" parameterClass="amenity">
+		delete from amenity where roomTypeId=#roomTypeId# and amenityType=#amenityType#
+    </delete>
+
+	<update id="updateRoomType" parameterClass="roomType">
+		update room_type SET
+		hotelId = #hotelId#
+		,roomCategory = #roomCategory#
+		,bedTypeCode = #bedTypeCode#
+		,physicalRooms = #physicalRooms#
+		,roomClassificationCode = #roomClassificationCode#,
+		roomTypeCode=REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''),
+		window_type=#window_type#,maxOccupancy=#maxOccupancy#,area=#area#,floor=#floor#,bed_type=#bed_type#,
+		bed_size=#bed_size#,internet=#internet#,has_receipt = #has_receipt#,receipt_type = #receipt_type#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		,sortNum = #sortNum#
+		where roomTypeId = #roomTypeId#
+    </update>
+
+	<update id="updateRoomTypeI18n" parameterClass="roomTypeI18n">
+		update room_type_i18n SET
+		roomTypeName = #roomTypeName#
+		,description = #description#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		<dynamic prepend=",">
+			<isNotEmpty property="babyName" prepend=",">
+				babyName=#babyName#
+			</isNotEmpty>
+			<isNotEmpty property="guide" prepend=",">
+				guide=#guide#
+			</isNotEmpty>
+			<isNotEmpty property="receipt_other_type_desc" prepend=",">
+				receipt_other_type_desc=#receipt_other_type_desc#
+			</isNotEmpty>
+			<isNotEmpty property="receipt_info" prepend=",">
+				receipt_info=#receipt_info#
+			</isNotEmpty>
+		</dynamic>
+		where roomTypeMId = #roomTypeMId#
+	</update>
+
+	<update id="deleteRoomType" parameterClass="roomType">
+		update room_type SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where roomTypeId = #roomTypeId#
+    </update>
+    
+    <update id="updateRoomTypeDelFlag" parameterClass="Map">
+		update room_type SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where roomTypeId = #roomTypeId#
+    </update>
+
+	<update id="deleteRoomTypeI18n" parameterClass="roomTypeI18n">
+		update room_type_i18n SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where roomTypeMId = #roomTypeMId#
+    </update>
+    
+    <update id="deleteRoomTypeI18nByRoomTypeId" parameterClass="java.lang.String">
+    <![CDATA[
+    	update room_type_i18n set delFlag = 1
+         where roomTypeId = #roomTypeId#
+    ]]>
+	</update>
+
+	<select id="getRoomType" resultClass="roomTypevo">
+		SELECT * FROM `room_type` r
+		WHERE r.`delFlag` = 0
+		AND r.`roomTypeId` = #roomTypeId#
+    </select>
+
+	<select id="getRoomTypeByObj" resultClass="roomType">
+		SELECT * FROM `room_type`
+		WHERE `delFlag` = 0 AND `roomTypeCode` = #roomTypeCode# and hotelId=#hotelId#
+    </select>
+
+	<select id="getRoomTypeByHotelCode" resultClass="roomType">
+		SELECT r.roomTypeId,r.physicalRooms,r.hotelId FROM room_type r
+		inner join hotel h on r.hotelId = h.hotelId
+		WHERE r.delFlag = 0 AND h.delFlag=0 and r.roomTypeCode = #roomTypeCode# and h.hotelCode=#hotelCode#
+    </select>
+    
+	<select id="getRoomTypeVOByObj" resultClass="roomTypevo">
+		SELECT r.`roomTypeId`,r.`maxOccupancy`,r.hotelId FROM `room_type` r 
+		WHERE  r.`delFlag` = 0 AND  r.`roomTypeCode` =  #roomTypeCode# AND r.hotelId=#hotelId#
+    </select>
+    
+    
+    <select id="getRoomTypeCodesByIds" resultClass="String" parameterClass="java.util.List">
+		SELECT roomTypeCode FROM room_type
+		WHERE delFlag = 0 AND roomTypeId in
+		<iterate open="(" close=")" conjunction=",">
+			#roomTypeIds[]# 
+		</iterate>
+		order by roomTypeCode
+	</select>
+	
+	<select id="getRoomTypeInfosByIds" resultClass="roomTypevo" parameterClass="Map">
+		SELECT r.roomTypeCode,ri.roomTypeName,r.roomTypeId,r.hotelId FROM room_type r left join room_type_i18n ri
+		    ON r.roomTypeId = ri.roomTypeId AND ri.delFlag = 0 AND ri.language = #language#
+		WHERE r.delFlag = 0 AND r.roomTypeId in
+		<iterate open="(" close=")" conjunction="," property="roomTypeIds">
+			#roomTypeIds[]# 
+		</iterate>
+	</select>
+
+	<select id="getRoomTypeById" resultClass="roomTypevo" parameterClass="Map">
+		SELECT * FROM `room_type` r left join `room_type_i18n` ri 
+			ON r.`roomTypeId` = ri.`roomTypeId` AND ri.`delFlag` = 0 AND ri.`language` = #language#
+		WHERE r.`delFlag` = 0 
+		AND r.`roomTypeId` = #roomTypeId#
+		
+    </select>
+
+	<select id="getRoomTypeByCode" resultClass="roomTypevo">
+		SELECT * FROM `room_type` r left join `room_type_i18n` ri
+			ON r.`roomTypeId` = ri.`roomTypeId` AND ri.`delFlag` = 0 AND ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`roomTypeCode` = #roomTypeCode#
+		AND r.`hotelId` = #hotelId#
+		 
+    </select>
+    
+	<select id="getRoomTypeI18nByHotelCode" resultClass="roomTypevo">
+		SELECT r.*,ri.* FROM `room_type` r inner join `hotel` h on r.`hotelId` = h.`hotelId`
+				left join `room_type_i18n` ri on r.`roomTypeId` = ri.`roomTypeId` 
+									   AND ri.`delFlag` = 0 AND ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`roomTypeCode` = #roomTypeCode#
+		AND h.`hotelCode` = #hotelCode#
+		AND h.`delFlag` = 0
+    </select>
+
+	<select id="getRoomTypeByCodes" resultClass="roomTypevo">
+		SELECT 
+		r.roomTypeId,r.hotelId,r.roomTypeCode,r.roomCategory,r.bedTypeCode,
+		r.physicalRooms,r.roomClassificationCode,r.createdBy,r.createdTime,
+		r.updatedBy,r.lastModifyTime,r.delFlag,r.dictId,
+		r.maxOccupancy,
+		r.window_type,r.area,r.floor,r.bed_type,r.bed_size,r.internet,r.picId,
+		r.has_receipt,r.receipt_type,r.roomTypeTemplateId,r.sortNum,
+		
+		ri.roomTypeMId,
+		ri.language,
+		ri.roomTypeName,
+		ri.description,
+		ri.babyName,
+		ri.guide,
+		ri.receipt_other_type_desc,
+		ri.receipt_info
+		
+		FROM `room_type` r 
+		
+		LEFT JOIN `room_type_i18n` ri ON r.`roomTypeId` = ri.`roomTypeId` AND ri.`delFlag` = 0 AND ri.`language` = #language#
+		
+		WHERE r.`delFlag` = 0 
+		AND r.hotelId = #hotelId#
+		
+		<isNotEmpty prepend="AND" property="asList">
+			<iterate property="asList" open="(" close=")" conjunction="or">
+				r.roomTypeCode = #asList[]#
+            </iterate>
+		</isNotEmpty>
+		order by r.`sortNum`,r.`roomTypeCode`
+	</select>
+
+	<select id="searchRoomType" resultClass="roomTypevo">
+		SELECT * FROM `room_type` r,`room_type_i18n` ri
+		WHERE r.`roomTypeId` = ri.`roomTypeId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				r.hotelId = #hotelId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				r.roomTypeCode = #roomTypeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeName">
+				ri.roomTypeName like CONCAT('%',#roomTypeName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		order by r.`sortNum`,r.`roomTypeCode`
+		<include refid="pageSqlRoomTypeSQL"/>
+	</select>
+
+	<select id="searchRoomTypeCount" resultClass="Integer">
+		SELECT count(*) FROM `room_type` r,`room_type_i18n` ri
+		WHERE r.`roomTypeId` = ri.`roomTypeId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="hotelId">
+				r.hotelId = #hotelId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				r.roomTypeCode = #roomTypeCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeName">
+				ri.roomTypeName like CONCAT('%',#roomTypeName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getAllRoomTypeByHotelId" resultClass="roomTypevo">
+		SELECT 
+		r.roomTypeId,r.hotelId,r.roomTypeCode,r.roomCategory,r.bedTypeCode,
+		r.physicalRooms,r.roomClassificationCode,r.createdBy,r.createdTime,
+		r.updatedBy,r.lastModifyTime,r.delFlag,r.dictId,
+		r.maxOccupancy,
+		r.window_type,r.area,r.floor,r.bed_type,r.bed_size,r.internet,r.picId,
+		r.has_receipt,r.receipt_type,r.roomTypeTemplateId,r.sortNum,
+		
+		ri.roomTypeMId,
+		ri.language,
+		ri.roomTypeName,
+		ri.description,
+		ri.babyName,
+		ri.guide,
+		ri.receipt_other_type_desc,
+		ri.receipt_info
+		
+		FROM `room_type` r 
+		
+		LEFT JOIN `room_type_i18n` ri ON r.`roomTypeId` = ri.`roomTypeId` AND ri.`delFlag` = 0 AND ri.`language` = #language#
+		
+		WHERE r.`delFlag` = 0 
+		AND r.hotelId = #hotelId#
+		order by r.`sortNum`,r.`roomTypeCode`
+	</select>
+	<select id="getAllRoomTypeByHotelIdAll" resultClass="roomTypevo">
+		SELECT * FROM `room_type` r
+		WHERE r.`delFlag` = 0
+		AND r.`hotelId` = #hotelId#
+		order by r.`sortNum`,r.`roomTypeCode`
+	</select>
+	<!-- b2b使用 -->
+	<select id="getRoomTypeByCreteria" resultClass="roomTypevo">
+		SELECT cgr.matchStatus,cgr.channelRoomTypeCode,rt.picId,rt.roomTypeId,rt.roomTypeCode,rt.delFlag,rti.roomTypeName,rti.babyName,rt.hotelId,h.hotelCode,hi.hotelName,
+		(SELECT channelGoodsCode FROM channel_goods WHERE roomtypeid=rt.roomtypeid AND channelGoodsCode IS NOT NULL LIMIT 0,1) channelGoodsCode,reqr.exception
+		FROM room_type rt
+		left join room_type_i18n rti on rt.roomTypeId=rti.roomTypeId AND rti.`language` = #language# AND rti.`delFlag` = 0
+		left join (select *from channelguestroom where channelId=(select channelId from channel where channelCode=#channelCode#))cgr on rt.roomTypeId=cgr.guestRoomId
+		left join hotel h on h.hotelId=rt.hotelId
+		left join hotel_i18n hi on hi.hotelId=h.hotelId AND hi.`languageCode` = #language# AND hi.`delFlag` = 0
+		left join (select *from receivereqres where type=#type# and interfaceId=#interfaceId#)reqr on rt.roomtypeid=reqr.extId
+		WHERE h.delFlag=0 
+		<isNotEmpty prepend="AND" property="userId">
+			h.createdBy = #userId#
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelId">
+			rt.hotelId = #hotelId#
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="roomTypeCode">
+			rt.roomTypeCode = #roomTypeCode#
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="roomTypeName">
+			rti.roomTypeName like CONCAT('%',#roomTypeName#,'%')
+        </isNotEmpty>
+		<isNotNull property="hotelIdList">
+			<isEmpty prepend="AND" property="hotelIdList">
+				1=0
+        	</isEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				rt.hotelId in
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+        		</iterate>
+			</isNotEmpty>
+		</isNotNull>
+	</select>
+	<!-- b2b使用 -->
+	<select id="getRoomTypeByRoomTypeId" resultClass="roomTypevo">
+		SELECT h.hotelCode,rt.*,rti.* FROM room_type rt
+		left join room_type_i18n rti on rt.roomTypeId=rti.roomTypeId 
+		                                AND rti.`language` = #language# 
+		                                AND rti.`delFlag` = 0
+		LEFT JOIN hotel h ON h.hotelId = rt.hotelId
+		WHERE rt.`roomTypeId` = #roomTypeId#
+    </select>
+
+	<select id="checkRoomTypeName" parameterClass="Map">
+		SELECT rt.roomTypeId,r.hotelId FROM room_type rt
+		inner join room_type_i18n rti on rt.roomTypeId=rti.roomTypeId 
+		WHERE rti.roomTypeName=#roomTypeName# AND rt.hotelId=#hotelId#
+		  AND rti.`language` = #language#  AND rti.`delFlag` = 0
+	</select>
+
+	<select id="getAmenityByRoomTypeId" resultClass="amenity" parameterClass="String">
+		SELECT amenityType,amenityId FROM amenity
+		WHERE roomTypeId=#roomTypeId#
+	</select>
+	
+	<select id="getRoomTypeI18ns" resultClass="roomTypeI18n" parameterClass="Map">
+		select * from room_type_i18n rti 
+		        where rti.roomTypeId=#roomTypeId#
+		          AND rti.`delFlag` = 0
+		order by roomTypeMId
+	</select>
+	<select id="getRoomTypeVOByRatePlanIdLang" resultClass="roomTypevo" parameterClass="Map">
+		SELECT DISTINCT rt.roomTypeId,rt.roomTypeCode,rti.roomTypeName,rt.hotelId FROM room_type rt
+		LEFT JOIN room_type_i18n rti ON rt.roomTypeId=rti.roomTypeId AND rti.delFlag=0 AND rti.language=#language#
+		INNER JOIN room_rate rr ON rt.roomTypeId=rr.roomTypeId AND rr.delFlag=0
+		INNER JOIN rate_detail rd ON rr.rateDetailId=rd.rateDetailId AND rd.delFlag=0 AND rd.ratePlanId=#ratePlanId#
+		WHERE rt.delFlag=0 order by roomTypeCode
+	</select>
+	
+	<select id="getHotelRoomTypesByHotelId" resultClass="roomType" parameterClass="String">
+		SELECT r.* FROM room_type r
+		WHERE r.delFlag = 0 AND r.hotelId=#hotelId#
+    </select>
+    
+    <select id="getRoomTypeByHotelId" resultClass="roomType">
+		SELECT * FROM room_type WHERE delFlag = 0 AND hotelId = #hotelId# 
+		order by sortNum,roomTypeCode
+	</select>
+	
+	<select id="getRoomTypeByHotelIdList" resultClass="roomType" parameterClass="Map">
+		SELECT * FROM room_type WHERE delFlag = 0 
+		<isNotEmpty prepend="AND" property="hotelIdList">
+			hotelId in
+			<iterate property="hotelIdList" open="(" close=")"
+				conjunction=",">
+				#hotelIdList[]#
+            </iterate>
+		</isNotEmpty>
+		order by sortNum,roomTypeCode
+	</select>
+	
+</sqlMap>

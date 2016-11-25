@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="OverbookingGroupSQL">
+    <typeAlias alias="overbookingGroup" type="com.ccm.api.model.sell.OverbookingGroup"/>
+    <typeAlias alias="channelHotel" type="com.ccm.api.model.channel.ChannelHotel" />
+    <resultMap class="overbookingGroup" id="overbookingGroup_channnelHotel" >
+    	<result property="groupId" column="groupId"/>
+	    <result property="groupCode" column="groupCode"/>
+	    <result property="percent" column="percent"/>
+	    <result property="hotelId" column="hotelId"/>
+    	<result property="channelHotelList" select="getCHByGroupIdAndHotelId2" column="{hotelId=hotelId,groupId=groupId}"/>
+    </resultMap>
+    
+    <insert id="addOverbookingGroup" parameterClass="overbookingGroup">
+        INSERT INTO overbookinggroup (groupId, groupCode, percent, hotelId)
+		VALUES (#groupId#, #groupCode#, #percent#, #hotelId#)
+    </insert>
+    
+    <update id="updateOverbookingGroup" parameterClass="overbookingGroup">
+        UPDATE overbookinggroup
+		SET groupCode = #groupCode#, percent = #percent#, hotelId = #hotelId#
+		WHERE groupId = #groupId#
+    </update>
+  
+    <select id="getOverbookingGroup" resultClass="overbookingGroup">
+        SELECT * FROM overbookinggroup where groupId=#groupId#
+    </select>
+    
+    <select id="getObGroupByHotelId" resultMap="overbookingGroup_channnelHotel" >
+        SELECT * FROM overbookinggroup where hotelId=#hotelId#
+    </select>
+    <select id="getCHByGroupIdAndHotelId2" resultClass="channelHotel">
+        select * from channel_hotel where hotelId=#hotelId# and groupId=#groupId# and delFlag=0
+        order by channelCode
+	</select>
+	
+	<select id="searchOverbookingChannelHotelGroup" resultClass="overbookingGroup">
+		SELECT t1.* FROM overbookinggroup t1 LEFT JOIN channel_hotel t2 ON t1.groupId = t2.groupId
+		WHERE t1.percent IS NOT NULL 
+			<isNotEmpty prepend="AND" property="channelCode">
+				channelCode=#channelCode#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="channelId">
+				channelId=#channelId#
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelId">
+				t1.hotelId=#hotelId#
+           </isNotEmpty>
+	</select>
+</sqlMap>

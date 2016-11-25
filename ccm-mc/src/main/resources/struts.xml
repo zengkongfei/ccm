@@ -1,0 +1,1041 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<!-- Constants -->
+	<constant name="struts.devMode" value="false" />
+	<constant name="struts.i18n.encoding" value="UTF-8" />
+
+	<constant name="struts.action.extension" value="do,action" />
+
+	<constant name="struts.objectFactory" value="spring" />
+	<constant name="struts.custom.i18n.resources"
+		value="ApplicationResources,errors,apiResource,i18n/Applicationi18nResources" />
+
+	<constant name="struts.multipart.maxSize" value="512000" />
+	<constant name="struts.ui.theme" value="simple" />
+	<constant name="struts.codebehind.pathPrefix" value="/pages/" />
+
+	<constant name="struts.enable.SlashesInActionNames" value="true" />
+	<constant name="struts.convention.action.disableScanning"
+		value="true" />
+	<constant name="struts.mapper.alwaysSelectFullNamespace"
+		value="false" />
+	<constant name="struts.ognl.allowStaticMethodAccess" value="true" />
+	<!-- S2-032 Remote Code Execution can be performed via method: prefix when Dynamic Method Invocation is enabled. -->
+	<constant name="struts.enable.DynamicMethodInvocation" value="false" />
+
+	<!-- Configuration for the default package. -->
+	<package name="default" extends="struts-default">
+		<interceptors>
+			<interceptor name="ccmTokenInterceptor"
+				class="com.ccm.mc.webapp.interceptor.CcmTokenInterceptor"></interceptor>
+			<!-- i18n -->
+			<interceptor name="i18nInterceptor"
+				class="com.ccm.mc.webapp.interceptor.I18nInterceptor" />
+
+			<interceptor name="logInterceptor"
+				class="com.ccm.mc.webapp.interceptor.LogActionInterceptor" />
+			<!-- Interceptor to handle allowing only admins to certain actions -->
+			<interceptor name="adminOnly" class="adminInterceptor" />
+			<!-- Copied from struts-default.xml and changed validation exclude methods -->
+			<interceptor-stack name="defaultStack">
+				<interceptor-ref name="i18nInterceptor" />
+				<interceptor-ref name="logInterceptor" />
+				<interceptor-ref name="exception" />
+				<interceptor-ref name="alias" />
+				<interceptor-ref name="servletConfig" />
+				<interceptor-ref name="prepare" />
+				<interceptor-ref name="i18n" />
+				<interceptor-ref name="chain" />
+				<interceptor-ref name="debugging" />
+				<interceptor-ref name="profiling" />
+				<interceptor-ref name="scopedModelDriven" />
+				<interceptor-ref name="modelDriven" />
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="checkbox" />
+				<interceptor-ref name="staticParams" />
+				<interceptor-ref name="params">
+					<param name="excludeParams">dojo\..*,d-..*,struts.token,struts.token.name</param>
+					<param name="acceptParamNames">\w+((\.\w+)|(\[\d+\])|(\['\w+'\]))*</param>
+				</interceptor-ref>
+				<interceptor-ref name="conversionError" />
+				<interceptor-ref name="validation">
+					<param name="excludeMethods">cancel,execute,delete,edit,list</param>
+				</interceptor-ref>
+				<interceptor-ref name="workflow">
+					<param name="excludeMethods">input,back,cancel,browse</param>
+				</interceptor-ref>
+			</interceptor-stack>
+			<interceptor-stack name="fileUploadStack">
+				<interceptor-ref name="fileUpload" />
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+			<interceptor-stack name="adminCheck">
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="adminOnly" />
+			</interceptor-stack>
+		</interceptors>
+
+		<global-results>
+			<result name="blankMsg">/common/messages.jsp</result>
+			<result name="dataAccessFailure">/common/dataAccessFailure.jsp</result>
+			<result name="index">/</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<exception-mapping exception="org.springframework.dao.DataAccessException"
+				result="dataAccessFailure" />
+		</global-exception-mappings>
+
+		<!-- 基础框架 公共部分 BEGIN -->
+		<action name="main" class="com.ccm.mc.webapp.action.common.MenuAction"
+			method="main">
+			<result name="success">/pages/main.jsp</result>
+		</action>
+
+		<action name="menu_*" class="com.ccm.mc.webapp.action.common.MenuAction"
+			method="{1}">
+			<result name="list">/common/menu.jsp</result>
+			<result name="success">/pages/main.jsp</result>
+		</action>
+
+		<action name="remind_*" class="com.ccm.mc.webapp.action.common.RemindAction"
+			method="{1}">
+			<result name="success">/pages/main.jsp</result>
+		</action>
+		<!-- 基础框架 公共部分END -->
+		<action name="editUser" class="userAction" method="edit">
+			<interceptor-ref name="adminCheck" />
+			<result name="success">/pages/userForm.jsp</result>
+			<result name="input">/pages/admin/userList.jsp</result>
+		</action>
+
+		<action name="editProfile" class="userAction" method="edit">
+			<result name="success">/pages/userForm.jsp</result>
+			<result name="error">/pages/main.jsp</result>
+		</action>
+
+		<action name="saveUser" class="userAction" method="save">
+			<result name="cancel" type="redirectAction">admin/users</result>
+			<result name="input">/pages/userForm.jsp</result>
+			<result name="success" type="redirectAction">admin/users</result>
+		</action>
+		
+		<!-- 文件管理begin -->
+		<action name="textfileUpload"
+			class="com.ccm.mc.webapp.action.common.TextfileUploadAction">
+			<interceptor-ref name="fileUploadStack" />
+		</action>
+		<!-- 文件管理end -->
+		
+		<!-- 图片管理 begin -->
+		<action name="pictureUpload"
+			class="com.ccm.mc.webapp.action.common.PictureUploadAction">
+			<interceptor-ref name="fileUploadStack" />
+			<result name="success">/pages/common/pictureBatchUpload.jsp</result>
+		</action>
+
+		<!-- ckeditor 图片上传 -->
+		<action name="ckeditor_*"
+			class="com.ccm.mc.webapp.action.common.CKEditorPictureUploadAction"
+			method="{1}">
+			<interceptor-ref name="fileUploadStack" />
+		</action>
+
+		<action name="picture_*"
+			class="com.ccm.mc.webapp.action.common.PictureUploadAction" method="{1}">
+
+			<interceptor-ref name="fileUploadStack" />
+
+			<result name="batchUpload">/pages/common/pictureBatchUpload.jsp</result>
+
+			<result name="batchEdit">/pages/common/pictureBatchEdit.jsp</result>
+
+			<result name="toPicList" type="redirectAction">
+				<param name="actionName">picture_pictureList</param>
+				<param name="bizType">${bizType}</param>
+				<param name="bizId">${bizId}</param>
+				<param name="bizDesc">${bizDesc}</param>
+			</result>
+
+			<result name="normalUpload">/pages/common/pictureUpload.jsp</result>
+
+			<result name="success">/pages/common/pictureBatchUpload.jsp</result>
+
+			<result name="picList">/pages/common/pictureList.jsp</result>
+
+			<result name="pictList">/pages/common/picList.jsp</result>
+
+		</action>
+		<!-- 图片管理 end -->
+
+		<!-- 运营人员，酒店雇员管理 -->
+		<action name="user_*" class="com.ccm.mc.webapp.action.user.UserAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="showUserName">/pages/user/showUserName.jsp</result>
+			<result name="logout" type="redirect">/logout.jsp</result>
+			<result name="list">/pages/user/userList.jsp</result>
+			<result name="edit">/pages/user/userEdit.jsp</result>
+			<result name="userManager">/pages/user/userManager.jsp</result>
+			<result name="resetPwd">/pages/user/resetPwd.jsp</result>
+			<result name="resetPwdsuccess" type="redirectAction">user_list?from=${from}</result>
+			<result name="saveSuccess" type="redirectAction">user_list?from=${from}</result>
+			
+			<result name="forgetPwd">/pages/user/forgetPwd.jsp</result>
+		</action>
+
+		<!-- 酒店管理员 -->
+		<action name="hotelAdmin_*" class="com.ccm.mc.webapp.action.user.UserAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="showUserName">/pages/user/showUserName.jsp</result>
+			<result name="logout" type="redirect">/logout.jsp</result>
+			<result name="list">/pages/user/userList.jsp</result>
+			<result name="edit">/pages/user/userEdit.jsp</result>
+			<result name="userManager">/pages/user/userManager.jsp</result>
+			<result name="resetPwd">/pages/user/resetPwd.jsp</result>
+			<result name="resetPwdsuccess" type="redirectAction">hotelAdmin_list?from=${from}</result>
+			<result name="saveSuccess" type="redirectAction">hotelAdmin_list?from=${from}</result>
+		</action>
+
+		<action name="passwordHint" class="passwordHintAction">
+			<result name="input">/</result>
+			<result name="success">/</result>
+		</action>
+
+		<!-- 酒店雇员 -->
+		<action name="hotelUser_*" class="com.ccm.mc.webapp.action.user.UserAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="showUserName">/pages/user/showUserName.jsp</result>
+			<result name="logout" type="redirect">/logout.jsp</result>
+			<result name="list">/pages/user/userList.jsp</result>
+			<result name="edit">/pages/user/userEdit.jsp</result>
+			<result name="userManager">/pages/user/userManager.jsp</result>
+			<result name="resetPwd">/pages/user/resetPwd.jsp</result>
+			<result name="resetPwdsuccess" type="redirectAction">hotelUser_list?from=${from}</result>
+			<result name="saveSuccess" type="redirectAction">hotelUser_list?from=${from}</result>
+		</action>
+
+		<!-- 渠道用户 -->
+			<!-- 酒店管理员 -->
+		<action name="channelAdmin_*" class="com.ccm.mc.webapp.action.user.UserAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="showUserName">/pages/user/showUserName.jsp</result>
+			<result name="logout" type="redirect">/logout.jsp</result>
+			<result name="list">/pages/user/userList.jsp</result>
+			<result name="edit">/pages/user/userEdit.jsp</result>
+			<result name="userManager">/pages/user/userManager.jsp</result>
+			<result name="resetPwd">/pages/user/resetPwd.jsp</result>
+			<result name="resetPwdsuccess" type="redirectAction">channelAdmin_list?from=${from}</result>
+			<result name="saveSuccess" type="redirectAction">channelAdmin_list?from=${from}</result>
+		</action>
+		<!-- 
+		<action name="channelAdmin_*" class="com.ccm.mc.webapp.action.user.ChannelUserAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<result name="invalid.token">/error.jsp</result>
+			<result name="logout" type="redirect">/logout.jsp</result>
+			<result name="showUserName">/pages/user/showUserName.jsp</result>
+			<result name="list">/pages/user/channelUserList.jsp</result>
+			<result name="edit">/pages/user/channelUserEdit.jsp</result>
+			<result name="userManager">/pages/user/userManager.jsp</result>
+			<result name="resetPwd">/pages/user/resetPwd.jsp</result>
+			<result name="resetPwdsuccess" type="redirectAction">
+				<param name="actionName">channelAdmin_list</param>
+				<param name="from">4</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="saveSuccess" type="redirectAction">
+				<param name="actionName">channelAdmin_list</param>
+				<param name="from">4</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>-->
+		<action name="passwordHint" class="passwordHintAction">
+			<result name="input">/</result>
+			<result name="success">/</result>
+		</action>
+
+		<!-- 集团管理 -->
+		<action name="chain_*" class="com.ccm.mc.webapp.action.hotel.ChainAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/hotel/chainList.jsp</result>
+			<result name="toEdit">/pages/hotel/chainForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">chain_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">chain_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 品牌管理 -->
+		<action name="brand_*" class="com.ccm.mc.webapp.action.hotel.BrandAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/brandList.jsp</result>
+			<result name="toEdit">/pages/hotel/brandForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">brand_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">brand_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 地标管理 -->
+		<action name="position_*" class="com.ccm.mc.webapp.action.hotel.PositionAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/positionList.jsp</result>
+			<result name="toEdit">/pages/hotel/positionForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">position_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">position_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 酒店管理 -->
+		<action name="hotel_*" class="com.ccm.mc.webapp.action.hotel.HotelAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/hotelList.jsp</result>
+			<result name="toEdit">/pages/hotel/hotelForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">hotel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">hotel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 客户管理 -->
+		<action name="custom_*" class="com.ccm.mc.webapp.action.hotel.CustomAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/customList.jsp</result>
+			<result name="edit">/pages/hotel/customEdit.jsp</result>
+		</action>
+		<!-- 房型管理 -->
+		<action name="roomType_*" class="com.ccm.mc.webapp.action.roomType.RoomTypeAction"
+			method="{1}">
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<interceptor-ref name="defaultStack" />
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/roomType/roomTypeList.jsp</result>
+			<result name="toEdit">/pages/roomType/roomTypeForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">roomType_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">roomType_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 酒店打包管理 -->
+		<action name="hotelPackage_*"
+			class="com.ccm.mc.webapp.action.hotel.HotelPackageAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/hotelPackageList.jsp</result>
+			<result name="toEdit">/pages/hotel/hotelPackageForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">hotelPackage_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">hotelPackage_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 酒店取消规则管理 -->
+		<action name="hotelCancel_*" class="com.ccm.mc.webapp.action.hotel.HotelCancelAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/hotel/hotelCancelList.jsp</result>
+			<result name="toEdit">/pages/hotel/hotelCancelForm.jsp</result>
+			<result name="save" type="redirectAction">
+			    <param name="actionName">hotelCancel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">hotelCancel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 酒店担保规则管理 -->
+		<action name="hotelGuarantee_*"
+			class="com.ccm.mc.webapp.action.hotel.HotelGuaranteeAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/hotel/hotelGuaranteeList.jsp</result>
+			<result name="toEdit">/pages/hotel/hotelGuaranteeForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">hotelGuarantee_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">hotelGuarantee_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 酒店优惠管理 -->
+		<action name="specialOffer_*"
+			class="com.ccm.mc.webapp.action.hotel.SpecialOfferAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/hotel/specialOfferList.jsp</result>
+			<result name="toEdit">/pages/hotel/specialOfferForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">specialOffer_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">				
+				<param name="actionName">specialOffer_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		
+		<!-- 酒店开关-->
+		<action name="hotelSwitch_*"
+			class="com.ccm.mc.webapp.action.hotel.HotelSwitchAction" method="{1}">
+			
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			
+			<result name="list">/pages/hotel/hotelSwitchList.jsp</result>
+			<result name="toEdit">/pages/hotel/hotelSwitchForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">hotelSwitch_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			
+		</action>
+		
+		<!-- 客户反馈 -->
+		<action name="feedBack_*" class="com.ccm.mc.webapp.action.hotel.FeedBackAction"
+			method="{1}">
+			<result name="list">/pages/hotel/feedBackList.jsp</result>
+			<result name="view">/pages/hotel/feedBack.jsp</result>
+		</action>
+		<!-- 房型模板管理 -->
+		<action name="roomTypeTemplate_*"
+			class="com.ccm.mc.webapp.action.roomType.RoomTypeTemplateAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/roomType/roomTypeTemplateList.jsp</result>
+			<result name="toEdit">/pages/roomType/roomTypeTemplateForm.jsp</result>
+			<result name="save" type="redirectAction">
+					<param name="actionName">roomTypeTemplate_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+					<param name="actionName">roomTypeTemplate_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 房价模板管理 -->
+		<action name="ratePlanTemplate_*"
+			class="com.ccm.mc.webapp.action.ratePlan.RatePlanTemplateAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/ratePlan/ratePlanTemplateList.jsp</result>
+			<result name="toEdit">/pages/ratePlan/ratePlanTemplateForm.jsp</result>
+			<result name="save" type="redirectAction">
+					<param name="actionName">ratePlanTemplate_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+					<param name="actionName">ratePlanTemplate_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+
+		<!-- 打包服务 -->
+		<action name="package_*" class="com.ccm.mc.webapp.action.ratePlan.PackageAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/ratePlan/packageList.jsp</result>
+			<result name="toEdit">/pages/ratePlan/packageForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">package_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">package_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 担保规则 -->
+		<action name="guarantee_*"
+			class="com.ccm.mc.webapp.action.ratePlan.GuaranteePolicyAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/ratePlan/guaranteePolicyList.jsp</result>
+			<result name="toEdit">/pages/ratePlan/guaranteePolicyForm.jsp</result>
+			<result name="save" type="redirectAction">
+				
+			</result>
+			<result name="delete" type="redirectAction">
+					<param name="actionName">guarantee_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 取消规则 -->
+		<action name="cancel_*"
+			class="com.ccm.mc.webapp.action.ratePlan.CancelPolicyAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/ratePlan/cancelPolicyList.jsp</result>
+			<result name="toEdit">/pages/ratePlan/cancelPolicyForm.jsp</result>
+			<result name="save" type="redirectAction">
+					<param name="actionName">cancel_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">cancel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 市场 -->
+		<action name="market_*" class="com.ccm.mc.webapp.action.sell.MarketAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/sell/marketList.jsp</result>
+			<result name="toEdit">/pages/sell/marketForm.jsp</result>
+			<result name="save" type="redirectAction">
+					<param name="actionName">market_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+					<param name="actionName">market_list</param>
+					<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 来源 -->
+		<action name="source_*" class="com.ccm.mc.webapp.action.sell.SourceAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/sell/sourceList.jsp</result>
+			<result name="toEdit">/pages/sell/sourceForm.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">source_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="delete" type="redirectAction">
+				<param name="actionName">source_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+
+		<!-- 房态管理 -->
+		<action name="roomStatus_*"
+			class="com.ccm.mc.webapp.action.roomStatus.RoomStatusAction" method="{1}">
+			<result name="list">/pages/roomStatus/roomStatusList.jsp</result>
+		</action>
+		<!-- 产品 -->
+		<action name="product_*"
+			class="com.ccm.mc.webapp.action.production.ProductionAction" method="{1}">
+			<result name="list">/pages/production/productionList.jsp</result>
+			<result name="toSetOnOff">/pages/production/productionSetForm.jsp</result>
+		</action>
+		<!-- 房价管理 -->
+		<action name="roomRate_*" class="com.ccm.mc.webapp.action.roomRate.RoomRateAction"
+			method="{1}">
+			<result name="roomRateList">/pages/roomRate/roomRateList.jsp</result>
+			<result name="addRoomRate">/pages/roomRate/addRoomRate.jsp</result>
+			<result name="to_refRoomType">/pages/roomRate/refRoomType.jsp</result>
+			<result name="to_roomRateList" type="redirectAction">roomRate_list.do?ratePlanId=${ratePlanId}
+			</result>
+			<result>/pages/roomRate/addRateSuccess.jsp</result>
+		</action>
+
+		<!-- 订单管理 -->
+		<action name="order_*" class="com.ccm.mc.webapp.action.order.OrderAction"
+			method="{1}">
+			<result name="list">/pages/order/orderList.jsp</result>
+			<result name="detail">/pages/order/orderDetail.jsp</result>
+			<result name="detailPrint">/pages/order/orderDetailPrint.jsp</result>
+			<result name="platDetail" type="redirectAction">
+				<param name="actionName">order_platdetail</param>
+				<param name="orderNo">${orderNo}</param>
+			    <param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="coDetail" type="redirectAction">
+				<param name="actionName">order_codetail</param>
+				<param name="orderNo">${orderNo}</param>
+			    <param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="report">/pages/order/orderReport.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}"</param>
+				<param name="inputName">txtFile</param>
+			</result>
+			<result name="changesLog">/pages/order/orderChangesLog.jsp</result>
+		</action>
+		<!-- Excel导出 -->
+		<action name="excel_*" class="com.ccm.mc.webapp.action.excel.ExcelAction"
+			method="{1}">
+			<result name="orderExcelExport" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}.xls"</param>
+				<param name="inputName">orderExcelFile</param>
+			</result>
+		</action>
+		<!-- 转换代码 -->
+		<action name="convert_*" class="com.ccm.mc.webapp.action.convert.CodeMapAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/convert/codeList.jsp</result>
+			<result name="showCurChainHotels">/pages/convert/showCurChainHotels.jsp</result>
+			<result name="edit">
+				<param name="location">/pages/convert/codeEdit.jsp</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">convert_list</param>
+				<param name="tmenuId">813</param>
+				<param name="dictId">${dictId}</param>
+			    <param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+
+		<!-- 渠道映射 -->
+		<action name="cMap_*"
+			class="com.ccm.mc.webapp.action.convert.ChannelMapAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+
+			<result name="list">/pages/convert/channelMapList.jsp</result>
+			<result name="edit">/pages/convert/channelMapEdit.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">cMap_list</param>
+				<param name="tmenuId">${#session.tmenuId}</param>
+				<param name="dictId">${dictId}</param>
+			    <param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+
+		<!-- 渠道基础 -->
+		<action name="channel_*" class="com.ccm.mc.webapp.action.channel.ChannelAction"
+			method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/channel/channelList.jsp</result>
+			<result name="toEdit">/pages/channel/channelEdit.jsp</result>
+			<result name="channelHotelConfig">/pages/channel/channelHotelConfig.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">channel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+			<result name="saveConfig" type="redirectAction">
+				<param name="actionName">channel_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 渠道包价 -->
+		<action name="dynamicPackage_*"
+			class="com.ccm.mc.webapp.action.channel.DynamicPackageAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/channel/dynamicPackageList.jsp</result>
+			<result name="edit">/pages/channel/dynamicPackageEdit.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">dynamicPackage_list</param>
+			    <param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+		<!-- 渠道绑定 -->
+		<action name="channelGoods_*"
+			class="com.ccm.mc.webapp.action.channel.ChannelGoodsAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/channel/channelGoodsList.jsp</result>
+			<result name="edit">/pages/channel/channelGoodsEdit.jsp</result>
+			<result name="roomType">/pages/channel/channelRoomType.jsp</result>
+			<result name="save" type="redirectAction">
+				<param name="actionName">channelGoods_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+		</action>
+
+		<!-- 日志管理 -->
+		<action name="log_*" class="com.ccm.mc.webapp.action.log.LogAction"
+			method="{1}">
+			<result name="list">/pages/log/logInfo.jsp</result>
+			<result name="logDetailSearch">/pages/log/logDetail.jsp</result>
+		</action>
+
+		<!-- 预订产量报表 -->
+		<action name="orderProduct_*"
+			class="com.ccm.mc.webapp.action.report.OrderProductAction" method="{1}">
+			<result name="detailList">/pages/report/orderProductDetailReport.jsp
+			</result>
+			<result name="collectList">/pages/report/orderProductCollectReport.jsp
+			</result>
+		</action>
+
+		<!-- 订单保证金报表 -->
+		<action name="bookingDeposit_*"
+			class="com.ccm.mc.webapp.action.report.BookingDepositAction" method="{1}">
+			<result name="list">/pages/report/bookingDeposit.jsp</result>
+		</action>
+
+		<!-- 酒店客房出租率报表 -->
+		<action name="roomRent_*"
+			class="com.ccm.mc.webapp.action.report.HotelRoomRentRateAction"
+			method="{1}">
+			<result name="list">/pages/report/hotelRoomRentRate.jsp</result>
+		</action>
+
+		<!-- 价格有效期报表 -->
+		<action name="priceValid_*"
+			class="com.ccm.mc.webapp.action.report.PriceValidTimeAction" method="{1}">
+			<result name="list">/pages/report/priceValidTime.jsp</result>
+		</action>
+
+		<!-- 房态和产品开关报表 -->
+		<action name="roomStatusAndProductSwitch_*"
+			class="com.ccm.mc.webapp.action.report.RoomStatusAndProductSwitchAction"
+			method="{1}">
+			<result name="list">/pages/report/roomStatusAndProductSwitch.jsp
+			</result>
+		</action>
+
+		<!-- 订单邮件确认函 -->
+		<action name="orderEmailConfirm_*"
+			class="com.ccm.mc.webapp.action.report.OrderEmailConfirmAction"
+			method="{1}">
+			<result name="list">/pages/report/orderEmailConfirm.jsp</result>
+			<result name="detailZh">/pages/report/orderEmailDetailZH.jsp</result>
+			<result name="detailEn">/pages/report/orderEmailDetailEN.jsp</result>
+			<result name="detailJa">/pages/report/orderEmailDetailJA.jsp</result>
+			<result name="detailHotelInterface">/pages/report/detailHotelInterface.jsp</result>
+			<result name="emailNotice">/pages/report/emailNotice.jsp</result>
+			<result name="detailError">/pages/report/orderEmailDetailError.jsp</result>
+		</action>
+
+		<!-- 监控日志 -->
+		<action name="pmsLog_*" class="com.ccm.mc.webapp.action.log.PmsLogAction"
+			method="{1}">
+			<result name="list">/pages/log/pmsLogList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}.xls"</param>
+				<param name="inputName">excelFile</param>
+			</result>
+		</action>
+		<!-- PMS消息上传下传日志 -->
+		<action name="upDownLog_*" class="com.ccm.mc.webapp.action.log.UpDownPmsAction"
+			method="{1}">
+			<result name="list">/pages/log/upDownPmsList.jsp</result>
+			<result name="detail">/pages/log/upDownPmsDetail.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}"</param>
+				<param name="inputName">txtFile</param>
+			</result>
+		</action>
+		<!-- OTA日志 -->
+		<action name="sendOTALog_*" class="com.ccm.mc.webapp.action.log.SendOtaLogAction"
+			method="{1}">
+			<result name="list">/pages/log/sendOtaLogList.jsp</result>
+			<result name="detail">/pages/log/sendOtaLogDetail.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}"</param>
+				<param name="inputName">txtFile</param>
+			</result>
+		</action>
+
+		<!-- 渠道订单报表 -->
+		<action name="channelOrder_*" class="com.ccm.mc.webapp.action.log.ChannelOrderAction"
+			method="{1}">
+			<result name="list">/pages/log/channelOrderList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}"</param>
+				<param name="inputName">txtFile</param>
+			</result>
+		</action>
+		
+		<!-- 保留房及自由销售房量使用情况订单报表 -->
+		<action name="usage_*" class="com.ccm.mc.webapp.action.report.UsageAction"
+			method="{1}">
+			<result name="list">/pages/log/usageList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">text/plain</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}"</param>
+				<param name="inputName">txtFile</param>
+			</result>
+		</action>
+		
+		<!-- adsBeq日志 -->
+		<action name="adsBeq_*" class="com.ccm.mc.webapp.action.ads.AdsBeqAction"
+			method="{1}">
+			<result name="searchLog">/pages/ads/adsBeqLog.jsp</result>
+			<result name="handSend">/pages/ads/adsHandSend.jsp</result>
+		</action>
+
+		<action name="imageCode" class="com.ccm.mc.webapp.action.common.ImageCodeAction">
+			<result type="stream">
+				<param name="contentType">image/jpeg</param>
+				<param name="inputtName">inputStream</param>
+			</result>
+		</action>
+
+		<action name="city_*" class="com.ccm.mc.webapp.action.city.CityAction"
+			method="{1}">
+			<result name="list">/pages/city/cityList.jsp</result>
+		</action>
+
+		<action name="importBlock"
+			class="com.ccm.mc.webapp.action.roomStatus.ImportBlockAction" method="importBlock">
+			<result name="success">/pages/roomStatus/roomStatusImportBLock.jsp
+			</result>
+		</action>
+		
+		<action name="channelBookIng_*" class="com.ccm.mc.webapp.action.channelbooking.ChannelBookIngAction" method="{1}">
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">booking</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/channelbook/channelBookIngList.jsp</result>
+			<result name="bookPage">/pages/channelbook/channelBookIngBookPage.jsp</result>
+			<result name="bookInfo">/pages/channelbook/channelBookIngBookInfo.jsp</result>
+			<result name="exportBookingPDF">/pages/channelbook/channelBookIngExportBookingPDF.jsp</result>
+			<result name="cancelPage">/pages/channelbook/channelBookIngCancelPage.jsp</result>
+			<result name="exportCancelPDF">/pages/channelbook/channelBookIngExportCancelPDF.jsp</result>
+			<result name="detail">/pages/channelbook/orderDetail.jsp</result>
+			<result name="changesLog">/pages/order/orderChangesLog.jsp</result>
+		</action>
+
+		<!-- 系统配置 -->
+		<action name="ccmSysCfg_*" class="com.ccm.mc.webapp.action.cfg.SysCfgAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">saveSuccess</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			
+			<result name="list">/pages/cfg/ccmSysCfgList.jsp</result>
+			<result name="saveSuccess" type="redirectAction">
+				<param name="actionName">ccmSysCfg_list</param>
+				<param name="hotelIdFormHidden">${hotelIdFormHidden}</param>
+			</result>
+				
+		</action>
+		
+		<!-- 订单监控失败日志 -->
+		<action name="orderFail_*" class="com.ccm.mc.webapp.action.order.OrderFailAction" method="{1}">
+			<result name="list">/pages/log/orderFailLogList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}.xls"</param>
+				<param name="inputName">excelFile</param>
+			</result>
+		</action>
+		
+		<!-- 接口监控失败日志-->
+		<action name="interfaceFail_*" class="com.ccm.mc.webapp.action.hotel.InterfaceFailAction" method="{1}">
+			<result name="list">/pages/log/interfaceFailLogList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}.xls"</param>
+				<param name="inputName">excelFile</param>
+			</result>
+		</action>
+		
+		<!-- 接口监控失败日志-->
+		<action name="smsSend_*" class="com.ccm.mc.webapp.action.log.SmsSendAction" method="{1}">
+			<result name="list">/pages/log/smsSendList.jsp</result>
+			<result name="export" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param>
+				<param name="contentDisposition">attachment;filename="${exportFileName}.xls"</param>
+				<param name="inputName">excelFile</param>
+			</result>
+		</action>
+		
+		<!-- 唯一码-->
+		<action name="uniqueCode_*" class="com.ccm.mc.webapp.action.common.UniqueCodeAction" method="{1}">
+		</action>
+		
+		<action name="creditLimit_*" class="com.ccm.mc.webapp.action.hotel.CreditLimitAction" method="{1}">
+			<result name="list">/pages/hotel/creditLimitList.jsp</result>
+			<result name="edit">/pages/hotel/creditLimitEdit.jsp</result>
+		</action>
+		
+		<!-- 角色权限 -->
+		<action name="role_*" class="com.ccm.mc.webapp.action.role.RoleAction"
+			method="{1}">
+
+			<interceptor-ref name="defaultStack" />
+			<interceptor-ref name="ccmTokenInterceptor">
+				<param name="includeMethods">save</param>
+			</interceptor-ref>
+			<!-- 如果重复提交，不会跳转到error.jsp页面 -->
+			<result name="invalid.token">/error.jsp</result>
+			<result name="list">/pages/role/roleList.jsp</result>
+			<result name="edit">/pages/role/roleEdit.jsp</result>
+		</action>
+	</package>
+</struts>

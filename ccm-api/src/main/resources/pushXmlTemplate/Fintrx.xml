@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<?Label $hotelCode|FINTRX|$msgId|SUCCESS?>
+<FinancialTransaction xmlns="financialtransaction.fidelio.4.0">
+	<HotelReference>
+		<hotelCode>$hotelCode</hotelCode>
+	</HotelReference>
+	<reservationID>$pmsId</reservationID>
+	<confirmationID>$masterId</confirmationID>
+	<mfConfirmationLegNo>1</mfConfirmationLegNo>
+	<FinTransactions>
+		<FinTransaction transactionId="$transactionId" transactionType="DEPOSIT" amount="$amount" currencyCode="$currencyCode" transactionCode="$transactionCode"></FinTransaction>
+	</FinTransactions>
+</FinancialTransaction>

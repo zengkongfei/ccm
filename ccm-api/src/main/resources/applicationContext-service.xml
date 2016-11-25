@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx 
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd" default-lazy-init="true">
+
+	<bean id="SpringContextUtil" class="com.ccm.api.util.SpringContextUtil" lazy-init="false" />
+
+	<!-- =================================================================== -->
+	<!-- AOP: Configuration and Aspects -->
+	<!-- =================================================================== -->
+	<aop:config>
+		<aop:advisor id="userManagerTx" advice-ref="userManagerTxAdvice" pointcut="execution(* *..service.*.UserManager.*(..))" order="0" />
+		<aop:advisor id="userManagerSecurity" advice-ref="userSecurityAdvice" pointcut="execution(* *..service.*.UserManager.saveUser(..))" order="1" />
+		<aop:advisor id="deductInventoryTx" advice-ref="deductInventoryAdvice" pointcut="execution(* *..service.*.RsvtypeChannelManager.validataRsvtypeChannelAilable(..))" order="2" />
+		<aop:advisor id="managerTx" advice-ref="txAdvice" pointcut="execution(* *..service.*.*Manager.*(..))" order="3" />
+		<aop:advisor id="requiredNewTx" advice-ref="requiredNewAdvice" pointcut="execution(* *..service.*.ChinaonlineReservationManager.*(..))" order="4" />
+	</aop:config>
+
+	<!-- Enable @Transactional support -->
+	<tx:annotation-driven />
+
+	<!-- Enable @AspectJ support -->
+	<aop:aspectj-autoproxy />
+
+	<!-- Activates scanning of @Autowired -->
+	<context:annotation-config />
+
+	<task:annotation-driven />
+
+	<!-- Activates scanning of @Service -->
+	<context:component-scan base-package="com.ccm.api">
+		<context:include-filter type="aspectj" expression="com.ccm.api.service.*.*" />
+		<context:include-filter type="aspectj" expression="com.ccm.api.aop.*" />
+	</context:component-scan>
+
+	<aop:config>
+		<!-- 切入点 -->
+		<aop:pointcut expression="execution(* com.ccm.api.dao.*.*.*iBatis.*(..)) || execution(* com.ccm.api.dao.*.*.*ibatis.*(..)) || execution(* com.ccm.api.dao.*.*.*Impl.*(..)) || execution(* com.ccm.api.jms.impl.*Impl.*(..)) || execution(* com.ccm.api.log.dao.*iBatis.*(..)) || execution(* com.ccm.api.log.service.*Impl.*(..)) || execution(* com.ccm.api.service.*.*.*Impl.*(..))" id="emailException" />
+		<!-- 切面： 将哪个对象中的哪个方法，织入到哪个切入点 -->
+		<aop:aspect ref="exceptionAspect">
+			<aop:after-throwing method="recordException" pointcut-ref="emailException" throwing="e" />
+		</aop:aspect>
+	</aop:config>
+	
+	<bean id="reservationService" class="com.ccm.api.service.order.impl.ReservationServiceImpl">
+		<property name="pmsVersion">
+			<map>
+				<entry>
+					<key>
+						<value>FIDELIO</value>
+					</key>
+					<ref bean="reservationToFIDELIOPmsService" />
+				</entry>
+				<entry>
+					<key>
+						<value>DEFAULT</value>
+					</key>
+					<ref bean="reservationToPmsService" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<bean id="push2ChannelManager" class="com.ccm.api.service.system.impl.Push2ChannelManagerImpl">
+		<property name="isOTA">
+			<map>
+				<entry>
+					<key>
+						<value>true</value>
+					</key>
+					<ref bean="push2ChannelProtocolOTAService" />
+				</entry>
+				<entry>
+					<key>
+						<value>false</value>
+					</key>
+					<ref bean="push2ChannelProtocolGeneralService" />
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<tx:advice id="requiredNewAdvice">
+		<tx:attributes>
+			<tx:method name="*" propagation="REQUIRES_NEW" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:advice id="txAdvice">
+		<tx:attributes>
+			<!-- Read-only commented out to make things easier for end-users -->
+			<!-- http://issues.appfuse.org/browse/APF-556 -->
+			<!--tx:method name="get*" read-only="true"/ -->
+			<tx:method name="processRoomMsg" read-only="true"/>
+			<tx:method name="getRsvtypeChannelByRsvIdAndChannelId" read-only="true"/>
+			<tx:method name="*" />
+		</tx:attributes>
+	</tx:advice>
+
+	<tx:advice id="userManagerTxAdvice">
+		<tx:attributes>
+			<tx:method name="save*" rollback-for="UserExistsException" />
+		</tx:attributes>
+	</tx:advice>
+
+	<bean id="userSecurityAdvice" class="com.ccm.api.service.user.UserSecurityAdvice" />
+	<bean id="deductInventoryAdvice" class="com.ccm.api.service.rsvtype.DeductInventoryAdvice" />
+	<!-- =================================================================== -->
+	<!-- Mail: Sender and Velocity configuration -->
+	<!-- =================================================================== -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="${mail.host}" />
+		<property name="username" value="${mail.username}" />
+		<property name="password" value="${mail.password}" />
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="simpleMailMessage" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from">
+			<value>${mail.default.from}</value>
+		</property>
+	</bean>
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+		<property name="velocityProperties">
+			<props>
+				<prop key="resource.loader">class</prop>
+				<prop key="class.resource.loader.class">
+					org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader     
+                </prop>
+				<prop key="velocimacro.library"></prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="mailSenderError" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.exmail.qq.com" />
+		<property name="username" value="testccm@lesuke.com" />
+		<property name="password" value="china88" />
+		<property name="defaultEncoding" value="UTF-8"></property>
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.timeout">${mail.smtp.timeout}</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="simpleMailMessageError" class="org.springframework.mail.SimpleMailMessage">
+		<property name="from">
+			<value>testccm@lesuke.com</value>
+		</property>
+	</bean>
+	<bean id="emailManager" class="com.ccm.api.service.email.impl.EmailManagerImpl">
+		<property name="mailSender" ref="mailSender" />
+		<property name="simpleMailMessage" ref="simpleMailMessage" />
+		<property name="velocityEngine" ref="velocityEngine" />
+		<property name="mailSenderError" ref="mailSenderError" />
+		<property name="simpleMailMessageError" ref="simpleMailMessageError" />
+	</bean>
+
+	<!-- =================================================================== -->
+	<!-- Security class from Spring Security - used to configure Password -->
+	<!-- Encryption in UserManagerImpl. Can override in security.xml. -->
+	<!-- =================================================================== -->
+	<bean id="passwordEncoder" class="com.ccm.api.service.security.DoubleMD5AndSaltPasswordEncoder" />
+
+	<bean id="saltSource" class="org.springframework.security.authentication.dao.ReflectionSaltSource">
+		<property name="userPropertyToUse" value="salt" />
+	</bean>
+
+	<bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<value>apiResource</value>
+				<value>api2wsResource</value>
+				<value>ApplicationResources</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="faxManager" class="com.ccm.api.service.fax.FaxManagerImpl">
+		<property name="fax_username" value="${fax.username}" />
+		<property name="fax_password" value="${fax.password}" />
+		<property name="fax_url" value="${fax.url}" />
+		<property name="fax_format" value="${fax.format}"/>
+		<property name="fax_deskey" value="${fax.deskey}"/>
+	</bean>
+
+</beans>

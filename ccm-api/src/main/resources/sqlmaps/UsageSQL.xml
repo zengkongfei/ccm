@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UsageSQL">
+    
+    <typeAlias alias="usage" type="com.ccm.api.model.rsvtype.Usage" />
+    
+    <sql id="pageSqlUsageSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<sql id="getUsagesCriteria">
+    	FROM rsvtype rsv 
+    	
+		INNER JOIN  hotel h
+		  ON h.hotelcode=rsv.hotelcode
+		  AND h.delflag=0
+		  
+		INNER JOIN room_type rt 
+		  ON rsv.type=rt.roomtypecode 
+		  AND h.hotelid=rt.hotelid
+		  <isNotEmpty prepend="AND" property="hotelIdList">
+		     h.hotelid IN
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+				</iterate>
+		   </isNotEmpty>
+		   AND rt.delflag=0
+		   
+		INNER JOIN rsvtype_channel rc
+		   ON rsv.rsvtypeid=rc.rsvtypeid
+		     <isNotEmpty prepend="AND" property="resvDateBegin">
+		      <![CDATA[
+		      	rsv.date>=#resvDateBegin#
+		       ]]>
+			 </isNotEmpty>
+			 <isNotEmpty prepend="AND" property="resvDateEnd">
+			  <![CDATA[
+			  	rsv.date<=#resvDateEnd#
+    		  ]]>
+			 </isNotEmpty>
+		     <isNotEmpty prepend="AND" property="roomTypeList">
+		   		rsv.type IN
+				<iterate property="roomTypeList" open="(" close=")" conjunction=",">
+					#roomTypeList[]#
+				</iterate>
+			  </isNotEmpty>
+			  <isNotEmpty prepend="AND" property="channelIdList">
+			 	rc.channelid IN
+					<iterate property="channelIdList" open="(" close=")" conjunction=",">
+						#channelIdList[]#
+					</iterate>
+			  </isNotEmpty>
+			  
+		 INNER JOIN channel cha
+			ON cha.channelid=rc.channelid
+			<isNotEmpty prepend="AND" property="channelIdList">
+		       cha.channelid IN
+				<iterate property="channelIdList" open="(" close=")" conjunction=",">
+					#channelIdList[]#
+				</iterate>
+			</isNotEmpty>
+			
+		  LEFT JOIN rsvchanblock rb 
+		    ON rsv.rsvtypeid = rb.rsvtypeid 
+		    AND rc.rsvtypeChannelId=rb.rsvtypeChannelId
+		    <isNotEmpty prepend="AND" property="channelIdList">
+			  rb.channelid IN
+				<iterate property="channelIdList" open="(" close=")" conjunction=",">
+					#channelIdList[]#
+				</iterate>
+			</isNotEmpty>
+		     <isNotEmpty prepend="AND" property="resvDateBegin">
+		      <![CDATA[
+		      	rb.date>=#resvDateBegin#
+		       ]]>
+			 </isNotEmpty>
+			 <isNotEmpty prepend="AND" property="resvDateEnd">
+			  <![CDATA[
+			  	rb.date<=#resvDateEnd#
+    		  ]]>
+			 </isNotEmpty>
+		    AND rsv.hotelCode=h.hotelCode
+		    AND rsv.delflag='0'
+		    
+		    LEFT JOIN
+		  	(SELECT (t1.percent*0.01) ratio,t1.hotelid 
+		  			FROM overbookinggroup t1 
+		  			LEFT JOIN channel_hotel t2 
+		  					ON t1.groupId = t2.groupId 
+							AND t1.hotelid=t2.hotelid 
+							<isNotEmpty prepend="AND" property="channelIdList">
+							  t2.channelId IN
+								<iterate property="channelIdList" open="(" close=")" conjunction=",">
+									#channelIdList[]#
+								</iterate>
+							</isNotEmpty>
+							<isNotEmpty prepend="AND" property="hotelIdList">
+						    	t2.hotelId IN
+								<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+									#hotelIdList[]#
+								</iterate>
+							</isNotEmpty>
+							AND t2.delFlag=0
+				WHERE t1.percent IS NOT NULL
+					<isNotEmpty prepend="AND" property="hotelIdList">
+					  t1.hotelId IN
+						<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+							#hotelIdList[]#
+						</iterate>
+					</isNotEmpty>
+		  		) ob_p
+		  		ON ob_p.hotelid=h.hotelid
+		  		
+		  LEFT JOIN (
+	        SELECT Date.date dated,arr,channelId,hotelid,TYPE,COUNT(*) masterNum 
+	        FROM `master` ma
+			LEFT JOIN Date 
+			<![CDATA[
+			ON Date.date>=#resvDateBegin#
+			AND Date.date<=#resvDateEnd#
+			]]>
+			WHERE ma.`sta` NOT IN  ('CANCEL','HARDCANCEL') 
+			AND ma.pcrec!="0"
+			<isNotEmpty prepend="AND" property="hotelIdList">
+		    	ma.`hotelid` IN
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelIdList">
+			  ma.`channelId` IN
+				<iterate property="channelIdList" open="(" close=")" conjunction=",">
+					#channelIdList[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeList">
+		   		ma.`type` IN
+				<iterate property="roomTypeList" open="(" close=")" conjunction=",">
+					#roomTypeList[]#
+				</iterate>
+			 </isNotEmpty>
+			<![CDATA[
+			AND ma.`arr`<=Date.date
+			AND ma.`dep`>Date.date
+			]]>
+			GROUP BY Date.date,hotelid,TYPE,channelId
+		 ) masterIn  
+			ON masterIn.`hotelid`=rt.hotelid
+			AND masterIn.`channelId`=rc.channelid
+			AND masterIn.`type`=rsv.type
+			AND masterIn.dated=rsv.date
+			
+	</sql>
+
+	<select id="getUsagesCount" resultClass="java.lang.Integer" parameterClass="Map">
+		SELECT COUNT(inTab.hotelCode) from (
+		  SELECT h.hotelCode hotelCode
+		  <include refid="getUsagesCriteria" />
+		  GROUP BY rsv.date,rsv.hotelCode,rsv.type,rc.channelId
+		) inTab
+  	</select>
+  	
+  	<select id="getUsages" resultClass="usage" parameterClass="Map">
+		SELECT 
+		  rsv.date resvDate,
+		  h.hotelCode,
+		  cha.channelCode,
+		  rsv.type roomType,
+		  IFNULL(rsv.available,rt.physicalrooms) +IFNULL(rsv.overbooking,0)*IFNULL(ob_p.ratio,0)- IFNULL(rsv.totalOBSold,0) available, 
+		  CASE WHEN rc.hasBlock=0 THEN (rc.allotment) ELSE (rb.blockNum) END allotment,
+		  CASE WHEN rc.hasBlock=0 THEN (rc.allotmentSold) ELSE (rb.blockSold) END allotmentSold,
+		  CASE WHEN rc.hasBlock=0 THEN (rc.allotment-rc.allotmentSold) ELSE (rb.blockNum-rb.blockSold) END allotmentRemain,
+		  masterIn.masterNum freeSellSold
+		  <!-- IFNULL(rsv.unavailable,0) freeSellSold -->
+		<include refid="getUsagesCriteria" />
+		GROUP BY rsv.date,rsv.hotelCode,rsv.type,rc.channelId
+		ORDER BY rsv.date,cha.channelCode,h.hotelCode,rsv.type
+		<include refid="pageSqlUsageSQL" />
+  	</select>
+
+	<select id="getUsagesSum" resultClass="usage" parameterClass="Map">
+		SELECT 
+		    SUM(inTab.available) availableSum, 
+  		    SUM(inTab.allotment) allotmentSum,
+  		    SUM(inTab.allotmentRemain) allotmentRemainSum
+		from
+		(
+			 SELECT 
+			   IFNULL(rsv.available,rt.physicalrooms) +IFNULL(rsv.overbooking,0)*IFNULL(ob_p.ratio,0)- IFNULL(rsv.totalOBSold,0) available, 
+			   CASE WHEN rc.hasBlock=0 THEN (rc.allotment) ELSE (rb.blockNum) END allotment,
+			   CASE WHEN rc.hasBlock=0 THEN (rc.allotment-rc.allotmentSold) ELSE (rb.blockNum-rb.blockSold) END allotmentRemain
+			 <include refid="getUsagesCriteria" />
+			 GROUP BY rsv.date,rsv.hotelCode,rsv.type,rc.channelId
+			 ORDER BY rsv.type,rc.channelId
+		) inTab
+  	</select>
+  	
+</sqlMap>

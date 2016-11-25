@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelSQL">
+
+	<typeAlias alias="hotel" type="com.ccm.api.model.hotel.Hotel" />
+
+	<typeAlias alias="hotelVO" type="com.ccm.api.model.hotel.vo.HotelVO" />
+
+	<typeAlias alias="hotelAmenity" type="com.ccm.api.model.hotel.HotelAmenity" />
+	<typeAlias alias="inventoryRQVO" type="com.ccm.api.model.ws.vo.inventory.InvSnapRQVO" />
+
+	<sql id="pageSqlHotelSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+
+	<resultMap id="hotelAmenityMap" class="com.ccm.api.model.hotel.HotelAmenity">
+		<result property="codeNo" column="codeNo" columnIndex="1" />
+		<result property="hotelAmenityId" column="hotelAmenityId" columnIndex="2" />
+	</resultMap>
+
+	<resultMap id="hotelMap" class="com.ccm.api.model.hotel.vo.HotelVO">
+		<result property="hotelId" column="hotelId" columnIndex="1" />
+		<result property="hotelCode" column="hotelCode" columnIndex="2" />
+		<result property="cityName" column="cityName" columnIndex="3" />
+		<result property="telephone" column="telephone" columnIndex="4" />
+		<result property="email" column="email" columnIndex="5" />
+		<result property="currencyCode" column="currencyCode" columnIndex="6" />
+		<result property="tbShopName" column="tbShopName" columnIndex="7" />
+		<result property="postCode" column="postCode" columnIndex="8" />
+		<result property="city" column="city" columnIndex="9" />
+		<result property="countryCode" column="countryCode" columnIndex="10" />
+		<result property="hotelPushUrl" column="hotelPushUrl" columnIndex="11" />
+		<result property="hotelName" column="hotelName" columnIndex="12" />
+		<result property="languageCode" column="languageCode" columnIndex="13" />
+		<result property="address" column="address" columnIndex="14" />
+		<result property="chainCode" column="chainCode" columnIndex="15" />
+		<result property="privinceName" column="privinceName" columnIndex="16" />
+		<result property="fax" column="fax" columnIndex="17" />
+		<result property="longitude" column="longitude" columnIndex="18" />
+		<result property="latitude" column="latitude" columnIndex="19" />
+	</resultMap>
+
+	<resultMap id="hotelNameMap" class="com.ccm.api.model.hotel.vo.HotelVO">
+		<result property="hotelId" column="hotelId" columnIndex="1" />
+		<result property="hotelName" column="hotelName" columnIndex="2" />
+	</resultMap>
+
+	<resultMap id="hotelsMap" class="com.ccm.api.model.hotel.vo.HotelVO" extends="hotelNameMap">
+		<result property="createdTime" column="createdTime" columnIndex="3" />
+		<result property="delFlag" column="delFlag" columnIndex="4" />
+		<result property="hotelCode" column="hotelCode" columnIndex="5" />
+		<result property="chainId" column="chainId" columnIndex="6" />
+		<result property="chainCode" column="chainCode" columnIndex="7" />
+		<result property="orderRemind" column="orderRemind" columnIndex="8" />
+		<result property="messRemind" column="messRemind" columnIndex="9" />
+	</resultMap>
+
+	<insert id="addHotel" parameterClass="hotel">
+    <![CDATA[
+        insert into hotel (hotelId,level,countryCode,telephone,city,areaCode,orientation,openingTime,decorateTime,storeys,rooms,addTime,delTime,status,
+        createdTime,cityCenterDistance,railwayDistance,airportDistance, chainId, brandId,hotelCode,longitude,latitude,altitude,star,postCode,bizId,
+        houseOverbook,domestic,whenBuilt,hotelStatusCode,isDaylightSaving,position_type,delFlag,createdBy,email,hotelPushUrl,defGuaranteeId,defCancelId,
+        allotNotificationEmail) 
+        values (#hotelId#,#level#,#countryCode#,#telephone#,#city#,#areaCode#,#orientation#,#openingTime#,#decorateTime#,#storeys#,#rooms#,#addTime#,
+        #delTime#,#status#,#createdTime#,#cityCenterDistance#,#railwayDistance#,#airportDistance#, #chainId#, #brandId#,
+        REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+        #longitude#,
+        #latitude#,#altitude#,#star#,#postCode#,#bizId#,#houseOverbook#,#domestic#,#whenBuilt#,#hotelStatusCode#,#isDaylightSaving#,#position_type#,
+        #delFlag#,#createdBy#,#email#,#hotelPushUrl#,#defGuaranteeId#,#defCancelId#,#allotNotificationEmail#)
+     ]]>
+	</insert>
+
+	<!-- Deprecated -->
+	<insert id="addHotelAmenity" parameterClass="hotelAmenity">
+    <![CDATA[
+        insert into hotelAmenity (hotelId,hotelAmenityId,codeNo,delFlag) 
+        values (#hotelId#,#hotelAmenityId#,#codeNo#,#delFlag#)
+     ]]>
+	</insert>
+	<!-- Deprecated -->
+	<delete id="deleteHotel" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from hotel where hotelId = #hotelId#
+    ]]>
+	</delete>
+	<!-- Deprecated -->
+	<update id="updateHotelAmenity" parameterClass="Map">
+    <![CDATA[
+		update hotelAmenity SET
+			delFlag = #delFlag#
+        where hotelAmenityId = #hotelAmenityId#
+    ]]>
+	</update>
+	<!-- Deprecated -->
+	<update id="updateHotelStatus" parameterClass="Map">
+		update hotel SET
+		status = #status#,lastModifyTime = #lastModifyTime#
+		where hotelId = #hotelId#
+	</update>
+
+	<!-- only update business fields -->
+	<update id="updateHotel" parameterClass="hotel">
+    <![CDATA[
+		update hotel SET	countryCode = #countryCode#,
+			areaCode = #areaCode#,
+			city=#city#,
+			level = #level#,
+			orientation = #orientation#,
+			telephone = #telephone#,
+			openingTime = #openingTime#,
+			decorateTime = #decorateTime#,
+			storeys = #storeys#,
+			rooms = #rooms#,
+			status = #status#,
+			lastModifyTime = #lastModifyTime#,
+			cityCenterDistance = #cityCenterDistance#,
+			railwayDistance = #railwayDistance#,
+			airportDistance = #airportDistance#,
+			hotelCode=REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+			domestic=#domestic#,
+			longitude=#longitude#,
+			latitude=#latitude#,
+			position_type=#position_type#,
+			email = #email#,
+			hotelPushUrl = #hotelPushUrl#, 
+			defGuaranteeId = #defGuaranteeId#,
+			defCancelId = #defCancelId#,
+			allotNotificationEmail=#allotNotificationEmail#
+        where hotelId = #hotelId#
+    ]]>
+	</update>
+
+	<update id="updateHotelDelFlag" parameterClass="Map">
+		update hotel SET delFlag = #delFlag#,lastModifyTime = #lastModifyTime#,updatedBy=#updatedBy#
+		where hotelId = #hotelId#
+	</update>
+
+	<select id="getHotelByHotelCode" resultClass="hotel">
+		SELECT * FROM hotel WHERE hotelCode = #hotelCode# and delFlag = 0
+	</select>
+
+	<select id="getHotelAllByHotelCode" resultClass="hotel">
+		SELECT * FROM hotel WHERE hotelCode = #hotelCode#
+	</select>
+
+	<select id="getHotelOfHotelId" resultClass="hotel">
+		SELECT * FROM hotel WHERE hotelid = #hotelId# and delFlag = 0
+	</select>
+
+	<select id="getHotelFieldsOfHotelId" resultClass="hotel" parameterClass="Map" remapResults="true">
+		SELECT $selectFields$ FROM hotel WHERE hotelid = #hotelId# and delFlag = 0
+	</select>
+
+	<select id="getHotelContainDel" resultClass="hotel">
+		SELECT * FROM hotel WHERE hotelid = #hotelId#
+	</select>
+
+	<select id="getHotels" resultClass="hotel">
+    <![CDATA[
+        select hotelId,hotelCode,isDirectPms,email from hotel WHERE delFlag = 0 order by hotelCode
+    ]]>
+	</select>
+
+	<select id="getHotelByChainId" resultClass="hotel">
+		select hotelId,hotelCode,isDirectPms from hotel WHERE delFlag = 0 and chainId=#chainId# order by hotelCode
+	</select>
+	
+	<select id="getHotelByChainCode" resultClass="hotel">
+		select hotelId,hotelCode from hotel h 
+		inner join chain c on h.chainId=c.chainId and c.delFlag=0 
+		where h.delFlag = 0 and chainCode=#chainCode# order by hotelCode
+	</select>
+
+	<select id="getHotelCodesByHotelIds" resultClass="String">
+		select hotelCode from hotel WHERE delFlag = 0
+		<isNotEmpty prepend="AND" property="hotelIdList">
+			hotelId in
+			<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+				#hotelIdList[]#
+            </iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="getAllHotels" resultClass="hotelVO">
+    <![CDATA[
+        select h.hotelId,h.hotelCode,h.chainId,hi.hotelName,h.pmsAccount
+        from hotel h 
+        left join hotel_i18n hi 
+           on h.hotelId=hi.hotelId 
+           AND hi.languageCode = #languageCode# 
+           AND hi.delFlag = 0
+         WHERE h.delFlag = 0 
+         order by h.hotelCode
+    ]]>
+	</select>
+
+	<select id="getHotelI18nByCode" resultClass="hotelVO" parameterClass="Map">
+		select h.*,hi.* from hotel h left join hotel_i18n hi on h.hotelId=hi.hotelId
+		AND hi.languageCode = #languageCode# AND hi.delFlag = 0
+		WHERE h.delFlag = 0
+		AND h.hotelCode = #hotelCode#
+		<isNotEmpty prepend="AND" property="chainId">
+			h.chainId=#chainId#
+	    </isNotEmpty>
+	</select>
+
+	<!-- 获取与PMS直连的所有酒店 -->
+	<select id="getAllDirectPmsHotel" resultClass="hotelVO">
+	<![CDATA[
+		select h.hotelId,h.hotelCode,h.email,hi.hotelName,h.isPMSHeartBeat from hotel h 
+		left join hotel_i18n hi on h.hotelId=hi.hotelId AND hi.delFlag = 0 AND hi.languageCode = #languageCode# 
+		where h.delFlag = 0 and isDirectPms=#isDirectPms#
+	]]>
+	</select>
+
+	<select id="getHotelVoByHotelId" resultClass="hotelVO">
+    <![CDATA[
+        SELECT h.*,hi.* FROM hotel h left join 
+               hotel_i18n hi on h.hotelId=hi.hotelId AND hi.languageCode = #languageCode# AND hi.delFlag = 0  
+         WHERE h.delFlag = 0 
+           AND h.hotelId=#hotelId#
+    ]]>
+	</select>
+
+	<select id="getHotelChainByHotelId" resultClass="hotelVO">
+    <![CDATA[
+        SELECT h.hotelId,h.chainId,h.hotelCode,h.currencyCode,c.chainCode FROM hotel h 
+        LEFT JOIN CHAIN c ON c.chainId=h.chainId AND c.delFlag = 0 
+        where h.hotelId=#hotelId# and h.delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getHotelI18nChainByHotelId" resultClass="hotelVO">
+    <![CDATA[
+        SELECT h.hotelId,h.chainId,h.hotelCode,h.currencyCode,c.chainCode,h.orderRemind,h.messRemind,h.allotNotificationEmail,hi.hotelName FROM hotel h 
+        LEFT JOIN hotel_i18n hi ON h.hotelId=hi.hotelId AND hi.delFlag=0 AND hi.languageCode = #languageCode# 
+        LEFT JOIN CHAIN c ON c.chainId=h.chainId AND c.delFlag = 0 
+        where h.hotelId=#hotelId# and h.delFlag = 0
+    ]]>
+	</select>
+	
+	<select id="getPushHotelInfoByHotelId" resultMap="hotelMap">
+    <![CDATA[
+        SELECT h.hotelId,h.hotelCode,cii.cityName,h.telephone,h.fax,h.email,h.latitude,h.longitude,
+        h.currencyCode,h.tbShopName,h.postCode,h.city,h.countryCode,h.hotelPushUrl,
+        hi.hotelName,hi.languageCode,hi.address,c.chainCode,ci.cityName AS privinceName FROM hotel h 
+        LEFT JOIN hotel_i18n hi ON h.hotelId=hi.hotelId AND hi.delFlag=0 AND hi.languageCode = #languageCode#
+        LEFT JOIN CHAIN c ON c.chainId=h.chainId AND c.delFlag = 0 
+        LEFT JOIN city ci ON h.privinceCode=ci.cityCode AND ci.language= #languageCode#
+        LEFT JOIN city cii ON h.city=cii.cityCode AND cii.language= #languageCode#
+        where h.hotelId=#hotelId# and h.delFlag = 0
+    ]]>
+	</select> 
+
+	<select id="getHotelInfoChainByUserId" resultMap="hotelsMap">
+    <![CDATA[
+        SELECT h.hotelId,h.createdTime,h.hotelCode,hi.hotelName,h.delFlag,c.chainId,c.chainCode,h.orderRemind,messRemind,h.pmsAccount  
+        FROM hotel h 
+        LEFT JOIN hotel_i18n hi ON h.hotelId=hi.hotelId AND hi.delFlag=0 AND hi.languageCode = #languageCode#
+        LEFT JOIN userrole ur ON h.hotelId=ur.hotelId  AND ur.`delFlag`=0
+        LEFT JOIN CHAIN c ON c.chainId=h.chainId AND c.`delFlag`=0
+        WHERE h.delFlag = 0 AND ur.userId=#userId# order by h.hotelCode
+    ]]>
+	</select>
+
+	<select id="getBdpHotel" resultClass="hotel">
+		SELECT DISTINCT 
+  		h.hotelCode,
+  		CAST(cg.status AS SIGNED) AS status
+		FROM
+		  channel_goods cg 
+		  INNER JOIN rate_plan rp 
+		    ON rp.rateplanid = cg.rateplanid 
+		    AND cg.delflag = 0 
+		    AND rp.delflag = 0 
+		    AND cg.status = 2 
+		  RIGHT JOIN hotel h 
+		    ON h.hotelId = rp.hotelId 
+		WHERE h.delflag = 0 
+	</select>
+	<!-- Deprecated -->
+	<select id="getHotelAmenity" resultMap="hotelAmenityMap">
+    <![CDATA[
+        select codeNo,hotelAmenityId from hotelAmenity 
+        where hotelId=#hotelId# and delFlag=0
+    ]]>
+	</select>
+	<!-- Deprecated -->
+	<select id="getSessionKeyByHotelId" resultClass="String">
+		SELECT u.sessionKey FROM userrole r,b2buser u
+		WHERE r.userId = u.userId
+		AND r.hotelId = #hotelId#
+	</select>
+	<!-- Deprecated -->
+	<select id="getHotelOfHid" resultClass="hotel">
+		SELECT * FROM hotel h,channel_hotel c
+		WHERE h.hotelid = c.hotelid
+		AND c.channelhotelCode = #hid# and h.delFlag = 0
+	</select>
+	<!-- Deprecated -->
+	<procedure id="cleanCCMData">
+		{ call cleanCcmData(#value#) } 
+	</procedure>
+</sqlMap>

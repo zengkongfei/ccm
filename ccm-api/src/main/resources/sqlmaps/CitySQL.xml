@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CitySQL">
+
+	<typeAlias alias="city" type="com.ccm.api.model.city.City" />
+	
+	<insert id="saveCity" parameterClass="city" >
+        INSERT INTO city(cityName,cityCode,language,delFlag,parentId,createdTime,createdBy,updatedBy,lastModifyTime)
+		VALUES(#cityName#,#cityCode#,#language#,#delFlag#,#parentId#,#createdTime#,#createdBy#,#updatedBy#,#lastModifyTime#)
+   		<selectKey resultClass="int" keyProperty="id" > 
+   			SELECT @@IDENTITY AS ID 
+  		</selectKey> 
+    </insert>
+    
+    <select id="getCity" resultClass="city">
+		select * from city where id=#id#
+    </select>
+    
+    <select id="checkCityCode" resultClass="Integer" parameterClass="Map">
+		select count(*) from city where cityCode=#cityCode# AND delFlag=0  AND language=#language#
+    </select>
+    
+    <select id="getCityByCityCode" resultClass="city" parameterClass="Map">
+		SELECT * FROM city WHERE parentId=(SELECT parentId FROM city WHERE cityCode=#cityCode# AND language=#language#) AND delFlag=0
+    </select>
+    
+    <select id="getCityList" resultClass="city">
+		select * from city where delFlag=0 AND parentId=#parentId# and language=#language#
+    </select>
+    
+    <select id="getCityCodeList" resultClass="city">
+		select * from city where delFlag=0 AND cityName=#cityName# and language=#language#
+    </select>
+    
+    <update id="updateCity" parameterClass="city">
+		update city 
+		set lastModifyTime=#lastModifyTime#
+		<isNotEmpty property="cityName" prepend=",">
+			cityName=#cityName#
+		</isNotEmpty>
+		<isNotEmpty property="cityCode" prepend=",">
+			 cityCode=#cityCode#
+		</isNotEmpty>
+		<isNotEmpty property="delFlag" prepend=",">
+			delFlag=#delFlag#
+		</isNotEmpty>
+		<isNotEmpty property="parentId" prepend=",">
+			parentId=#parentId#
+		</isNotEmpty>
+		<isNotEmpty property="createdTime" prepend=",">
+			createdTime=#createdTime#
+		</isNotEmpty>
+		<isNotEmpty property="createdBy" prepend=",">
+			createdBy=#createdBy#
+		</isNotEmpty>
+		<isNotEmpty property="updatedBy" prepend=",">
+			updatedBy=#updatedBy#
+		</isNotEmpty>
+		<isNotEmpty property="lastModifyTime" prepend=",">
+			lastModifyTime=#lastModifyTime#
+		</isNotEmpty>
+		where id=#id#
+	</update>
+
+	<delete id="deleteCity" parameterClass="java.lang.Integer">
+		delete from city where id =#id#
+	</delete>
+	
+
+</sqlMap>

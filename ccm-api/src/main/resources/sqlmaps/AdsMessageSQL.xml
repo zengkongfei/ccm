@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AdsMessageSQL">
+
+    <typeAlias alias="adsMessage" type="com.ccm.api.model.ads.AdsMessage"/>
+	
+	<sql id="pageSqlAdsMessageSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+ 
+    <resultMap id="adsMessageResult" class="adsMessage">
+        <result property="adsId" column="adsId"/>
+        <result property="echoToken" column="echoToken"/>
+        <result property="content" column="content"/>
+        <result property="createdTime" column="createdTime" jdbcType="DATETIME"/>
+        <result property="status" column="status"/>
+        <result property="adsType" column="adsType"/>
+        <result property="errMsg" column="errMsg"/>
+        <result property="rquestTbData" column="rquestTbData"/>
+        <result property="chainCode" column="chainCode"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="roomTypeCode" column="roomTypeCode"/>
+        <result property="ratePlanCode" column="ratePlanCode"/>
+        <result property="targetGDS" column="targetGDS"/>
+        <result property="tbStatus" column="tbStatus"/>
+        <result property="lastRequestDate" column="lastRequestDate"/>
+        <result property="actionValue" column="actionValue"/>
+     </resultMap>
+     
+     <resultMap id="adsCodeResult" class="adsMessage">
+        <result property="chainCode" column="chainCode"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="roomTypeCode" column="roomTypeCode"/>
+        <result property="targetGDS" column="targetGDS"/>
+     </resultMap>
+     
+    <insert id="addAdsMessage" parameterClass="adsMessage">
+    <![CDATA[
+        insert into adsmessage
+                (adsId,echoToken, content, createdTime,status, adsType,errMsg,rquestTbData,chainCode,hotelCode,targetGDS,lastRequestDate,roomTypeCode,ratePlanCode,tbStatus,msgType,actionValue,actionDate)
+        values (#adsId#,#echoToken#, #content#, #createdTime#,#status#,#adsType#,#errMsg#,#rquestTbData#,
+        	#chainCode#,
+        	#hotelCode#,
+        	#targetGDS#,
+        	#lastRequestDate#,
+        	#roomTypeCode#,
+        	#ratePlanCode#,
+        	#tbStatus#,#msgType#,#actionValue#,#actionDate#)
+    ]]>
+    </insert>
+
+	<update id="updateAdsMessageStatus" parameterClass="Map">
+		update adsmessage SET status = #status# , errMsg=#errMsg# where adsId = #adsId# and hotelCode=#hotelCode# 
+	</update>
+
+    <update id="updateAdsMessage" parameterClass="adsMessage">
+    <![CDATA[
+        update adsmessage SET
+            createdTime = #createdTime#,  
+            status    = #status#,
+            echoToken = #echoToken#,
+            adsType = #adsType#,
+            errMsg = #errMsg#,
+            rquestTbData = #rquestTbData#,
+            chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+            hotelCode = #hotelCode#,
+            targetGDS = #targetGDS#,
+            lastRequestDate = #lastRequestDate#,
+            roomTypeCode= REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''),
+            ratePlanCode= REPLACE(REPLACE(#ratePlanCode#,' ',''),'　',''),
+            tbStatus = #tbStatus#,
+            actionValue=#actionValue#
+        where adsId = #adsId#
+    ]]>
+    </update>
+
+	<select id="getAdsMessageByEchoTokenAndAdsType" resultMap="adsMessageResult" parameterClass="Map">
+        select * from adsmessage t1 where echoToken = #echoToken# and adsType = #adsType# order by createdTime desc limit 0,1
+    </select>
+
+    <select id="getAdsMessage" resultMap="adsMessageResult" parameterClass="java.lang.String">
+        select t1.*,'' as tbStatus  from adsmessage t1 where adsId=#adsId#
+    </select>
+    
+    <select id="getParamCode" resultMap="adsCodeResult" parameterClass="java.lang.String">
+        SELECT targetGDS,chainCode,hotelCode,roomTypeCode from adsmessage WHERE targetGDS != '' AND chainCode != '' AND hotelCode != '' and roomTypeCode != '' 
+           <isNotEmpty prepend="AND" property="value">
+              msgType   = #value# 
+           </isNotEmpty>
+          GROUP BY targetGDS,chainCode,hotelCode,roomTypeCode
+    </select>
+    
+    <select id="getMaxReqDateAdsMessage" resultMap="adsMessageResult">
+         SELECT t1.*,'' as tbStatus from adsmessage t1 
+  WHERE NOT EXISTS (SELECT echoToken FROM adstotblog t2 WHERE t1.echoToken=t2.echoToken AND STATUS = 1) ORDER BY lastRequestDate DESC LIMIT 0,1
+    </select>
+    
+     <delete id="deleteAdsMessage" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from adsmessage where adsId = #adsId#
+    ]]>
+    </delete>
+    
+   <select id="searchAdsMessage"  resultMap="adsMessageResult">
+		SELECT adsId,echoToken,'' as content,createdTime,status,adsType,errMsg,rquestTbData,chainCode,hotelCode,roomTypeCode,targetGDS,lastRequestDate
+		, tbStatus ,ratePlanCode,actionValue
+			from adsmessage t1 
+	  	where 1=1
+	  	
+	  	  <isNotEmpty prepend="AND" property="chainCodeList">
+				chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="channelCodeList">
+				targetGDS in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="adsTypeList">
+				adsType in
+				<iterate property="adsTypeList" open="(" close=")" conjunction=",">
+					#adsTypeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="roomTypeCodeList">
+				roomTypeCode in
+				<iterate property="roomTypeCodeList" open="(" close=")" conjunction=",">
+					#roomTypeCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="statusList">
+				status in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  
+           <isNotEmpty prepend="AND" property="status">
+              status   = #status# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+              tbStatus   = #tbStatus# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="adsType">
+              adsType   = #adsType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="targetGDS">
+              targetGDS = #targetGDS# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotels">
+	            <iterate property="hotels" open="(" close=")" conjunction="or">
+					hotelCode = #hotels[].hotelCode#
+	           	</iterate>
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="roomTypeCode">
+              roomTypeCode = #roomTypeCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="ratePlanCode">
+              ratePlanCode = #ratePlanCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="echoToken">
+              echoToken = #echoToken#
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="msgType">
+              msgType   = #msgType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="actionDate">
+              actionDate   = #actionDate# 
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="lastRequestDate">
+              lastRequestDate = #lastRequestDate# 
+           </isNotEmpty>
+        order by createdTime desc 
+   		 <include refid="pageSqlAdsMessageSQL"/>
+    </select>
+    
+    <select id="getAdsMessageFieldValue" resultClass="String"  remapResults="true" parameterClass="Map">
+    <![CDATA[
+         select $field$ from adsmessage where adsId = #adsId# and hotelCode=#hotelCode#
+         ]]>
+    </select>
+    
+    <select id="searchAdsMessageCount" resultClass="Integer">
+		SELECT count(1) count from adsmessage t1 
+  		where 1=1
+  			
+  		  <isNotEmpty prepend="AND" property="chainCodeList">
+				chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="channelCodeList">
+				targetGDS in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="adsTypeList">
+				adsType in
+				<iterate property="adsTypeList" open="(" close=")" conjunction=",">
+					#adsTypeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="roomTypeCodeList">
+				roomTypeCode in
+				<iterate property="roomTypeCodeList" open="(" close=")" conjunction=",">
+					#roomTypeCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="statusList">
+				status in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  
+           <isNotEmpty prepend="AND" property="status">
+              status   = #status# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+              tbStatus   = #tbStatus# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="adsType">
+              adsType   = #adsType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="targetGDS">
+              targetGDS = #targetGDS# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotels">
+	            <iterate property="hotels" open="(" close=")" conjunction="or">
+					hotelCode = #hotels[].hotelCode#
+	           	</iterate>
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="roomTypeCode">
+              roomTypeCode = #roomTypeCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="ratePlanCode">
+              ratePlanCode = #ratePlanCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="echoToken">
+              echoToken = #echoToken#
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="msgType">
+              msgType   = #msgType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="actionDate">
+              actionDate   = #actionDate# 
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="lastRequestDate">
+              lastRequestDate = #lastRequestDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+               tbStatus = #tbStatus# 
+           </isNotEmpty>
+    </select>
+    
+    <select id="getInventoryByCode"  resultClass="java.util.HashMap">
+    	SELECT DATE_FORMAT(t1.date, '%Y-%m-%d') date, 
+    		MAX(t1.amount) amount, MAX(t1.numberOfUnits) numberOfUnits,MAX(t2.physicalRooms) physicalRooms, MIN(t3.onOff)onOff
+			FROM price_calc t1 
+				LEFT JOIN rsvtype t2 ON t1.hotelCode = t2.hotelCode AND t1.roomTypeCode = t2.type AND t1.date = t2.date
+				LEFT JOIN restriction_calc t3 ON t3.hotelCode = t1.hotelCode AND t3.roomTypeCode = t1.roomTypeCode 
+			AND t3.ratePlanCode = t1.ratePlanCode AND t3.date = t1.date
+		where 	t1.hotelCode = #hotelCode# and
+           		t1.roomTypeCode = #roomTypeCode# and 
+           		t1.ratePlanCode = #ratePlanCode# and
+           		t1.date <![CDATA[>=]]> #startDate# and t1.date <![CDATA[<=]]> #endDate#
+           	GROUP BY DATE_FORMAT(t1.date, '%Y-%m-%d')
+        	ORDER BY  t1.date ASC
+    </select>
+    
+    <!-- 
+            根据日期与酒店编号删除adsmessage表的数据并返回影响记录的条数
+     -->
+     
+    <delete id="deleteAdsMesssageByCreatedTimeAndHotelCode" parameterClass="Map">
+		DELETE FROM adsmessage WHERE createdTime <![CDATA[<]]> #createdTime# AND hotelcode=#hotelcode#
+	</delete>
+	
+</sqlMap>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="OTALogSQL">
+	<typeAlias alias="sendOTALog" type="com.ccm.api.model.log.SendOTALog" />
+
+	<sql id="pageOTALogSQL">
+		<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+		</isNotEmpty>
+	</sql>
+
+	<sql id="pageSqlSendOTALogSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="createOTALogTable">
+		CREATE TABLE $tableName$ LIKE sendotalog
+	</insert>
+
+	<insert id="addOTALog" parameterClass="sendOTALog">
+		insert into sendotalog
+		(sendOTALogId,hotelCode,chainCode,channelCode,messageType,action,status,message,oxiTrxId,comments,transformStatus,createdTime,roomTypeCode,ratePlanCode,startDate)values(#sendOTALogId#,#hotelCode#,#chainCode#,#channelCode#,#messageType#,#action#,#status#,#message#,#oxiTrxId#,#comments#,#transformStatus#,#createdTime#,#roomTypeCode#,#ratePlanCode#,#startDate#)
+	</insert>
+
+	<update id="updateStatusForOTALog" parameterClass="Map">
+		update sendotalog set status=#status#,comments=#comments#,lastModifyTime=#lastModifyTime# where sendOTALogId=#sendOTALogId#
+	</update>
+
+	<select id="findOTALog" parameterClass="String" resultClass="sendOTALog">
+		select * from sendotalog where sendOTALogId=#sendOTALogId#
+	</select>
+	
+	<select id="getOTALog" resultClass="sendOTALog">
+        select sendOTALogId,hotelCode,messageType,action,status,message,chainCode,channelCode,oxiTrxId,transformStatus,comments,createdTime,lastModifyTime,roomTypeCode,ratePlanCode,startDate
+         from sendotalog 
+        where sendOTALogId = #sendOTALogId# and hotelCode = #hotelCode#
+	</select>
+	
+	<select id="countSendOTALog" resultClass="Integer">
+		select count(*) from sendotalog  
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="message">
+				message = #message#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="oxiTrxId">
+				oxiTrxId = #oxiTrxId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createdTime">
+           	<![CDATA[
+            	createdTime>=#createdTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyTime">
+           	<![CDATA[
+            	lastModifyTime>=#lastModifyTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="channelCode">
+				channelCode = #channelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="transformStatus">
+				transformStatus = #transformStatus#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="comments">
+				comments = #comments#
+		    </isNotEmpty>
+		     <isNotEmpty prepend="AND" property="roomTypeCode">
+				roomTypeCode = #roomTypeCode#
+		    </isNotEmpty>
+		     <isNotEmpty prepend="AND" property="ratePlanCode">
+				ratePlanCode = #ratePlanCode#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="startDate">
+				startDate = #startDate#
+		    </isNotEmpty>
+		</dynamic>
+	</select>
+	
+	<select id="searchSendOTALog" resultClass="sendOTALog">
+		select sendOTALogId,hotelCode,messageType,action,status,message,chainCode,channelCode,oxiTrxId,transformStatus,comments,createdTime,lastModifyTime,roomTypeCode,ratePlanCode,startDate 
+		 from sendotalog  
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="message">
+				message = #message#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="oxiTrxId">
+				oxiTrxId = #oxiTrxId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createdTime">
+           	<![CDATA[
+            	createdTime>=#createdTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="lastModifyTime">
+           	<![CDATA[
+            	lastModifyTime>=#lastModifyTime#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainCode">
+				chainCode = #chainCode# 
+		    </isNotEmpty>
+		    	<isNotEmpty prepend="AND" property="channelCode">
+				channelCode = #channelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="transformStatus">
+				transformStatus = #transformStatus#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="comments">
+				comments = #comments#
+		    </isNotEmpty>
+		     <isNotEmpty prepend="AND" property="roomTypeCode">
+				roomTypeCode = #roomTypeCode#
+		    </isNotEmpty>
+		     <isNotEmpty prepend="AND" property="ratePlanCode">
+				ratePlanCode = #ratePlanCode#
+		    </isNotEmpty>
+		    <isNotEmpty prepend="AND" property="startDate">
+				startDate = #startDate#
+		    </isNotEmpty>
+		</dynamic>
+		order by createdTime desc
+		<include refid="pageSqlSendOTALogSQL"/>
+	</select>
+
+</sqlMap>

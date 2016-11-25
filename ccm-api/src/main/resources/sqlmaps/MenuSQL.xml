@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuSQL">
+
+	<typeAlias alias="menu" type="com.ccm.api.model.common.Menu" />
+
+	<typeAlias alias="menuVO" type="com.ccm.api.model.common.vo.MenuVO" />
+
+	<resultMap id="menuResult" class="menu">
+		<result property="menuId" column="menuId" />
+		<result property="menuName" column="menuName" />
+		<result property="displayName" column="displayName" />
+
+		<result property="target" column="target" />
+		<result property="url" column="url" />
+		<result property="picPath" column="picPath" />
+
+		<result property="parentId" column="parentId" />
+		<result property="menuType" column="menuType" />
+		<result property="authFlag" column="authFlag" />
+		<result property="usageScope" column="usageScope" />
+		<result property="delFlag" column="delFlag" />
+
+	</resultMap>
+
+	<insert id="addMenu" parameterClass="menu">
+    <![CDATA[
+        insert into menu (menuId, menuName, displayName, target, url, picPath, parentId, menuType, authFlag, usageScope, createdBy, createdTime, delFlag) 
+        values (#menuId#, #menuName#, #displayName#, #target#, #url#, #picPath#, #parentId#, #menuType#, #authFlag#, #usageScope#, #createdBy#, #createdTime#, #delFlag#)
+    ]]>
+	</insert>
+
+	<delete id="deleteMenu">
+    <![CDATA[
+        delete from menu where menuId=#menuId#
+    ]]>
+	</delete>
+
+	<update id="updateMenu" parameterClass="menu">
+    <![CDATA[
+        update menu set menuName = #menuName#, displayName = #displayName#, picPath = #picPath#, parentId = #parentId#, menuType = #menuType#, usageScope = #usageScope#,
+		updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime# 
+        where menuid=#menuId#
+    ]]>
+	</update>
+
+	<select id="getMenu" resultClass="menu">
+   	<![CDATA[
+            SELECT * FROM menu m WHERE  m.`delFlag` = 0 AND m.menuId = #menuId#
+    ]]>
+	</select>
+
+	<select id="getAuthedTopMenus" resultClass="menu" parameterClass="Map">
+    <![CDATA[
+		SELECT DISTINCT m.menuId,mi.displayName,mu.url
+		FROM menu m,rolemenu rm,menu_i18n mi,menuurl mu 
+		WHERE m.menuId=rm.menuId AND m.menuId=mu.menuId AND m.menuId=mi.menuId and menuType=1 AND mu.masterFlag=1 AND rm.roleid IN
+		(
+			SELECT r.roleId FROM b2buser u ,userrole ur,role r WHERE u.userid=ur.userid AND ur.roleid=r.roleid AND u.userid=#userId# AND r.isShow=0
+		)
+		AND mi.language=#language#
+    ]]>
+	</select>
+
+	<select id="getAuthedTopMenusByUserIds" resultClass="menu">
+		SELECT DISTINCT m.menuId,mi.displayName,mu.url
+		FROM menu m,rolemenu rm,menu_i18n mi,menuurl mu 
+		WHERE m.menuId=rm.menuId AND m.menuId=mu.menuId AND m.menuId=mi.menuId and menuType=1 AND mu.masterFlag=1 AND rm.roleid IN
+		(
+			SELECT DISTINCT r.roleId FROM b2buser u ,userrole ur,role r 
+			where u.userid=ur.userid AND ur.roleid=r.roleid AND r.isShow=0
+			<isNotEmpty prepend="AND" property="userIds">
+				u.userid in
+				<iterate property="userIds" open="(" close=")"
+				conjunction=",">
+					#userIds[]#
+           		</iterate>
+			</isNotEmpty>
+		)
+		AND mi.language=#language#
+	</select>
+	
+	<select id="getAuthedTwoMenus" resultClass="menu" parameterClass="Map">
+    <![CDATA[
+		SELECT DISTINCT m.menuId,mi.displayName,ml.url  
+		FROM menu m,menuurl ml,menu_i18n mi ,rolemenu rm 
+		WHERE m.menuId=ml.menuId AND m.menuId=rm.menuId AND ml.masterFlag=1 AND mi.menuId=m.menuId AND m.menuType=2 and parentId =#parentId# AND rm.roleid IN
+		(
+			SELECT r.roleId FROM b2buser u ,userrole ur,role r WHERE u.userid=ur.userid AND ur.roleid=r.roleid AND u.userid=#userId# AND r.isShow=0
+		)
+		AND mi.language=#language#
+    ]]>
+	</select>
+
+	<select id="getCanAuthedMenus" resultClass="menu" parameterClass="java.lang.String">
+    <![CDATA[
+		SELECT m.menuId,m.displayName,m.parentId,m.menuType 
+		FROM menu m,rolemenu rm 
+		WHERE m.menuId=rm.menuId AND m.authFlag=1 AND rm.roleid IN
+		(
+			SELECT r.roleId FROM b2buser u ,userrole ur,role r WHERE u.userid=ur.userid AND ur.roleid=r.roleid AND u.userid=#userId# AND r.isShow=0
+		)
+    ]]>
+	</select>
+	
+	<select id="getCanAuthedMenus_i18n" resultClass="menu" parameterClass="Map">
+    <![CDATA[
+		SELECT DISTINCT m.menuId,mi.displayName,m.parentId,m.menuType 
+		FROM (menu m INNER JOIN menu_i18n mi ON mi.`menuId`=m.`menuId`),rolemenu rm 
+		WHERE m.menuId=rm.menuId AND m.authFlag=1 AND mi.`language`=#language# AND rm.roleid IN
+		(
+			SELECT r.roleId FROM b2buser u ,userrole ur,role r WHERE u.userid=ur.userid AND ur.roleid=r.roleid AND u.userid=#userId# AND r.isShow=0
+		)
+    ]]>
+	</select>
+
+	<select id="getTopMenuList" resultClass="menu">
+    <![CDATA[
+          SELECT * FROM menu WHERE menuType=1 order by menuId
+    ]]>
+	</select>
+	<select id="getTopMenuList_i18n" resultClass="menu" parameterClass="java.lang.String">
+    <![CDATA[
+          SELECT m.`menuId`,mi.`displayName` AS menuName,mi.`displayName`
+FROM menu m INNER JOIN menu_i18n mi ON m.`menuId`=mi.`menuId` WHERE m.menuType=1 AND mi.`language`=#language#  ORDER BY m.menuId
+    ]]>
+	</select>
+
+	<select id="findRecordLogMenuByUrl" resultClass="menuVO">
+    <![CDATA[
+           SELECT m.menuId,m.parentId pmenuId,ml.urlId,ml.menuName menuUrlName 
+           FROM  menu m,menuurl ml 
+           WHERE m.menuid=ml.menuid and recordLog="1" AND ml.url = #url#
+    ]]>
+	</select>
+	
+	<select id="findRecordLogMenuByUrl_i18n" resultClass="menuVO">
+   
+           SELECT m.menuId,m.parentId pmenuId,ml.urlId,mi.displayName menuUrlName 
+           FROM   menu m 
+			  LEFT JOIN menuurl ml 
+			    ON m.menuId = ml.menuId 
+			  LEFT JOIN menu_i18n mi 
+			    ON mi.menuId = m.menuId 
+			    WHERE recordLog = "1"   AND ml.url = #url#  
+			    <isNotEmpty property="language">
+			    AND mi.`language`=#language#
+			    </isNotEmpty>
+    
+	</select>
+
+	<select id="getMenuByMenuId" resultMap="menuResult">
+   	<![CDATA[
+            SELECT m.menuId,m.menuName,m.displayName,m.target,ml.url,m.picPath,m.parentId,m.menuType,m.authFlag,m.usageScope,m.delFlag FROM 
+			 menu m,menuurl ml  WHERE m.menuId=ml.menuId AND ml.masterFlag=1 AND m.menuType=2 AND m.menuId=  #menuId#	
+	
+    ]]>
+	</select>
+
+	<select id="getAllSecurityUrl" resultMap="menuResult">
+    <![CDATA[
+       SELECT m.menuId,m.menuName,m.displayName,m.target,ml.url,m.picPath,m.parentId,m.menuType,
+              m.authFlag,m.usageScope,m.delFlag FROM menu m,menuurl ml 
+         WHERE m.menuId=ml.menuId AND delflag = 0 AND parentId IS NOT NULL and m.menuType in (1,2)
+     
+    ]]>
+	</select>
+
+	<select id="findRoleNameByUrl" resultClass="role">
+    <![CDATA[
+		SELECT DISTINCT r.name FROM  menuurl ml, rolemenu rm, role r 
+		WHERE  ml.menuid = rm.menuId AND rm.roleid = r.roleId and ml.url = #url#	 
+    ]]>
+	</select>
+
+	<select id="getAllAuthMenuListByUsescope" resultClass="menu" parameterClass="java.lang.String">
+    <![CDATA[
+            SELECT m.menuId,m.menuName,m.displayName,m.parentId
+			FROM  role r JOIN  menu m ON r.roleid = m.menuid AND r.isShow=0
+			WHERE delflag='0' AND authFlag='1' AND r.usescope IN ($userId$)
+    ]]>
+	</select>
+
+	<select id="getChainAuthSubMenus" resultClass="menu">
+    <![CDATA[
+              SELECT m.menuId,m.menuName,m.displayName,m.target,ml.url,m.picPath,m.parentId,m.menuType,m.authFlag,m.usageScope,m.delFlag FROM 
+			 menu m,menuurl ml  WHERE m.menuId=ml.menuId AND ml.masterFlag=1 and parentId ='303'
+	
+    ]]>
+	</select>
+	<select id="getPlatAuthSubMenus" resultClass="menu">
+    <![CDATA[
+                SELECT m.menuId,m.menuName,m.displayName,m.target,ml.url,m.picPath,m.parentId,m.menuType,m.authFlag,m.usageScope,m.delFlag FROM 
+			 menu m,menuurl ml  WHERE m.menuId=ml.menuId AND ml.masterFlag=1 and parentId ='304'
+    ]]>
+	</select>
+
+	<select id="getMenuByParentId" resultClass="menu">
+		SELECT * FROM menu WHERE delFlag=0 AND menuid=#menuId# AND parentid=#parentId#
+	</select>
+
+	<select id="getTwoMenus" resultClass="menu">
+		SELECT DISTINCT m.menuId,m.displayName,ml.url
+		FROM menu m,menuurl ml,rolemenu rm
+		WHERE m.menuId=ml.menuId AND m.menuId=rm.menuId AND ml.masterFlag=1 AND m.menuType=2 AND parentId =#parentId#
+	</select>
+	<select id="getTwoMenus_i18n" resultClass="menu" parameterClass="Map">
+		SELECT DISTINCT m.menuId,mi.displayName,ml.url
+		FROM menu m,menuurl ml,rolemenu rm, menu_i18n mi
+		WHERE m.menuId=ml.menuId AND m.menuId=rm.menuId AND m.menuId=mi.`menuId` AND ml.masterFlag=1 AND m.menuType=2 AND parentId =#parentId# AND mi.language=#language#
+	</select>
+	
+	<select id="getTwoMenusByParentIds_i18n" resultClass="menu">
+		SELECT DISTINCT m.menuId,mi.displayName,ml.url
+		FROM menu m,menuurl ml,rolemenu rm, menu_i18n mi
+		WHERE m.menuId=ml.menuId AND m.menuId=rm.menuId AND m.menuId=mi.`menuId` AND ml.masterFlag=1 AND m.menuType=2 AND mi.language=#language#
+		<isNotEmpty prepend="AND" property="parentIds">
+			parentId in
+			<iterate property="parentIds" open="(" close=")" conjunction=",">
+				#parentIds[]#
+          	</iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="getParentSubMenuIdByUrl" resultClass="menuVO">
+		SELECT m.menuId,m.parentId pmenuId
+		FROM menu m,menuurl ml,rolemenu rm,userrole ur
+		WHERE m.menuid=ml.menuid AND m.menuId=rm.menuId AND ur.roleId=rm.roleId
+		AND userId=#userId# AND ml.url =#url#
+	</select>
+
+	<select id="getAuthedTwoMenusByUrl" resultClass="menu" parameterClass="Map">
+    <![CDATA[
+		SELECT DISTINCT m.menuId,mi.displayName,ml.url  
+		FROM menu m,menuurl ml,rolemenu rm ,menu_i18n mi
+		WHERE m.menuId=ml.menuId AND m.menuId=rm.menuId AND ml.masterFlag=1 AND m.menuType=2 AND m.menuId=mi.menuId  AND rm.roleid IN
+		(
+			SELECT r.roleId FROM b2buser u ,userrole ur,role r WHERE u.userid=ur.userid AND ur.roleid=r.roleid AND u.userid=#userId# AND r.isShow=0
+		)
+		AND m.parentId =(SELECT  b.parentId  FROM  menuurl a, menu b WHERE a.menuId = b.menuId AND a.url = #url#) 
+		AND mi.language=#language#
+    ]]>
+	</select>
+	
+	<select id="getMenuByUrl" resultClass="menu" parameterClass="Map">
+   	<![CDATA[
+            SELECT DISTINCT m.menuId,m.parentId,mi.displayName AS menuName
+	    FROM (menu m INNER JOIN menuurl mu  ON m.`menuId` = mu.`menuId` ) 
+  		LEFT JOIN menu_i18n mi ON m.`menuId` = mi.`menuId` 
+		WHERE mu.`url` = #url# 
+  		AND mi.`language` = #language# 
+    ]]>
+	</select>
+	
+	<select id="getMenuById" resultClass="menu"  parameterClass="Map">
+   	<![CDATA[
+            SELECT DISTINCT m.menuId,mi.displayName AS menuName,mi.displayName ,m.`parentId`
+        FROM  menu m  INNER JOIN menu_i18n mi  ON m.`menuId` = mi.`menuId` 
+		WHERE mi.`language`=#language#
+		AND m.`menuId`=#menuId#
+    ]]>
+	</select>
+	
+	<select id="getAllMenu" resultClass="menu"  parameterClass="String">
+   	<![CDATA[
+          SELECT DISTINCT m.menuId,
+          	  m.menuName,
+			  mi.displayName,
+			  m.parentId,
+			  m.menuType 
+			FROM
+			    menu m 
+			    INNER JOIN menu_i18n mi 
+			      ON mi.menuId = m.menuId
+			WHERE 
+			   m.authFlag = 1 
+			  AND mi.language = #language#
+			  AND m.delFlag = 0
+    ]]>
+	</select>
+	
+	<select id="getMenuByRoleId" resultClass="menu"  parameterClass="Map">
+   	<![CDATA[
+         SELECT DISTINCT 
+		  m.menuId,
+		  m.menuName,
+		  mi.displayName,
+		  m.parentId,
+		  m.menuType 
+		FROM
+		  (
+		    menu m 
+		    INNER JOIN menu_i18n mi 
+		      ON mi.menuId = m.menuId
+		  ),
+		  rolemenu rm 
+		WHERE m.menuId = rm.menuId 
+		  AND m.delFlag = 0
+		  AND rm.delFlag =0
+		  AND m.authFlag = 1 
+		  AND mi.language = #language# 
+		  AND rm.roleId =#roleId#
+    ]]>
+	</select>
+	
+</sqlMap>

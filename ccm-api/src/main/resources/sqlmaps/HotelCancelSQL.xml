@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="HotelCancelSQL">
+	
+	<typeAlias alias="hotelCancel" type="com.ccm.api.model.hotel.HotelCancel" />
+	<typeAlias alias="hotelCancelI18n" type="com.ccm.api.model.hotel.HotelCancelI18n" />
+	<typeAlias alias="hotelCancelVO" type="com.ccm.api.model.hotel.vo.HotelCancelVO" />
+	<typeAlias alias="cancelPolicyvo" type="com.ccm.api.model.ratePlan.vo.CancelPolicyVO"/>
+		
+    <sql id="pageSqlHotelCancelSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addHotelCancel" parameterClass="hotelCancel">
+		INSERT INTO hotel_cancel(hotelCancelId, hotelId, cancelId, createdTime, createdBy, delFlag, sortNum)
+		VALUES (#hotelCancelId#, #hotelId#, #cancelId#, #createdTime#,#createdBy#,#delFlag#,#sortNum#)
+	</insert>
+	
+	<insert id="addHotelCancelI18n" parameterClass="hotelCancelI18n">
+		INSERT INTO hotel_cancel_i18n(hotelCancelMId,hotelCancelId, language,policyName,description,
+			createdBy,createdTime,delFlag)
+		VALUES (#hotelCancelMId#,#hotelCancelId#, #language#, #policyName#, #description#,
+			#createdBy#,#createdTime#,#delFlag#)
+	</insert>
+	
+	<update id="updaetHotelCancel" parameterClass="hotelCancel">
+		UPDATE hotel_cancel hc set hc.updatedBy = #updatedBy#,hc.lastModifyTime = #lastModifyTime#,hc.sortNum = #sortNum#
+		WHERE hc.hotelCancelId = #hotelCancelId# 
+	</update>
+	
+	<update id="updateHotelCancelI18n" parameterClass="hotelCancelI18n">
+		update hotel_cancel_i18n hci SET
+		hci.policyName = #policyName#
+		,hci.description = #description#
+		,hci.updatedBy = #updatedBy#
+		,hci.lastModifyTime = #lastModifyTime#
+		where hci.hotelCancelMId = #hotelCancelMId#
+	</update>
+	
+	<update id="deleteHotelCancelById">
+		update hotel_cancel hc SET hc.delFlag = 1 
+		 where hc.hotelCancelId = #hotelCancelId#
+	</update>
+
+	<update id="deleteHotelCancelByHotelId">
+		update hotel_cancel hc SET hc.delFlag = 1 
+		where hc.hotelId = #hotelId#
+    </update>
+    
+    <update id="deleteHotelCancelI18nById">
+    	update hotel_cancel_i18n hci set hci.delFlag = 1 
+    	where hci.hotelCancelId = #hotelCancelId#
+    </update>
+    
+	<select id="getHotelCancelById" resultClass="hotelCancelVO">
+    <![CDATA[
+        select hc.*,hci.*,h.hotelCode,cp.cancelPolicyCode from hotel_cancel hc
+           left join hotel h on hc.hotelId = h.hotelId AND h.delFlag = 0
+           left join cancel_policy cp on hc.cancelId = cp.cancelId AND cp.delFlag = 0
+           left join hotel_cancel_i18n hci on hc.hotelCancelId = hci.hotelCancelId
+           		 and hci.language = #language# and hci.delFlag = 0
+        where hc.hotelCancelId = #hotelCancelId# and hc.delFlag = 0
+    ]]>
+	</select>
+	
+	<select id="getHotelCancelI18ns" resultClass="hotelCancelI18n" parameterClass="Map">
+		select * from hotel_cancel_i18n hci 
+		        where hci.hotelCancelId = #hotelCancelId#
+		          AND hci.`delFlag` = 0
+		order by hotelCancelMId
+	</select>
+	
+	<select id="getHotelCancelByHotelId" resultClass="hotelCancelVO">
+    <![CDATA[
+        select hc.hotelId,h.hotelCode,hci.*,GROUP_CONCAT(cp.cancelId) as cancelIds,GROUP_CONCAT(cp.cancelPolicyCode) as cancelPolicyCodes 
+          from hotel_cancel hc
+           left join hotel h on hc.hotelId = h.hotelId AND h.delFlag = 0
+           left join cancel_policy cp on hc.cancelId = cp.cancelId AND cp.delFlag = 0
+           left join hotel_cancel_i18n hci on hc.hotelCancelId = hci.hotelCancelId
+           		 and hci.language = #language# and hci.delFlag = 0
+          where hc.hotelId = #hotelId# and hc.delFlag = 0
+          group by hc.hotelId
+    ]]>
+	</select>
+
+	<select id="getHotelCancelByObj" resultClass="hotelCancelVO" >
+        select hc.*,hci.*,h.hotelCode,cp.cancelPolicyCode from hotel_cancel hc
+           left join hotel h on hc.hotelId = h.hotelId AND h.delFlag = 0
+           left join cancel_policy cp on hc.cancelId = cp.cancelId AND cp.delFlag = 0
+           left join hotel_cancel_i18n hci on hc.hotelCancelId = hci.hotelCancelId
+           		 and hci.language = #language# and hci.delFlag = 0
+        where hc.delFlag = 0
+        <isNotEmpty prepend="AND" property="hotelId">
+			hc.hotelId=#hotelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="hotelCancelId">
+			hc.hotelCancelId = #hotelCancelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cancelId">
+			hc.cancelId = #cancelId#
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="cancelIds">
+			hc.cancelId in
+			<iterate open="(" close=")" conjunction="," property="cancelIdList">
+				#cancelIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="searchHotelCancel" resultClass="hotelCancelVO" >
+		SELECT hc.*,hci.*,h.hotelCode,cp.cancelPolicyCode
+		  FROM hotel_cancel hc
+		  LEFT JOIN hotel h ON hc.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN cancel_policy cp ON hc.cancelId = cp.cancelId AND cp.delFlag = 0
+		  LEFT JOIN hotel_cancel_i18n hci on hc.hotelCancelId = hci.hotelCancelId
+           		 and hci.language = #language# and hci.delFlag = 0
+		WHERE hc.delFlag = 0  
+		  AND hc.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="cancelIds">
+			hc.cancelId in
+			<iterate open="(" close=")" conjunction="," property="cancelIdList">
+				#cancelIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+		ORDER BY hc.sortNum,cp.cancelPolicyCode
+		<include refid="pageSqlHotelCancelSQL"/>
+	</select>
+
+	<select id="countHotelCancel" resultClass="Integer" >
+		SELECT count(*) FROM hotel_cancel hc
+		  LEFT JOIN hotel h ON hc.hotelId = h.hotelId AND h.delFlag = 0
+		  LEFT JOIN cancel_policy cp ON hc.cancelId = cp.cancelId AND cp.delFlag = 0
+		  LEFT JOIN hotel_cancel_i18n hci on hc.hotelCancelId = hci.hotelCancelId
+           		 and hci.language = #language# and hci.delFlag = 0
+		WHERE hc.delFlag = 0 
+		  AND hc.hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="cancelIds">
+			hc.cancelId in
+			<iterate open="(" close=")" conjunction="," property="cancelIdList">
+				#cancelIdList[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+	
+	<select id="getDontUseHotelCancel" resultClass="cancelPolicyvo" parameterClass="Map">
+		SELECT * FROM `cancel_policy` c,`cancel_policy_i18n` ci 
+				WHERE c.`cancelId` = ci.`cancelId`
+				  AND c.`delFlag` = 0
+				  AND ci.`delFlag` = 0
+				  AND ci.`language` = #language#
+				  AND NOT EXISTS(
+						SELECT 1 FROM hotel_cancel hc 
+								WHERE hc.`delFlag` = 0 
+						 	      AND hc.`hotelId` = #hotelId#
+						 	      AND hc.`cancelId` = c.`cancelId`
+				  )
+	</select>
+	
+	<select id="getUseRateCancel" resultClass="rateplan" parameterClass="Map">
+		SELECT r.* FROM rate_plan r,hotel h
+				  WHERE r.`hotelId` = h.`hotelId`
+				    AND h.`hotelId` = #hotelId#
+				    AND r.`delFlag` = 0
+				    AND h.`delFlag` = 0
+				    AND EXISTS(
+						SELECT 1 FROM rate_cancel_relationship rcr
+								WHERE rcr.`ratePlanId` = r.`ratePlanId`
+					              AND rcr.`cancelId` = #cancelId#
+					              AND rcr.`delFlag` = 0
+				  	)
+	</select>
+	
+	
+</sqlMap>

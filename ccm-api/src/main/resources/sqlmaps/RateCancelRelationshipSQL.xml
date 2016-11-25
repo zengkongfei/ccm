@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RateCancelRelationshipSQL">
+	<typeAlias alias="rateCancelRelationship" type="com.ccm.api.model.ratePlan.RateCancelRelationship" />
+	
+	<insert id="addRateCancelRelationship" parameterClass="rateCancelRelationship">
+		INSERT INTO rate_cancel_relationship
+            (rateCancelRelationshipId, ratePlanId, cancelId, effectiveDate, expireDate, isApplyToMonday, isApplyToTuesday, isApplyToWednesday, isApplyToThursday, isApplyToFriday, isApplyToSaturday, isApplyToSunday, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#rateCancelRelationshipId#, #ratePlanId#, #cancelId#, #effectiveDate#, #expireDate#, #isApplyToMonday#, #isApplyToTuesday#, #isApplyToWednesday#, #isApplyToThursday#, #isApplyToFriday#, #isApplyToSaturday#, #isApplyToSunday#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)
+	</insert>
+	
+	<update id="updateRateCancelRelationship" parameterClass="rateCancelRelationship">
+		UPDATE rate_cancel_relationship
+		SET rateCancelRelationshipId = #rateCancelRelationshipId#, ratePlanId = #ratePlanId#, cancelId = #cancelId#, effectiveDate = #effectiveDate#, expireDate = #expireDate#, isApplyToMonday = #isApplyToMonday#, isApplyToTuesday = #isApplyToTuesday#, isApplyToWednesday = #isApplyToWednesday#, isApplyToThursday = #isApplyToThursday#, isApplyToFriday = #isApplyToFriday#, isApplyToSaturday = #isApplyToSaturday#, isApplyToSunday = #isApplyToSunday#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE rateCancelRelationshipId = #rateCancelRelationshipId#
+	</update>
+	
+	<select id="getRateCancelRelationship" resultClass="rateCancelRelationship">
+		SELECT * FROM rate_cancel_relationship WHERE delFlag = 0 and rateCancelRelationshipId=#value#
+    </select>
+
+	<select id="getRateCancelRelationshipByRatePlanId" resultClass="rateCancelRelationship" parameterClass="String">
+		SELECT t1.*,cancelPolicyCode as policyName FROM rate_cancel_relationship t1
+		LEFT JOIN cancel_policy t2 ON t1.cancelId = t2.cancelId AND t2.delFlag = 0
+		WHERE t1.delFlag = 0 AND t1.ratePlanId=#ratePlanId# 
+    </select>
+    
+    <select id="getRateCancelPolicyByRatePlanId" resultClass="rateCancelRelationship" parameterClass="String">
+    	<![CDATA[
+		SELECT * FROM rate_cancel_relationship t1
+		LEFT JOIN cancel_policy t2 ON t1.cancelId = t2.cancelId AND t2.delFlag = 0
+		WHERE t1.delFlag = 0 AND t1.ratePlanId=#ratePlanId# AND expireDate >=CURDATE()
+		]]>
+    </select>
+    
+    <select id="getRateCancelPolicyI18nByRatePlanId" resultClass="rateCancelRelationship" parameterClass="Map">
+		SELECT DISTINCT c.*,hci.policyName,hci.description,rcr.effectiveDate,rcr.expireDate,rcr.isApplyToMonday,rcr.isApplyToTuesday,rcr.isApplyToWednesday,rcr.isApplyToThursday,
+		rcr.isApplyToFriday,rcr.isApplyToSaturday,rcr.isApplyToSunday FROM rate_cancel_relationship rcr, cancel_policy c, hotel_cancel hc,`hotel_cancel_i18n` hci
+		WHERE rcr.cancelId=c.cancelId AND rcr.`cancelId`=hc.cancelId and hc.hotelCancelId=hci.hotelCancelId AND rcr.delFlag=0 AND c.delFlag=0 AND hc.delFlag=0 AND hci.delFlag=0
+		AND rcr.ratePlanId=#ratePlanId# AND hci.language = #language# AND hc.hotelId=#hotelId# 
+	</select>
+    
+    <update id="deleteRateCancelRelationship">
+    	UPDATE rate_cancel_relationship set delFlag = 1 where rateCancelRelationshipId = #value#
+    </update>
+    
+    <delete id="deleteRateCancelRelationshipByRatePlanId">
+	    DELETE
+			FROM rate_cancel_relationship
+		WHERE ratePlanId = #ratePlanId#
+    </delete>
+    
+    <select id="get180DayRateCancel" resultClass="rateCancelRelationship">
+    <![CDATA[
+    	SELECT * FROM rate_cancel_relationship t1 INNER JOIN cancel_policy t2 ON t1.cancelId = t2.cancelId AND t2.delFlag = 0 AND t1.delFlag = 0
+	INNER JOIN (SELECT ratePlanId FROM rate_plan WHERE delflag=0 AND hotelId=#hotelId# AND ratePlanCode=#ratePlanCode#) t3 ON t3.ratePlanId = t1.ratePlanId
+		WHERE t1.effectiveDate <= #day# AND t1.expireDate >= #day# 
+	AND SUBSTRING(CONCAT(IFNULL(isApplyToMonday,0),IFNULL(isApplyToTuesday,0),IFNULL(isApplyToWednesday,0),IFNULL(isApplyToThursday,0),IFNULL(isApplyToFriday,0),IFNULL(isApplyToSaturday,0),IFNULL(isApplyToSunday,0)),WEEKDAY(#day#)+1,1) =1
+	]]>
+    </select>
+</sqlMap>

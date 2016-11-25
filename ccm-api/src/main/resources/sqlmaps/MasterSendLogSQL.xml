@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MasterSendLogSQL">
+
+	<typeAlias alias="masterSendLog" type="com.ccm.api.model.email.MasterSendLog" />
+	<typeAlias alias="masterSendLogVO" type="com.ccm.api.model.email.vo.MasterSendLogVO" />
+
+	<insert id="addMasterSendLog" parameterClass="masterSendLog">
+	    <![CDATA[
+	        insert into masterSendLog
+	                (payment,mobile,cardCode,masterEmail,addressLine,numberOfUnits,masterSendLogId, smsSendId, masterId, 
+	                	language, hotelId, hotelCode, hotelName, 
+	                	name4, telephone, fax, postCode, 
+	                	email, address, sta, changed, 
+	                	arr, dep, roomTypeName, ratePlanDesc,
+	                	gstno, mrListJson, mpListJson, charge,chargeAfterTax,
+	                	srqs, ref, checkInTimeDesc, checkOutTimeDesc, 
+	                	cancelPolicyDesc, createdBy, createdTime, 
+	                	pictureUrlFolder, logoPicUrl, channelCode)
+	        values (#payment#,#mobile#,#cardCode#,#masterEmail#,#addressLine#,#numberOfUnits#,#masterSendLogId#,#smsSendId#, #masterId#, 
+	        	#language#, #hotelId#, #hotelCode#, #hotelName#, 
+	        	#name4#, #telephone#, #fax#, #postCode#,
+	        	#email#, #address#, #sta#, #changed#,
+	        	#arr#, #dep#, #roomTypeName#, #ratePlanDesc#, 
+	        	#gstno#, #mrListJson#, #mpListJson#, #charge#,#chargeAfterTax#,
+	        	#srqs#, #ref#, #checkInTimeDesc#, #checkOutTimeDesc#, 
+	        	#cancelPolicyDesc#, #createdBy#, #createdTime#,
+	        	#pictureUrlFolder#, #logoPicUrl#, #channelCode#)
+	    ]]>
+	</insert>
+
+	<select id="getMasterSendLogById" resultClass="masterSendLog" parameterClass="java.lang.String">
+		select m.* from masterSendLog m where m.masterSendLogId = #masterSendLogId#
+    </select>
+
+	<select id="getMasterSendLogBySmsId" resultClass="masterSendLog" parameterClass="java.lang.String">
+		select m.*,ma.currencyCode from masterSendLog m left join master ma on m.masterid=ma.masterid where m.smsSendId = #smsSendId#
+    </select>
+
+	<!-- 查询渠道新建子订单30分钟后 -->
+	<select id="getMasterSendLogByChannelStaDate" resultClass="masterSendLogVO">
+		<![CDATA[select masterId,hotelCode,hotelName,s.smsSendId,s.mobileNumber,s.smsType,s.smsContent,s.verifyCode from masterSendLog  msl
+		inner join smssend s on msl.smsSendId=s.smsSendId and s.bizId=msl.masterId and s.mobileNumber=msl.sta 
+		WHERE channelCode=#channel# and sta=#sta# and changed<=#changed# and s.resultCode=#resultCode# and smsType=#smsType#]]>
+	</select>
+
+
+</sqlMap>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ChainannelRateIdMapperSQL">
+	<typeAlias alias="chainannelRateIdMapper" type="com.ccm.api.model.ads.ChainannelRateIdMapper" />
+	
+	<insert id="addChainannelRateIdMapper" parameterClass="chainannelRateIdMapper">
+	    <![CDATA[
+	        INSERT INTO chainannelrateidmapper
+            	(chainannelrateidmapperId, chainCode, hotelCode, roomType, rateCode, chainannelProductCode)
+			VALUES (#chainannelrateidmapperId#, 
+			REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#roomType#,' ',''),'　',''), 
+			REPLACE(REPLACE(#rateCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#chainannelProductCode#,' ',''),'　',''))
+		]]>
+	</insert>
+	
+	<select id="searchChainannelRateIdMapper" resultClass="chainannelRateIdMapper">
+		select * FROM chainannelrateidmapper 
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>           
+           <isNotEmpty prepend="AND" property="roomType">
+              roomType = #roomType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="rateCode">
+              rateCode = #rateCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="chainannelProductCode">
+              chainannelProductCode = #chainannelProductCode# 
+           </isNotEmpty>
+        </dynamic>
+	</select>
+	
+	
+	<update id="updateChainannelRateIdMapper" parameterClass="chainannelRateIdMapper">
+		UPDATE chainannelrateidmapper
+		SET chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+			hotelCode = REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+			roomType = REPLACE(REPLACE(#roomType#,' ',''),'　',''), 
+			rateCode = REPLACE(REPLACE(#rateCode#,' ',''),'　',''), 
+			chainannelProductCode = REPLACE(REPLACE(#chainannelProductCode#,' ',''),'　','')
+		WHERE chainannelrateidmapperId = #chainannelrateidmapperId#
+    </update>
+</sqlMap>

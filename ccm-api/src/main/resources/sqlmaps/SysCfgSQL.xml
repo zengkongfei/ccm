@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="SysCfgSQL">
+	<typeAlias alias="sysCfg" type="com.ccm.api.model.cfg.SysCfg" />
+	
+	<resultMap id="sysCfgResult" class="sysCfg">
+		<result property="ccmSysCfgId" column="ccmSysCfgId" />
+		<result property="pendingMsgCount" column="pendingMsgCount" />
+		<result property="masterListener" column="masterListener" />
+		<result property="interfaceListener" column="interfaceListener" />
+		<result property="isMasterLister" column="isMasterLister" />
+		<result property="isInterfaceListener" column="isInterfaceListener" />
+		<result property="masterDealTime" column="masterDealTime" />
+		
+		<result property="announcementCn" column="announcement_cn" />
+		<result property="announcementEn" column="announcement_en" />
+		<result property="isAnnounce" column="isAnnounce" />
+		<result property="timeArr" column="timeArr" />
+		
+	</resultMap>
+	
+	<insert id="addSysCfg" parameterClass="sysCfg">
+        insert into ccm_sys_cfg(ccmSysCfgId,pendingMsgCount,masterListener,interfaceListener,isMasterLister,isInterfaceListener,announcement_cn,announcement_en,isAnnounce,masterDealTime,timeArr) 
+        values (REPLACE(UUID(), '-', ''),#pendingMsgCount#,#masterListener#,#interfaceListener#,#isMasterLister#,#isInterfaceListener#,#announcementCn#,#announcementEn#,#isAnnounce#,masterDealTime,#timeArr#)
+	</insert>
+
+	<update id="updateSysCfg" parameterClass="sysCfg">
+	 <![CDATA[
+		update ccm_sys_cfg SET 
+		pendingMsgCount = #pendingMsgCount#
+		,masterListener = #masterListener#
+		,interfaceListener = #interfaceListener#
+		,isMasterLister = #isMasterLister#
+		,isInterfaceListener = #isInterfaceListener#
+		,announcement_cn = #announcementCn#
+		,announcement_en = #announcementEn#
+		,isAnnounce=#isAnnounce#
+		,masterDealTime=#masterDealTime#
+		,timeArr=#timeArr#
+		where ccmSysCfgId = #ccmSysCfgId#
+	     ]]>
+	</update>
+	
+	<delete id="deleteSysCfg" parameterClass="java.lang.String">
+		 delete from ccm_sys_cfg 
+		 WHERE 1=1
+	</delete>
+	
+	<select id="getSysCfgs" parameterClass="java.lang.String" resultMap="sysCfgResult">
+        select ccmSysCfgId,pendingMsgCount,masterListener,interfaceListener,isMasterLister,isInterfaceListener,announcement_cn,announcement_en,isAnnounce,masterDealTime,timeArr
+        from ccm_sys_cfg 
+	</select>
+	
+</sqlMap>

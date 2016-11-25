@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ReceivePmsLogSQL">
+	<typeAlias alias="receivePmsLog" type="com.ccm.api.model.log.ReceivePmsLog" />
+	
+	<sql id="pageReceivePmsLogSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="addReceivePmsLog" parameterClass="receivePmsLog">
+    <![CDATA[
+        insert into receivepmslog (receivepmslogId,interfaceId,hotelCode,createdTime,lastModifyTime,receiveMsgLogLastTime) 
+        values (#receivepmslogId#,#interfaceId#,
+        REPLACE(REPLACE(#hotelCode#,' ',''),'　',''),
+        #createdTime#,#lastModifyTime#,#receiveMsgLogLastTime#);
+     ]]>
+	</insert>
+
+	<delete id="deleteReceivePmsLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from receivepmslog where receivepmslogId = #receivepmslogId#
+    ]]>
+	</delete>
+
+	<update id="updateReceivePmsLog" parameterClass="receivePmsLog">
+		update receivepmslog
+		<dynamic prepend="SET">
+			<isNotEmpty property="lastModifyTime" prepend=",">
+				<![CDATA[lastModifyTime = #lastModifyTime#]]>
+			</isNotEmpty>
+			<isNotEmpty property="receiveMsgLogLastTime" prepend=",">
+				<![CDATA[receiveMsgLogLastTime = #receiveMsgLogLastTime#]]>
+			</isNotEmpty>
+		</dynamic>
+		where receivepmslogId = #receivepmslogId# and hotelCode = #hotelCode#
+	</update>
+
+	<select id="getReceivePmsLog" resultClass="receivePmsLog">
+    <![CDATA[
+        select * from receivepmslog 
+        where receivepmslogId = #receivepmslogId#
+    ]]>
+	</select>
+
+	<select id="getReceivePmsLogs" resultClass="receivePmsLog">
+    <![CDATA[
+        select * from receivepmslog
+    ]]>
+	</select>
+
+	<select id="getReceivePmsLogByConf" resultClass="receivePmsLog">
+		select * from receivepmslog
+		where hotelCode = #hotelCode#
+		<isNotEmpty prepend="AND" property="interfaceId">
+			interfaceId = #interfaceId# 
+		</isNotEmpty>
+	</select>
+
+	<select id="countReceivePmsLog" resultClass="Integer">
+		<![CDATA[
+		SELECT count(*) FROM receivepmslog
+	 	]]>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hoteCodes">
+				hotelCode in
+				<iterate open="(" close=")" conjunction="," property="hoteCodes">
+					#hoteCodes[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				<isEqual property="status" compareValue="on">
+					<![CDATA[(TIME_TO_SEC(TIMEDIFF(NOW(),lastModifyTime))/60<=5 OR TIME_TO_SEC(TIMEDIFF(NOW(),receiveMsgLogLastTime))/60<=5)]]>
+				</isEqual>
+				<isEqual property="status" compareValue="off">
+					<![CDATA[(lastModifyTime is null or TIME_TO_SEC(TIMEDIFF(NOW(),lastModifyTime))/60>5) 
+					AND (receiveMsgLogLastTime is null or TIME_TO_SEC(TIMEDIFF(NOW(),receiveMsgLogLastTime))/60>5)]]>
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="searchReceivePmsLog" resultClass="receivePmsLog">
+		<![CDATA[SELECT r.hotelCode,NOW() createdTime,r.lastModifyTime,
+		CASE 
+       	WHEN (r.receiveMsgLogLastTime IS NULL) AND (r.lastModifyTime IS NULL)
+	     	THEN 0
+      	WHEN r.receiveMsgLogLastTime IS NULL
+	    	THEN TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))
+      	WHEN r.lastModifyTime IS NULL
+	    	THEN TIME_TO_SEC(TIMEDIFF(NOW(),r.receiveMsgLogLastTime))
+       	WHEN TIME_TO_SEC(TIMEDIFF(NOW(),r.receiveMsgLogLastTime))>TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))
+            THEN TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))
+       	ELSE TIME_TO_SEC(TIMEDIFF(NOW(),r.receiveMsgLogLastTime))
+       		END spaceSec 
+		]]>
+		<isNotEmpty property="languageCode">
+			,h.isPMSHeartBeat,h.isCreditOnlineHotel,h.isDisplacementInterface,di.codeLabel pmsType,hi.hotelName FROM receivepmslog r
+			LEFT JOIN hotel h ON r.hotelcode=h.hotelcode AND h.delFlag=0
+			LEFT JOIN hotel_i18n hi ON h.hotelid=hi.hotelid AND hi.delFlag=0 AND hi.languageCode=#languageCode# 
+			left join dictcode d on dictId="21" and d.codeNo=h.pmsType 
+			LEFT JOIN dictcode_i18n di ON d.codeId=di.codeId AND di.language=#languageCode# 
+		</isNotEmpty>
+		<isEmpty property="languageCode">
+			,null isCreditOnlineHotel,null isCreditOnlineHotel,null isDisplacementInterface,null pmsType,null hotelName 
+			FROM receivepmslog r
+		</isEmpty>
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="hotelCode">
+				r.hotelCode = #hotelCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="hoteCodes">
+				r.hotelCode in
+				<iterate open="(" close=")" conjunction="," property="hoteCodes">
+					#hoteCodes[]# 
+		        </iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				<isEqual property="status" compareValue="on">
+					<![CDATA[(TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))/60<=5 OR TIME_TO_SEC(TIMEDIFF(NOW(),r.receiveMsgLogLastTime))/60<=5)]]>
+				</isEqual>
+				<isEqual property="status" compareValue="off">
+					<![CDATA[(r.lastModifyTime is null or TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))/60>5) 
+					AND (r.receiveMsgLogLastTime is null or TIME_TO_SEC(TIMEDIFF(NOW(),r.receiveMsgLogLastTime))/60>5)]]>
+				</isEqual>
+			</isNotEmpty>
+		</dynamic>
+		order by r.hotelCode
+		<include refid="pageReceivePmsLogSQL"/>
+	</select>
+
+
+<select id="getOffReceivePmsLog"  resultClass="receivePmsLog">
+	<![CDATA[
+	SELECT r.*,h.`hotelId` FROM receivepmslog r LEFT JOIN hotel h ON r.`hotelCode`=h.hotelcode AND h.delflag=0 AND h.isDirectPms=1
+ WHERE  TIME_TO_SEC(  TIMEDIFF(NOW(), r.receiveMsgLogLastTime) ) > 5 * 60  AND TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))>5*60 GROUP BY hotelcode
+	]]>
+</select>
+
+<select id="getOnReceivePmsLog"  resultClass="receivePmsLog">
+	<![CDATA[
+	SELECT r.*,h.`hotelId` FROM receivepmslog r LEFT JOIN hotel h ON r.`hotelCode`=h.hotelcode AND h.delflag=0 AND h.isDirectPms=1
+ WHERE  TIME_TO_SEC(  TIMEDIFF(NOW(), r.receiveMsgLogLastTime) ) < 5 * 60  or TIME_TO_SEC(TIMEDIFF(NOW(),r.lastModifyTime))<5*60 GROUP BY hotelcode
+	]]>
+</select>
+
+</sqlMap>

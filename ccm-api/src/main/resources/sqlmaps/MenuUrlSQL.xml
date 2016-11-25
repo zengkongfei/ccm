@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="MenuUrlSQL">
+
+	<typeAlias alias="menuUrl" type="com.ccm.api.model.user.MenuUrl" />
+
+	<insert id="addMenuUrl" parameterClass="menuUrl">
+    <![CDATA[
+        insert into menuurl (urlId, menuId, menuName, url, masterFlag) 
+        values (#urlId#, #menuId#, #menuName#, #url#, #masterFlag#)
+    ]]>
+	</insert>
+
+	<delete id="deleteMenuUrl">
+    <![CDATA[
+        delete from menuurl where urlId=#urlId#
+    ]]>
+	</delete>
+
+	<update id="updateMenuUrl" parameterClass="menuUrl">
+    <![CDATA[
+        update menuurl set menuId = #menuId#, menuName = #menuName#, url = #url#, masterFlag = #masterFlag#,
+		updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime# 
+        where urlId=#urlId#
+    ]]>
+	</update>
+
+	<update id="updateMenuUrlDelFlag" parameterClass="menuUrl">
+    <![CDATA[
+        update menuurl set delFlag=#delFlag#
+        where urlId=#urlId#
+    ]]>
+	</update>
+
+	<select id="getMenuUrl" resultClass="menuUrl">
+		SELECT * from menuurl where urlId=#urlId#
+	</select>
+
+	<select id="getMenuUrls" resultClass="menuUrl">
+		SELECT * from menuurl
+	</select>
+	
+</sqlMap>

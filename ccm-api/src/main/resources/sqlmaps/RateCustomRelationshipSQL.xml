@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RateCustomRelationshipSQL">
+	<typeAlias alias="rateCustomRelationship" type="com.ccm.api.model.ratePlan.RateCustomRelationship" />
+	<typeAlias alias="custom" type="com.ccm.api.model.hotel.Custom" />
+
+	<insert id="addRateCustomRelationship" parameterClass="rateCustomRelationship">
+		INSERT INTO rate_custom_relationship
+		(rateCustomRelationshipId, ratePlanId, customId, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#rateCustomRelationshipId#, #ratePlanId#, #customId#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)
+	</insert>
+
+	<update id="deleteRateCustomRelationship">
+		UPDATE rate_Custom_relationship set delFlag = 1 where rateCustomRelationshipId = #value#
+    </update>
+
+	<delete id="deleteRateCustomRelationshipByRatePlanId">
+		DELETE FROM rate_custom_relationship WHERE ratePlanId = #ratePlanId#
+    </delete>
+
+	<update id="updateRateCustomRelationshipDelFlag" parameterClass="Map">
+		update rate_custom_relationship SET
+		delFlag = #delFlag#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where rateCustomRelationshipId = #rateCustomRelationshipId#
+    </update>
+    
+	<update id="updateRateCustomRelationship" parameterClass="rateCustomRelationship">
+		UPDATE rate_custom_relationship
+		SET rateCustomRelationshipId = #rateCustomRelationshipId#, ratePlanId = #ratePlanId#, customId = #customId#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE rateCustomRelationshipId = #rateCustomRelationshipId#
+    </update>
+
+	<select id="getRateCustomRelationship" resultClass="rateCustomRelationship">
+		SELECT * FROM rate_custom_relationship WHERE delFlag = 0 and rateCustomRelationshipId=#value#
+    </select>
+    
+    <select id="getRateCustomRelationshipByRatePlanIdAndCustomId" resultClass="rateCustomRelationship">
+		SELECT * FROM rate_custom_relationship WHERE delFlag = 0 
+		and ratePlanId=#ratePlanId#
+		and customId=#customId#
+    </select>
+
+	<select id="getCustomIdByRatePlanId" resultClass="String">
+		SELECT t1.customId FROM rate_custom_relationship t1 inner join custom c on t1.customId=c.customId and c.delFlag=0
+		WHERE t1.delFlag = 0 and t1.ratePlanId=#value#
+    </select>
+    
+    <select id="getCustomByRatePlanId"  resultClass="custom">
+		SELECT t1.customId,c.* FROM rate_custom_relationship t1 inner join custom c on t1.customId=c.customId and c.delFlag=0
+		WHERE t1.delFlag = 0 and t1.ratePlanId=#value#
+    </select>
+
+	<select id="getCustomIdByRateCustom" resultClass="custom" parameterClass="Map">
+		SELECT c.* FROM rate_custom_relationship rcr INNER JOIN custom c ON rcr.customId=c.customId and c.delFlag=0
+		WHERE rcr.delFlag=0 and rcr.ratePlanId=#ratePlanId# AND c.hotelId=#hotelId# AND c.type=#type# AND c.accessCode=#accessCode#
+	</select>
+
+	<select id="getCustomByRateCustom" resultClass="rateCustomRelationship" parameterClass="Map">
+		SELECT rcr.* FROM rate_custom_relationship rcr
+		INNER JOIN custom c ON rcr.customId=c.customId
+		INNER JOIN rate_plan rp ON rcr.ratePlanId = rp.ratePlanId and rp.hotelId=c.hotelId
+		WHERE rcr.delFlag=0
+		AND rp.delFlag=0
+		AND c.delFlag=0
+		AND rp.ratePlanCode = #ratePlanCode#
+		AND c.hotelId = #hotelId#
+		AND c.accessCode = #accessCode#
+		<isNotEmpty prepend="AND" property="type">
+			c.type = #type# 
+		</isNotEmpty>
+	</select>
+
+	<select id="getAccessRatePlanIdByChannelIds" resultClass="String" parameterClass="Map">
+		SELECT DISTINCT rcr.ratePlanId FROM rate_custom_relationship rcr INNER JOIN custom c ON
+			c.customId=rcr.customId
+			AND channelId IN 
+			<iterate open="(" close=")" conjunction="," property="channelList">#channelList[].channelId#</iterate>
+			AND  hotelId=#hotelId# 
+			AND c.delflag=0 AND c.delflag=0  AND  rcr.delflag=0
+	</select>
+</sqlMap>

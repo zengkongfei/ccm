@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+ 
+<sqlMap namespace="RateDetailSQL">
+	<typeAlias alias="rateDetail" type="com.ccm.api.model.ratePlan.RateDetail" />
+	<typeAlias alias="rateDetailVO" type="com.ccm.api.model.ratePlan.vo.RateDetailVO" />
+	<typeAlias alias="priceValid" type="com.ccm.api.model.ratePlan.PriceValid" />
+	<typeAlias alias="roomRateDetailComparableVO" type="com.ccm.api.model.channel.vo.RoomRateDetailComparableVO" />
+	<typeAlias alias="rateCodeWithRoomVO" type="com.ccm.api.model.rsvtype.vo.RateCodeWithRoomVO" />
+	<sql id="pageSqlRateDetailSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="addRateDetail" parameterClass="rateDetail">
+		INSERT INTO rate_detail
+            (rateDetailId, ratePlanId, effectiveDate, expireDate, isApplyToMonday, isApplyToTuesday, isApplyToWednesday, isApplyToThursday, isApplyToFriday, isApplyToSaturday, isApplyToSunday, createdBy, createdTime, updatedBy, lastModifyTime, delFlag,extraBed,extraBedChild)
+		VALUES (#rateDetailId#, #ratePlanId#, #effectiveDate#, #expireDate#, #isApplyToMonday#, #isApplyToTuesday#, #isApplyToWednesday#, #isApplyToThursday#, #isApplyToFriday#, #isApplyToSaturday#, #isApplyToSunday#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#,#extraBed#,#extraBedChild#)
+	</insert>
+	
+	<insert id="addBatchRateDetails" parameterClass="java.util.List">
+	    <![CDATA[
+	        insert into rate_detail
+	        		(rateDetailId, ratePlanId, effectiveDate, expireDate, isApplyToMonday, 
+	        		isApplyToTuesday, isApplyToWednesday, isApplyToThursday, 
+	        		isApplyToFriday, isApplyToSaturday, isApplyToSunday, createdBy, 
+	        		createdTime, updatedBy, lastModifyTime, delFlag,extraBed,extraBedChild)
+	        values
+	    ]]>
+		<iterate conjunction=",">
+	      <![CDATA[
+	          (
+	              #list[].rateDetailId#,
+	              #list[].ratePlanId#,
+	              #list[].effectiveDate#,
+	              #list[].expireDate#,
+	              #list[].isApplyToMonday#,
+	              #list[].isApplyToTuesday#,
+	              #list[].isApplyToWednesday#,
+	              #list[].isApplyToThursday#,
+	              #list[].isApplyToFriday#,
+	              #list[].isApplyToSaturday#,
+	              #list[].isApplyToSunday#,
+	              #list[].createdBy#,
+	              #list[].createdTime#,
+	              #list[].updatedBy#,
+	              #list[].lastModifyTime#,
+	              #list[].delFlag#,
+	              #list[].extraBed#,
+	              #list[].extraBedChild#
+	          )
+	      ]]>
+		</iterate>
+	</insert>
+	
+	<select id="getRateDetailVOByRatePlanId" resultClass="rateDetailVO">
+		SELECT * FROM rate_detail WHERE delFlag=0 and ratePlanId=#ratePlanId#
+			<isNotEmpty property="rateDetailId" prepend="and">
+				rateDetailId = #rateDetailId#
+			</isNotEmpty>
+    </select>
+	
+	<select id="getRoomRateDetailComparableVO" resultClass="roomRateDetailComparableVO"  parameterClass="Map">
+		SELECT 
+  rd.rateplanId,
+  rd.rateDetailid,
+  rr.roomRateid,
+  rr.roomtypeid,
+  rd.effectiveDate,
+  rd.expireDate,
+  <![CDATA[ CASE WHEN #newToDate# < rd.effectiveDate OR #newFromDate# > rd.expireDate THEN 7 ]]>
+  <![CDATA[ WHEN #newToDate# < rd.expireDate AND #newToDate# >= rd.effectiveDate AND #newFromDate# < rd.effectiveDate THEN 4 ]]>
+  <![CDATA[ WHEN #newToDate# = rd.expireDate AND #newFromDate# < rd.effectiveDate THEN 2 ]]>
+  <![CDATA[ WHEN #newToDate# <= rd.expireDate  AND #newFromDate# >= rd.effectiveDate THEN 1 ]]>
+  <![CDATA[ WHEN #newFromDate# > rd.effectiveDate AND #newFromDate# <= rd.expireDate AND #newToDate# > rd.expireDate THEN 5 ]]>
+  <![CDATA[ WHEN #newFromDate# = rd.effectiveDate AND #newToDate#> rd.expireDate THEN 3 ]]>
+  <![CDATA[ WHEN #newFromDate# < rd.effectiveDate AND #newToDate# > rd.expireDate THEN 6 ]]>
+  END 
+   AS dateRangeType,
+   CONCAT(
+    IFNULL(isApplyToSunday, 0),
+    IFNULL(isApplyToMonday, 0),
+    IFNULL(isApplyToTuesday, 0),
+    IFNULL(isApplyToWednesday, 0),
+    IFNULL(isApplyToThursday, 0),
+    IFNULL(isApplyToFriday, 0),
+    IFNULL(isApplyToSaturday, 0)) dayRange,
+   CONCAT(
+    IFNULL(isApplyToSunday, 0),
+    IFNULL(isApplyToMonday, 0),
+    IFNULL(isApplyToTuesday, 0),
+    IFNULL(isApplyToWednesday, 0),
+    IFNULL(isApplyToThursday, 0),
+    IFNULL(isApplyToFriday, 0),
+    IFNULL(isApplyToSaturday, 0)) day_range,
+  CASE WHEN  #weekIsApply#=CONCAT(
+    IFNULL(isApplyToSunday, 0),
+    IFNULL(isApplyToMonday, 0),
+    IFNULL(isApplyToTuesday, 0),
+    IFNULL(isApplyToWednesday, 0),
+    IFNULL(isApplyToThursday, 0),
+    IFNULL(isApplyToFriday, 0),
+    IFNULL(isApplyToSaturday, 0)
+  ) THEN 1 ELSE 0 END AS isDaysSame,
+ <![CDATA[ CONCAT(if(IFNULL(isApplyToSunday, 0)-#newToSunday# <0,0,IFNULL(isApplyToSunday, 0)-#newToSunday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToMonday, 0)-#newToMonday# <0,0,IFNULL(isApplyToMonday, 0)-#newToMonday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToTuesday,0)-#newToTuesday# <0,0,IFNULL(isApplyToTuesday,0)-#newToTuesday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToWednesday,0)-#newToWendsday# <0,0,IFNULL(isApplyToWednesday,0)-#newToWendsday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToThursday, 0)-#newToTursday# <0,0,IFNULL(isApplyToThursday, 0)-#newToTursday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToFriday, 0)-#newToFriday# <0,0,IFNULL(isApplyToFriday, 0)-#newToFriday#),]]>
+ <![CDATA[ if(IFNULL(isApplyToSaturday, 0)-#newToSaturday#<0,0,IFNULL(isApplyToSaturday, 0)-#newToSaturday#)) as uncoveredDayRange ]]>
+FROM
+  rate_detail rd 
+  INNER JOIN room_rate rr 
+    ON rd.rateDetailId = rr.rateDetailId 
+    AND rr.delflag = '0' 
+    AND rd.delflag = '0'
+    AND rr.roomTypeId=#roomTypeId#
+    AND rd.rateplanId = #ratePlanId#
+    AND rd.expireDate>=CURDATE() 
+    <isNotEmpty prepend="AND" property="updatedRateDetailId">
+     rd.rateDetailId !=#updatedRateDetailId#
+    </isNotEmpty>
+    order by dateRangeType
+    </select>
+	
+	<select id="getRateDetail" resultClass="rateDetail">
+		SELECT * FROM rate_detail WHERE delFlag=0 and rateDetailId=#value#
+    </select>
+    
+    <select id="getRateDetailVO" resultClass="rateDetailVO">
+		SELECT * FROM rate_detail WHERE delFlag=0 and rateDetailId=#value#
+    </select>
+    
+    <update id="updateRateDetail" parameterClass="rateDetail">
+    	UPDATE rate_detail
+			SET rateDetailId = #rateDetailId#, ratePlanId = #ratePlanId#, effectiveDate = #effectiveDate#, expireDate = #expireDate#,
+			 isApplyToMonday = #isApplyToMonday#, isApplyToTuesday = #isApplyToTuesday#, 
+			isApplyToWednesday = #isApplyToWednesday#, isApplyToThursday = #isApplyToThursday#, isApplyToFriday = #isApplyToFriday#, 
+			isApplyToSaturday = #isApplyToSaturday#, isApplyToSunday = #isApplyToSunday#, extraBed=#extraBed#, extraBedChild=#extraBedChild#,
+			updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE rateDetailId = #rateDetailId#
+    </update>
+    
+    <update id="deleteRateDetail">
+	    UPDATE rate_detail set delFlag=1
+		WHERE rateDetailId = #rateDetailId#
+    </update>
+    
+    <delete id="deleteRateDetailByRatePlanId">
+	    DELETE
+			FROM rate_detail
+		WHERE ratePlanId = #ratePlanId#
+    </delete>
+    
+    <select id="searchPriceValidTimes" resultClass="priceValid">
+    	SELECT 
+		  res.`hotelCode`,
+		  res.`specialist` ,
+		  rp.`ratePlanCode`,
+		  rpi.`ratePlanName`,
+		  res.`roomTypeCode`,
+		  res.`roomTypeName`,
+		  res.`rateDetailId`,
+		  res.`effectiveDate`,
+		  res.`expireDate`,
+		  res.`weeks`
+		FROM rate_plan rp 
+		  INNER JOIN 
+		    (SELECT DISTINCT 
+			    h.`specialist`,
+			    h.`hotelCode`,
+			    rp.`ratePlanId`,
+			    rp.`ratePlanCode`,
+			    rt.`roomTypeCode`,
+			    rti.`roomTypeName`,
+			    rd.`rateDetailId`,
+			    rd.`effectiveDate`,
+			    rd.`expireDate`,
+			    SUBSTR(
+				    CONCAT(
+				      IF(isApplyToMonday = 1, ',一', ''),
+				      IF(isApplyToTuesday = 1, ',二', ''),
+				      IF(isApplyToWednesday = 1, ',三', ''),
+				      IF(isApplyToThursday = 1, ',四', ''),
+				      IF(isApplyToFriday = 1, ',五', ''),
+				      IF(isApplyToSaturday = 1, ',六', ''),
+				      IF(isApplyToSunday = 1, ',日', '')
+				    ),2
+			    ) AS weeks
+			  FROM
+			    hotel h 
+			    INNER JOIN rate_plan rp 
+			      ON h.`hotelId` = rp.`hotelId` 
+			    INNER JOIN rate_detail rd 
+			      ON rp.`ratePlanId` = rd.`ratePlanId` 
+			    INNER JOIN room_rate rr 
+			      ON rd.`rateDetailId` = rr.`rateDetailId`
+			    INNER JOIN room_type rt 
+			      ON rr.`roomTypeId` = rt.`roomTypeId` 
+			    LEFT JOIN room_type_i18n rti 
+			      ON rt.`roomTypeId` = rti.`roomTypeId` 
+			      AND rti.`language` = #language#
+			      AND rti.`delFlag` = 0 
+			  WHERE h.`delFlag` = 0 
+			    AND rp.`delFlag` = 0 
+			    AND rd.`delFlag` = 0 
+			    AND rt.`delFlag` = 0 
+			    AND IFNULL(rp.`inheritRatePlanId`, '') = ''
+			    AND <![CDATA[ rp.`expireDate` >= CURRENT_DATE() ]]>
+				AND <![CDATA[ (rd.`effectiveDate` > #endDate# OR rd.`expireDate` < #startDate#) ]]>
+				AND <![CDATA[ rd.`expireDate` >= CURRENT_DATE() ]]>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="hotelCodeList">
+					h.`hotelCode` in
+					<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+						#hotelCodeList[]#
+					</iterate>
+				</isNotEmpty>
+			) res 
+		    ON rp.`ratePlanId` = res.`ratePlanId` 
+		    OR rp.`inheritRatePlanId` = res.`ratePlanId` 
+		    LEFT JOIN rate_plan_i18n rpi 
+		      ON rp.`ratePlanId` = rpi.`ratePlanId` 
+		      AND rpi.`language` = #language#
+		      AND rpi.`delFlag` = 0 
+		  ORDER BY res.`hotelCode`, rp.`ratePlanCode`, res.`roomTypeCode`, res.`effectiveDate`, res.`expireDate` 
+		  <include refid="pageSqlRateDetailSQL"/>
+	</select>
+	
+	<select id="searchPriceValidTimesCount" resultClass="Integer">
+		SELECT count(*) FROM rate_plan rp 
+		  INNER JOIN 
+		    (SELECT DISTINCT 
+			    h.`specialist`,
+			    h.`hotelCode`,
+			    rp.`ratePlanId`,
+			    rp.`ratePlanCode`,
+			    rt.`roomTypeCode`,
+			    rti.`roomTypeName`,
+			    rd.`rateDetailId`,
+			    rd.`effectiveDate`,
+			    rd.`expireDate`
+			  FROM
+			    hotel h 
+			    INNER JOIN rate_plan rp 
+			      ON h.`hotelId` = rp.`hotelId` 
+			    INNER JOIN rate_detail rd 
+			      ON rp.`ratePlanId` = rd.`ratePlanId` 
+			    INNER JOIN room_rate rr 
+			      ON rd.`rateDetailId` = rr.`rateDetailId`
+			    INNER JOIN room_type rt 
+			      ON rr.`roomTypeId` = rt.`roomTypeId` 
+			    LEFT JOIN room_type_i18n rti 
+			      ON rt.`roomTypeId` = rti.`roomTypeId` 
+			      AND rti.`language` = #language#
+			      AND rti.`delFlag` = 0 
+			  WHERE h.`delFlag` = 0 
+			    AND rp.`delFlag` = 0 
+			    AND rd.`delFlag` = 0 
+			    AND rt.`delFlag` = 0 
+			    AND IFNULL(rp.`inheritRatePlanId`, '') = ''
+			    AND <![CDATA[ rp.`expireDate` >= CURRENT_DATE() ]]>
+				AND <![CDATA[ (rd.`effectiveDate` > #endDate# OR rd.`expireDate` < #startDate#) ]]>
+				AND <![CDATA[ rd.`expireDate` >= CURRENT_DATE() ]]>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="hotelCodeList">
+					h.`hotelCode` in
+					<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+						#hotelCodeList[]#
+					</iterate>
+				</isNotEmpty>
+			) res 
+		    ON rp.`ratePlanId` = res.`ratePlanId` 
+		    OR rp.`inheritRatePlanId` = res.`ratePlanId` 
+		    LEFT JOIN rate_plan_i18n rpi 
+		      ON rp.`ratePlanId` = rpi.`ratePlanId` 
+		      AND rpi.`language` = #language#
+		      AND rpi.`delFlag` = 0 
+	</select>
+    
+    <select id="getRateCodeFromRoomTypeId" resultClass="rateCodeWithRoomVO" >
+	SELECT DISTINCT abc.roomTypeCode,rp.ratePlanCode,rp.ratePlanId,abc.rateDetailId,rp.effectiveDate,rp.expireDate,rp.inheritRatePlanId FROM 
+	(SELECT rt.roomTypeCode,m.ratePlanCode,m.ratePlanId,d.rateDetailId FROM rate_plan m INNER JOIN
+	rate_detail d
+	ON m.`ratePlanId`=d.`ratePlanId`
+	AND d.expireDate>=CURDATE() 
+	AND d.`delFlag`='0'
+	AND m.`delFlag`='0'
+	<![CDATA[ AND M.`effectiveDate`<= #startDate# ]]>
+	<!--  <![CDATA[ AND M.`expireDate`>= #endDate#]]>-->
+	INNER JOIN HOTEL h
+	on m.hotelId=h.hotelId
+	and h.hotelId=#hotelId#
+	and h.`delFlag`='0'
+	INNER JOIN room_rate rr
+	ON rr.`rateDetailId`=d.`rateDetailId`
+	AND rr.`delFlag`='0'
+	INNER JOIN room_type rt
+	on rt.hotelId=m.hotelId
+	and rt.roomTypeId=rr.roomTypeId
+	and
+	 rt.roomTypeId =#roomTypeId#
+	) abc,
+  	rate_plan rp 
+  	INNER JOIN rate_custom_relationship rcr
+  	ON rcr.ratePlanId=rp.ratePlanId
+  	AND rcr.delFlag='0'
+  	INNER JOIN custom cus ON cus.`customId`=rcr.`customId`
+  	AND cus.channelId=#channelId#
+  	AND cus.`delFlag`='0'
+  	AND cus.`accessCode`=#accessCode#
+	WHERE (rp.inheritRatePlanId = abc.ratePlanId 
+  	OR rp.`ratePlanId` = abc.ratePlanId)
+  	<![CDATA[ AND rp.`effectiveDate`<= #startDate# ]]> 
+	<!-- <![CDATA[ AND rp.`expireDate`>= #endDate# ]]>-->
+  	<isNotEmpty prepend="AND" property="ratePlanCodeList">
+					rp.ratePlanCode in
+					<iterate property="ratePlanCodeList" open="(" close=")" conjunction=",">
+						#ratePlanCodeList[]#
+					</iterate>
+	</isNotEmpty>
+  	AND rp.`delFlag`='0'
+	ORDER BY abc.roomTypeCode,rp.ratePlanCode,abc.rateDetailId
+	</select>
+	
+	<select id="getValidCountOfRateDetail" resultClass="Integer">
+	<![CDATA[ 
+		SELECT count(*) FROM rate_detail WHERE effectiveDate <= #endDate# and expireDate >= CURDATE() and ratePlanId=#ratePlanId# and delflag='0'
+		]]> 
+	</select>
+</sqlMap>

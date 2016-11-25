@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ChannelHotelSQL">
+
+	<typeAlias alias="channelHotel" type="com.ccm.api.model.channel.ChannelHotel" />
+
+	<insert id="addChannelHotel" parameterClass="channelHotel">
+    <![CDATA[
+        insert into channel_hotel (channelHotelId,hotelId, channelId, channelHotelCode,addTime,delTime,createdTime,createdBy,channelStatus,delFlag,matchStatus,outerId,groupId,channelCode) 
+        values (#channelHotelId#,#hotelId#, #channelId#, 
+        REPLACE(REPLACE(#channelHotelCode#,' ',''),'　',''),
+        #addTime#,#delTime#,#createdTime#,#createdBy#,#channelStatus#,#delFlag#,#matchStatus#,#outerId#,#groupId#,
+        REPLACE(REPLACE(#channelCode#,' ',''),'　',''))
+     ]]>
+	</insert>
+
+	<delete id="deleteChannelHotel" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from channel_hotel where hotelId = #hotelId#
+    ]]>
+	</delete>
+
+	<update id="logicDeleteChannelHotel" parameterClass="channelHotel">
+		update channel_hotel SET
+		delFlag = #delFlag#,
+		lastModifyTime=#lastModifyTime#,
+		updatedBy=#updatedBy#
+		where hotelId=#hotelId# and channelId=#channelId#
+		<isNotEmpty prepend="AND" property="addTime">
+			<![CDATA[addTime=#addTime#]]>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="delTime">
+			<![CDATA[delTime=#delTime#]]>
+		</isNotEmpty>
+	</update>
+
+	<!-- only update business fields -->
+	<update id="updateChannelHotel" parameterClass="channelHotel">
+    <![CDATA[
+		update channel_hotel SET
+			channelHotelCode = REPLACE(REPLACE(#channelHotelCode#,' ',''),'　',''),
+			lastModifyTime=#lastModifyTime#,
+			matchStatus=#matchStatus#,
+			channelStatus=#channelStatus#
+        where channelHotelId = #channelHotelId#
+    ]]>
+	</update>
+
+	<select id="getChannelHotel" resultClass="channelHotel">
+    <![CDATA[
+        select * from channel_hotel 
+        where channelHotelId = #channelHotelId# and delFlag=0
+    ]]>
+	</select>
+
+	<select id="getChannelHotels" resultClass="channelHotel">
+    <![CDATA[
+        select t1.*,t2.channelCode,t2.maxPushDay from channel_hotel t1 left join channel t2 using(channelId)
+        where t1.delFlag=0
+    ]]>
+	</select>
+
+	<select id="getChannelHotelCodeByHotelId" resultClass="channelHotel" parameterClass="String">
+    <![CDATA[
+		SELECT DISTINCT ch.channelId,ch.`hotelId` FROM channel_hotel ch 
+		inner join channel c on ch.channelId=c.channelId 
+		WHERE ch.delFlag=0 and c.delFlag=0 and c.isEnabled=1 AND ch.hotelId=#hotelId#
+    ]]>
+	</select>
+
+	<select id="getChannelHotelByHotelIdChannelId" resultClass="channelHotel" parameterClass="channelHotel">
+		select * from channel_hotel
+		where hotelId=#hotelId# and channelId=#channelId# and delFlag=0
+	</select>
+
+	<select id="getChannelHotelByHotelIdChannelCode" resultClass="channelHotel" parameterClass="Map">
+		select * from channel_hotel ch inner join channel c on ch.channelId=c.channelId
+		where ch.hotelId=#hotelId# and c.channelCode=#channelCode# and ch.delFlag=0 and c.delFlag=0
+	</select>
+
+	<select id="getHotelIdByChannelCodeChannelHotelCode" resultClass="String" parameterClass="Map">
+    <![CDATA[
+        select hotelId from channel_hotel ch 
+        left join channel c on ch.channelId=c.channelId and c.delFlag=0 
+        where ch.channelHotelCode=#channelHotelCode# and c.channelCode=#channelCode# and ch.delFlag=0
+    ]]>
+	</select>
+
+	<delete id="deleteCHByGroupIdAndHotelId" parameterClass="Map">
+		delete from channel_hotel where hotelId=#hotelId# and groupId=#groupId#
+	</delete>
+	
+	<select id="getCHByGroupIdAndHotelId" resultClass="channelHotel" parameterClass="Map">
+        select * from channel_hotel where hotelId=#hotelId# and groupId=#groupId# and delFlag=0
+	</select>
+	<delete id="deleteChannelHotelById" parameterClass="java.lang.String">
+		delete from channel_hotel where channelHotelId=#channelHotelId#
+	</delete>
+</sqlMap>

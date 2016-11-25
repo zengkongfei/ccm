@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CodeListMappingSQL">
+
+	<typeAlias alias="codeMap" type="com.ccm.api.model.convert.CodeListMapping" />
+
+	<insert id="addCodeListMapping" parameterClass="codeMap">
+    <![CDATA[
+        insert into codelistmapping(codeListMappingId,channelId,hotelId, codeName, codeId,external2ccm,ccm2external,createdBy,createdTime) 
+        values (#codeListMappingId#,#channelId#,#hotelId#, #codeName#, #codeId#,#external2ccm#,#ccm2external#,#createdBy#,#createdTime#);
+     ]]>
+	</insert>
+
+	<insert id="addCodeMapList" parameterClass="Map">
+		INSERT INTO codelistmapping(codeListMappingId,channelId,hotelId,codeName,codeId,external2ccm,ccm2external,createdBy,createdTime)
+		values
+		<iterate conjunction="," property="codeMapList">
+			(
+			REPLACE(UUID(), '-', ''),
+			#codeMapList[].channelId#,
+			#curHotelId#,
+			#codeMapList[].codeName#,
+			#codeMapList[].codeId#,
+			#codeMapList[].external2ccm#,
+			#codeMapList[].ccm2external#,
+			#createdBy#,
+			now()
+			)
+		</iterate>
+	</insert>
+
+	<delete id="deleteCodeListMappingByHotelId" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from codelistmapping where hotelid=#curHotelId# 
+        AND codeid NOT IN(SELECT roomtypeid FROM room_type WHERE hotelid=#curHotelId#) 
+        AND codeid NOT IN(SELECT rateplanid FROM rate_plan WHERE hotelid=#curHotelId#);
+    ]]>
+	</delete>
+
+	<delete id="deleteCodeListMapping" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from codelistmapping where codeListMappingId = #codeListMappingId#
+    ]]>
+	</delete>
+
+	<update id="updateCodeListMapping" parameterClass="codeMap">
+    <![CDATA[
+		update codelistmapping SET
+			channelId=#channelId#,
+			hotelId=#hotelId#,
+			codeName=#codeName#,
+			codeId=#codeId#,
+			external2ccm=#external2ccm#,
+			ccm2external=#ccm2external#,
+			updatedBy = #updatedBy#,
+			lastModifyTime = #lastModifyTime#
+        where codeListMappingId = #codeListMappingId#
+    ]]>
+	</update>
+
+	<select id="getCodeListMapping" resultClass="codeMap">
+    <![CDATA[
+         SELECT * FROM codelistmapping  
+         where codeListMappingId = #codeListMappingId#
+    ]]>
+	</select>
+
+	<select id="getCodeMapNoRoomRateByHotelId" parameterClass="java.lang.String" resultClass="codeMap">
+    <![CDATA[
+        select * from codelistmapping where hotelid=#hotelId# 
+        AND codeid NOT IN(SELECT roomtypeid FROM room_type WHERE hotelid=#hotelId#) 
+        AND codeid NOT IN(SELECT rateplanid FROM rate_plan WHERE hotelid=#hotelId#);
+    ]]>
+	</select>
+
+	<select id="getCodeListMappingByCond" resultClass="codeMap">
+		SELECT * FROM codelistmapping where codeName=#codeName# and codeId=#codeId#
+		<isNotEmpty property="channelId" prepend="AND">
+			channelId=#channelId#
+		</isNotEmpty>
+		<isNotEmpty property="hotelId" prepend="AND">
+			hotelId=#hotelId#
+		</isNotEmpty>
+	</select>
+
+	<select id="getCodeMapByCodeId" parameterClass="codeMap" resultClass="codeMap">
+		SELECT codeMap.*,codeNo,c.channelCode FROM codelistmapping codemap inner join
+		<isNotEmpty property="dataTable">
+			(select
+			<isNotEmpty property="lableField">$lableField$ </isNotEmpty>
+			from
+			<isNotEmpty property="querySql">$querySql$ </isNotEmpty>
+			) dc
+		</isNotEmpty>
+		<isEmpty property="dataTable">
+			dictcode dc 
+         </isEmpty>
+		on codemap.codeId=dc.codeId
+		<isNotEmpty property="hotelId">
+			inner join (select null channelCode) c on codemap.hotelId=#hotelId#
+		</isNotEmpty>
+		<isEmpty property="hotelId">
+			inner join channel c on codeMap.channelId=c.channelId and c.delFlag=0 
+        </isEmpty>
+		where dc.dictId=#dictId# order by channelCode
+	</select>
+
+</sqlMap>

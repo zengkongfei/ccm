@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="PessimisticLockSQL">
+	<typeAlias alias="pessimisticLock" type="com.ccm.api.model.common.PessimisticLock" />
+
+	<insert id="addPessimisticLock" parameterClass="pessimisticLock">
+		insert into pessimistic_lock (bizId,bizType,orderId,hotelCode,charsetName,transactionId,createdTime)
+		values (#bizId#,#bizType#,#orderId#,#hotelCode#,#charsetName#,#transactionId#,#createdTime#);
+    </insert>
+
+	<delete id="deletePessimisticLock" parameterClass="pessimisticLock">
+		delete from pessimistic_lock
+		where bizId = #bizId# and bizType=#bizType#
+    </delete>
+
+	<select id="getPessimisticLocks" resultClass="pessimisticLock">
+	<![CDATA[
+		SELECT * FROM pessimistic_lock WHERE createdTime < DATE_SUB(NOW(),INTERVAL 30 SECOND) AND orderId IS NOT NULL
+     ]]>
+	</select>
+
+	<select id="getPessimisticLockByKey" parameterClass="pessimisticLock" resultClass="pessimisticLock">
+		SELECT * FROM pessimistic_lock WHERE bizId = #bizId# and bizType=#bizType#
+	</select>
+
+</sqlMap>

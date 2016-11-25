@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="SendMsgLogSQL">
+
+	<typeAlias alias="sendMsgLog" type="com.ccm.api.model.log.SendMsgLog" />
+
+	<sql id="pageSqlSendMsgLogSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+	
+	<insert id="createSendMsgLogTable">
+		CREATE TABLE $tableName$ LIKE sendmsglog
+	</insert>
+
+	<insert id="addSendMsgLog" parameterClass="sendMsgLog">
+    <![CDATA[
+        insert into $tableName$ (sendmsglogId,interfaceId, hotelCode, messageType,message,createdTime,lastModifyTime,msgId,linkedMsgId,action,orderId,status) 
+        values (#sendMsgLogId#,#interfaceId#,#hotelCode#,#messageType#,#message#,#createdTime#,#lastModifyTime#,#msgId#,#linkedMsgId#,#action#,#orderId#,#status#);
+     ]]>
+	</insert>
+
+	<delete id="deleteSendMsgLog" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from $tableName$ where sendmsglogId = #sendmsglogId#
+    ]]>
+	</delete>
+
+	<update id="updateSendMsgLog" parameterClass="sendMsgLog">
+    <![CDATA[
+		update $tableName$ SET
+			status=#status#,
+			lastModifyTime=#lastModifyTime# 
+        where sendmsglogId = #sendMsgLogId# and hotelCode = #hotelCode#
+    ]]>
+	</update>
+
+	<select id="getSendMsgLog" resultClass="sendMsgLog">
+    <![CDATA[
+        select * from sendmsglog 
+        where sendmsglogId = #sendMsgLogId# and hotelCode = #hotelCode#
+    ]]>
+	</select>
+
+	<select id="getSendMsgLogs" resultClass="sendMsgLog">
+    <![CDATA[
+        select * from $tableName$
+    ]]>
+	</select>
+
+	<select id="getMaxMsgId" resultClass="String">
+		SELECT MAX(CAST(msgId AS UNSIGNED)) msgId FROM sendmsglog where hotelCode = #hotelCode#
+    </select>
+
+	<select id="getSendMsgLogByCondit" resultClass="sendMsgLog">
+		select * from $tableName$
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="orderId">
+				orderId = #orderId# 
+		    </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="msgId">
+				msgId = #msgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="interfaceId">
+				interfaceId = #interfaceId# 
+		    </isNotEmpty>
+
+			<isNotEmpty prepend="AND" property="byStatus">
+				status IN ($byStatus$) 
+		    </isNotEmpty>
+		</dynamic>
+		order by msgId,createdTime,lastModifyTime
+	</select>
+
+	<select id="countSendMsgLog" resultClass="Integer">
+		select count(*) from $tableName$
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="ccmMsgId">
+				msgId = #ccmMsgId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extMsgId">
+				linkedMsgId = #extMsgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				orderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		     
+		     <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+		    <isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				status in
+				<iterate property="downPmsMsgStatusList" open="(" close=")" conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageTypes">
+				messageType in
+				<iterate property="messageTypes" open="(" close=")" conjunction=",">
+					#messageTypes[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actions">
+				action in
+				<iterate property="actions" open="(" close=")" conjunction=",">
+					#actions[]#
+            	</iterate>
+			</isNotEmpty>
+			
+		</dynamic>
+	</select>
+
+	<select id="searchSendMsgLog" resultClass="sendMsgLog">
+		select sendmsglogId,hotelCode,createdTime,msgId,linkedMsgId,messageType,ACTION,orderId,STATUS from $tableName$
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="ccmMsgId">
+				msgId = #ccmMsgId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extMsgId">
+				linkedMsgId = #extMsgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				orderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				status = #status#
+		    </isNotEmpty>
+		    
+		     <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+		    <isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				status in
+				<iterate property="downPmsMsgStatusList" open="(" close=")" conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageTypes">
+				messageType in
+				<iterate property="messageTypes" open="(" close=")" conjunction=",">
+					#messageTypes[]#
+            	</iterate>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="actions">
+				action in
+				<iterate property="actions" open="(" close=")" conjunction=",">
+					#actions[]#
+            	</iterate>
+			</isNotEmpty>
+   
+		</dynamic>
+		order by createdTime desc
+		<include refid="pageSqlSendMsgLogSQL"/>
+	</select>
+
+
+	<select id="searchSendMsgLogNoCount" resultClass="sendMsgLog">
+	SELECT s.sendmsglogId,s.hotelCode,s.createdTime,s.msgId,s.linkedMsgId,s.messageType,s.ACTION,s.orderId,s.STATUS FROM sendmsglog s
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="ccmMsgId">
+				s.msgId = #ccmMsgId#
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="extMsgId">
+				s.linkedMsgId = #extMsgId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelCode">
+				s.hotelCode = #hotelCode# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="createStart">
+           	<![CDATA[
+            	s.createdTime>=#createStart#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="createEnd">
+           	<![CDATA[
+            	s.createdTime<=#createEnd#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="messageType">
+				s.messageType = #messageType# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="action">
+				s.action = #action# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="orderId">
+				s.orderId = #orderId# 
+		    </isNotEmpty>
+			<isNotEmpty prepend="AND" property="status">
+				s.status = #status#
+		    </isNotEmpty>
+		    
+		    <isNotEmpty prepend="AND" property="downPmsMsgStatusList">
+				s.status in
+				<iterate property="downPmsMsgStatusList" open="(" close=")" conjunction=",">
+					#downPmsMsgStatusList[]#
+            	</iterate>
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="actions">
+				s.action in
+				<iterate property="actions" open="(" close=")" conjunction=",">
+					#actions[]#
+            	</iterate>
+			</isNotEmpty>
+		    	    			
+			<isNotEmpty prepend="AND" property="hotelCodeList">
+				s.hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+			</isNotEmpty>
+		    
+		</dynamic>
+		order by s.createdTime desc
+	</select>
+
+	  <!-- 
+            根据日期与酒店编号删除sendmsglog表的数据并返回影响记录的条数
+     -->
+     
+    <delete id="deleteSendMsgLogByCreatedTimeAndHotelCode" parameterClass="Map">
+		DELETE FROM sendmsglog WHERE createdTime <![CDATA[<]]> #createdTime# AND hotelcode=#hotelcode#
+	</delete>
+	
+</sqlMap>

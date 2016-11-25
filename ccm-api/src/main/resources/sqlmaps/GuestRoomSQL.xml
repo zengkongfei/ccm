@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd" >
+
+<sqlMap namespace="Guestroom" >
+
+  	<typeAlias alias="guestroom" type="com.ccm.api.model.guestroom.GuestRoom" />
+	<typeAlias alias="guestroomI18n" type="com.ccm.api.model.guestroom.GuestroomI18n" />
+	<typeAlias alias="roomTypeRSVO" type="com.ccm.api.model.ws.vo.availability.RoomTypeRSVO" />
+ 	<typeAlias alias="inventoryRQVO" type="com.ccm.api.model.ws.vo.inventory.InvSnapRQVO" />
+ 	
+ 	<select id="getGuestRoom" resultClass="guestroom">
+        select * from guestroom where guestRoomId=#guestRoomId# 
+    </select>
+    
+    <select id="getChannelGoodList" resultClass="java.util.HashMap" remapResults="true" parameterClass="java.lang.String">
+		SELECT t2.guestRoomTitle,t2.channelGoodsCode,t3.roomTypeName,t1.guestRoomId AS guestRoomId,t1.status,
+				roomTypeCode,t4.maxAvailable,t5.roomNos
+			FROM (SELECT guestRoomId,roomTypeCode,status FROM guestroom WHERE hotelId=#value#
+			AND (delFlag IS NULL OR delFlag =0))t1 
+		INNER JOIN channel_goods t2 ON t1.guestRoomId = t2.guestRoomId
+		INNER JOIN guestRoom_i18n t3 ON t1.guestRoomId = t3.guestRoomId
+		LEFT JOIN (SELECT TYPE,MAX(available) maxAvailable FROM rsvtype r1 WHERE hotelId=#value# GROUP BY TYPE) t4
+		ON t4.type = t1.roomTypeCode
+		LEFT JOIN (SELECT TYPE,GROUP_CONCAT(roomNo) roomNos FROM rmsta WHERE hotelid=#value# GROUP BY TYPE) t5 
+		ON t5.TYPE=t1.roomTypeCode
+    </select>
+    
+  <insert id="addGuestRoom" parameterClass="guestroom" >
+    INSERT INTO guestroom( guestRoomId, hotelId, roomTypeCode, standardOccupancy, maxOccupancy, 
+      maxAdultOccupancy, maxChildOccupancy, standardNumBeds, bedTypeCode, breakfast, 
+      status, size,createdTime)
+     VALUES (#guestRoomId#, #hotelId#, 
+     REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''), 
+     #standardOccupancy#, #maxOccupancy#, 
+     #maxAdultOccupancy#, #maxChildOccupancy#, #standardNumBeds#, #bedTypeCode#, #breakfast#, 
+     #status#, #size#,#createdTime#)
+  </insert>
+
+  <update id="updateGuestRoom" parameterClass="guestroom" >
+    UPDATE guestroom   
+    <dynamic prepend="SET" >
+      <isNotNull property="hotelId" prepend="," >
+        <![CDATA[  
+        hotelId = #hotelId#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="roomTypeCode" prepend="," >
+        <![CDATA[  
+        roomTypeCode = REPLACE(REPLACE(#roomTypeCode#,' ',''),'　','') 
+        ]]>  
+      </isNotNull>
+      <isNotNull property="standardOccupancy" prepend="," >
+        <![CDATA[  
+        standardOccupancy = #standardOccupancy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="maxOccupancy" prepend="," >
+        <![CDATA[  
+        maxOccupancy = #maxOccupancy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="maxAdultOccupancy" prepend="," >
+        <![CDATA[  
+        maxAdultOccupancy = #maxAdultOccupancy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="maxChildOccupancy" prepend="," >
+        <![CDATA[  
+        maxChildOccupancy = #maxChildOccupancy#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="standardNumBeds" prepend="," >
+        <![CDATA[  
+        standardNumBeds = #standardNumBeds#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="bedTypeCode" prepend="," >
+        <![CDATA[  
+        bedTypeCode = #bedTypeCode#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="breakfast" prepend="," >
+        <![CDATA[  
+        breakfast = #breakfast#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="status" prepend="," >
+        <![CDATA[  
+        status = #status#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="size" prepend="," >
+        <![CDATA[  
+        size = #size#  
+        ]]>  
+      </isNotNull>
+      <isNotNull property="lastModifiedTime" prepend="," >
+        <![CDATA[  
+        lastModifiedTime = #lastModifiedTime#  
+        ]]>
+      </isNotNull>
+    </dynamic>
+     WHERE guestRoomId = #guestRoomId#  
+  </update>
+  
+  <update id="updateGuestRoomDelFlag" parameterClass="java.util.HashMap" >
+    UPDATE guestroom   
+    <dynamic prepend="SET" >
+    	<isNotNull property="delFlag" prepend="," >
+        <![CDATA[  
+        delFlag = #delFlag#  
+        ]]>
+      </isNotNull>
+    </dynamic>
+    WHERE guestRoomId = #guestRoomId#  
+</update> 
+
+  	<select id="getGuestRoomIdMap" resultClass="java.util.HashMap">
+        SELECT DISTINCT c.channelRoomTypeCode AS rid,ri18n.roomTypeName AS roomTypeName 
+        FROM guestRoom r,userrole u,guestRoom_i18n ri18n,channelGuestRoom c
+		WHERE r.hotelId = u.hotelId
+		AND r.guestRoomId = ri18n.guestRoomId
+		AND c.guestRoomId = r.guestRoomId
+		AND (delFlag IS NULL OR delFlag =0)
+		AND u.userId = #userId#
+		ORDER BY roomTypeName
+    </select>
+    
+	<select id="checkGuestRoomName" resultClass="guestroomI18n">
+		SELECT guestRoomId,roomTypeName FROM guestroom_i18n t1 WHERE t1.roomTypeName=#roomTypeName#
+		AND EXISTS (SELECT guestRoomId FROM guestRoom t2 WHERE t2.guestRoomId = t1.guestRoomId and hotelid = #hotelId# and (delFlag IS NULL OR delFlag =0))
+	</select>
+
+    <select id="getRoomTypeCodeByUserId" resultClass="String">
+		SELECT roomTypeCode FROM guestroom g,userrole u
+		WHERE u.hotelId = g.hotelId
+		AND (g.delFlag IS NULL OR g.delFlag =0)
+		AND u.userId = #userId#
+    </select>
+    
+    <select id="getEditedGuestRoom" resultClass="guestroom">
+        SELECT g.* FROM channel_goods c,guestroom g,userrole u
+		WHERE c.guestRoomId = g.guestRoomId
+		AND g.hotelId = u.hotelId
+		AND (g.delFlag IS NULL OR g.delFlag =0)
+		AND c.status = 1
+		AND u.userId = #userId#
+    </select>
+    
+    <select id="getGuestRoomByGid" resultClass="guestroom">
+        SELECT g.* FROM guestroom g,channel_goods c
+		WHERE g.guestRoomId = c.guestRoomId
+		AND (g.delFlag IS NULL OR g.delFlag =0)
+		AND c.channelGoodsCode = #gid#
+    </select>
+    
+    <select id="getGuestRoomByHotelIdAndGidIsNotNull" resultClass="guestroom">
+        SELECT g.* FROM guestroom g,channel_goods c
+		WHERE g.guestRoomId = c.guestRoomId
+		AND (g.delFlag IS NULL OR g.delFlag =0)
+		AND c.channelGoodsCode IS NOT NULL
+		AND g.hotelId = #hotelId#
+    </select>
+    
+    <select id="getGeneralRoomTypeRSVO" resultClass="roomTypeRSVO">
+        <![CDATA[
+        SELECT DISTINCT gr.`roomTypeCode`,gri18n.roomTypeName AS roomTypeDescription
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,guestRoom_i18n gri18n,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND gr.`guestRoomId` = gri18n.`guestRoomId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date >= #startDate#
+		AND r.date < #endDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+    </select>
+    
+    <select id="getDetailRoomTypeRSVO" resultClass="roomTypeRSVO">
+        <![CDATA[
+        SELECT DISTINCT gr.`roomTypeCode`,gri18n.roomTypeName AS roomTypeDescription
+		FROM channel_goods cg,guestRoom gr,hotel h,rate_plan rp,guestRoom_i18n gri18n,
+			(SELECT 
+			  rsv.hotelid,rsv.date,rsv.type,rsv.rate,rsv.channel,rsv.sta, MAX(rsv.type_count) - IF(rm.arr IS NULL, 0, COUNT(0)) - rsv.outoforder AS available 
+			FROM
+			  (SELECT 
+			    r.hotelid, r.date, r.type,r.sta, IFNULL(b.type_count, 0) AS type_count, r.rate, r.channel ,IFNULL(r.outoforder,0) AS outoforder
+			  FROM
+			    rsvtype r 
+			    LEFT JOIN 
+			      (SELECT 
+				TYPE, COUNT(0) type_count 
+			      FROM
+				rmsta 
+			      GROUP BY TYPE) b 
+			      ON r.type = b.type) AS rsv 
+			  LEFT JOIN 
+			    (SELECT 
+			      arr, dep, TYPE 
+			    FROM
+			      MASTER 
+			    WHERE sta = 'I' 
+			      OR sta = 'R') AS rm 
+			    ON rsv.type = rm.type 
+			    AND (
+			      (
+				rsv.date >= rm.arr 
+				AND rsv.date < rm.dep
+			      ) 
+			      OR (
+				rsv.date = rm.arr 
+				AND rm.arr = rm.dep
+			      )
+			    ) 
+			GROUP BY rsv.hotelid, rsv.date, rsv.type, rsv.rate, rsv.channel 
+			ORDER BY rsv.hotelid, rsv.type, rsv.date)r
+		WHERE cg.`guestRoomId` = gr.`guestRoomId`
+		AND gr.`hotelId` = h.`hotelId`
+		AND cg.`ratePlanId` = rp.`ratePlanId`
+		AND gr.`guestRoomId` = gri18n.`guestRoomId`
+		AND h.`hotelId` = r.hotelid
+		AND gr.`roomTypeCode` = r.type
+		AND r.date >= #startDate#
+		AND r.date < #endDate#
+		AND h.`hotelCode` = #hotelCode#
+		AND r.available >= #numberOfRooms#
+		AND r.type = #roomTypeCode#
+		AND rp.`rateCode` = #ratePlanCode#
+		]]>
+		<isNotEmpty prepend="AND" property="originEntityID">
+			r.`channel` = #originEntityID#
+		</isNotEmpty>
+    </select>
+</sqlMap>
+ 

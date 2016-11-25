@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ChainSQL">
+    <typeAlias alias="chainvo" type="com.ccm.api.model.hotel.vo.ChainVO"/>
+    <typeAlias alias="chain" type="com.ccm.api.model.hotel.Chain"/>
+    <typeAlias alias="chainI18n" type="com.ccm.api.model.hotel.ChainI18n"/>
+    
+    <sql id="pageSqlChainSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="addChain" parameterClass="chain">
+        insert into chain (chainId,chainCode,createdBy,createdTime,delFlag) 
+        values (#chainId#,
+        REPLACE(REPLACE(#chainCode#,' ',''),'　',''),
+        #createdBy#,#createdTime#,#delFlag#)
+    </insert>
+    
+    <insert id="addChainI18n" parameterClass="chainI18n">
+        insert into chain_i18n (chainMId,chainId,language,chainName,description,
+        		createdBy,createdTime,delFlag) 
+        values (#chainMId#,#chainId#,#language#,#chainName#,#description#,
+        		#createdBy#,#createdTime#,#delFlag#)
+    </insert>
+    
+    <update id="updateChainI18n" parameterClass="chainI18n">
+        update chain_i18n SET
+			chainName = #chainName#
+			,description = #description#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where chainMId = #chainMId#
+    </update>
+    
+    <update id="deleteChain" parameterClass="chain">
+        update chain SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where chainId = #chainId#
+    </update>
+    
+    <update id="deleteChainI18n" parameterClass="chainI18n">
+        update chain_i18n SET
+			delFlag = #delFlag#
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+        where chainMId = #chainMId#
+    </update>
+    
+    <update id="deleteChainI18nByChainId" parameterClass="java.lang.String">
+    <![CDATA[
+    	UPDATE chain_i18n SET delFlag = 1
+    	 WHERE chainId = #chainId#
+    ]]>
+	</update>
+	
+	<select id="getChain" resultClass="chain">
+		SELECT * FROM `chain` where `delFlag` = 0 
+		AND `chainId` = #chainId#
+    </select>
+    
+    <select id="getChainByChainCode" resultClass="chain">
+		SELECT * FROM `chain` WHERE `delFlag` = 0 AND `chainCode` = #chainCode#
+    </select>
+    
+    <select id="getChainByCode" resultClass="chainvo">
+        SELECT * FROM `chain` c left join `chain_i18n` ci 
+        	on c.`chainId` = ci.`chainId` and ci.`delFlag` = 0 
+        	and ci.`language` = #language# 
+		WHERE c.`delFlag` = 0
+		AND c.`chainCode` = #chainCode#
+    </select>
+    
+  	<select id="getChainById" resultClass="chainvo">
+		SELECT * FROM `chain` c left join `chain_i18n` ci 
+        	on c.`chainId` = ci.`chainId` and ci.`delFlag` = 0 
+        	and ci.`language` = #language# 
+		WHERE c.`delFlag` = 0
+		AND c.`chainId` = #chainId#
+    </select>
+
+    <select id="searchChain" resultClass="chainvo">
+    	SELECT * FROM `chain` c,`chain_i18n` ci
+		WHERE c.`chainId` = ci.`chainId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainCode">
+				c.chainCode = #chainCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainName">
+				ci.chainName like  CONCAT('%',#chainName#,'%')
+	        </isNotEmpty>
+        </dynamic>
+        <include refid="pageSqlChainSQL"/>
+    </select>
+
+    <select id="searchChainCount" resultClass="Integer">  
+    	SELECT count(*) FROM `chain` c,`chain_i18n` ci
+		WHERE c.`chainId` = ci.`chainId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="chainCode">
+				c.chainCode = #chainCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="chainName">
+				ci.chainName like  CONCAT('%',#chainName#,'%')
+	        </isNotEmpty> 
+        </dynamic>
+    </select>
+    
+    <select id="getAllChainI18n" resultClass="chainvo">
+    	SELECT * FROM `chain` c,`chain_i18n` ci
+		WHERE c.`chainId` = ci.`chainId`
+		AND c.`delFlag` = 0
+		AND ci.`delFlag` = 0
+		AND ci.`language` = #language#
+		ORDER BY c.chainCode 
+    </select>
+
+	<select id="getAllChain" resultClass="chain">
+		SELECT chainId,chainCode FROM chain WHERE delFlag = 0 ORDER BY chainCode 
+    </select>
+    
+    <select id="getChainI18ns" resultClass="chainI18n" parameterClass="Map">
+		select * from chain_i18n ci 
+		        where ci.chainId =#chainId#
+		          AND ci.delFlag = 0
+		order by chainMId
+	</select>
+</sqlMap>

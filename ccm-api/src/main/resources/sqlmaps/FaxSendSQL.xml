@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="FaxSendSQL">
+    <typeAlias alias="faxSend" type="com.ccm.api.model.fax.FaxSend"/>
+    <typeAlias alias="faxSendVO" type="com.ccm.api.model.fax.vo.FaxSendVO"/>
+    
+       
+    <sql id="pageSqlFaxSendSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="saveFaxSend" parameterClass="faxSend">
+        insert into faxsend (`faxSendId`,`faxNumber`, `sendTime`,`faxType`,`faxContent`,`bizId`,`msgId`,`verifyCode`,`resultCode`,`resultMsg`,number) 
+        values (REPLACE(UUID(), '-', ''),#faxNumber#,#sendTime#,#faxType#,#faxContent#,#bizId#,#msgId#,#verifyCode#,#resultCode#,#resultMsg#,#number#)
+    </insert>
+    
+    <select id="getFaxSendCount" resultClass="Integer">
+    	SELECT COUNT(f.`bizId`) FROM
+		  faxSend f 
+		  LEFT JOIN MASTER m 
+		    ON f.bizId = m.masterid 
+		  LEFT JOIN master_order mo 
+		    ON f.`bizId` = mo.`masterId` 
+		  LEFT JOIN master_cancel mc 
+		    ON mo.`masterId` = f.`msgId` 
+	    where 1=1
+		    <isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	 f.`sendTime` >= #beginDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	 f.`sendTime` <= #endDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sta">
+	             m.`sta`=#sta#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizId">
+	             f.`bizId`=#bizId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="faxStatus">
+             <isEqual  property="faxStatus" compareValue="SUCCESS">
+             	f.faxstatus='9'
+             </isEqual>
+             <isEqual property="faxStatus" compareValue="FAIL">
+             	f.`faxStatus` IS NOT NULL  AND f.`faxStatus`!='0' AND f.`faxStatus`!='9'
+             </isEqual>
+             </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")"
+					conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+    </select>
+    
+    <select id="getFaxSendList" resultClass="faxSendVO">
+    	SELECT f.`sendTime`,f.`faxSendId`,f.`faxNumber`,f.`bizId`,m.`sta`,mo.`pmsId`,mc.`cancelId`,mo.`hotelCode` ,f.sendTime,
+    	CASE  WHEN f.`faxStatus`='9' THEN 'success'
+		WHEN f.`faxStatus` IS NULL  OR f.`faxStatus`='0'  THEN ''
+		ELSE 'fail' END AS faxStatus
+    	FROM
+		  faxSend f 
+		  LEFT JOIN MASTER m 
+		    ON f.bizId = m.masterid 
+		  LEFT JOIN master_order mo 
+		    ON f.`bizId` = mo.`masterId` 
+		  LEFT JOIN master_cancel mc 
+		    ON mo.`masterId` = f.`msgId` 
+	    where 1=1
+		    <isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	 f.`sendTime` >= #beginDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	 f.`sendTime` <= #endDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sta">
+	             m.`sta`=#sta#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizId">
+	             f.`bizId`=#bizId#
+			</isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="faxStatus">
+             <isEqual  property="faxStatus" compareValue="SUCCESS">
+             	f.faxstatus='9'
+             </isEqual>
+             <isEqual  property="faxStatus" compareValue="FAIL">
+             	f.`faxStatus` IS NOT NULL  AND f.`faxStatus`!='0' AND f.`faxStatus`!='9'
+             </isEqual>
+             </isNotEmpty>
+			
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			ORDER BY mo.`hotelCode`
+			<include refid="pageSqlFaxSendSQL" />
+    </select>
+    
+    <select id="getFaxSendExcelList" resultClass="faxSendVO">
+    	SELECT f.`sendTime`,f.`faxSendId`,f.`faxNumber`,f.`bizId`,m.`sta`,mo.`pmsId`,mc.`cancelId`,mo.`hotelCode`,f.sendTime,
+    	CASE  WHEN f.`faxStatus`='9' THEN 'success'
+		WHEN f.`faxStatus` IS NULL  OR f.`faxStatus`='0'  THEN ''
+		ELSE 'fail' END AS faxStatus
+    	 FROM
+		  faxSend f 
+		  LEFT JOIN MASTER m 
+		    ON f.bizId = m.masterid 
+		  LEFT JOIN master_order mo 
+		    ON f.`bizId` = mo.`masterId` 
+		  LEFT JOIN master_cancel mc 
+		    ON mo.`masterId` = f.`msgId` 
+	    where 1=1
+		    <isNotEmpty prepend="AND" property="beginDate">
+           	<![CDATA[
+            	 f.`sendTime` >= #beginDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="endDate">
+           	<![CDATA[
+            	 f.`sendTime` <= #endDate#
+            ]]>
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="sta">
+	             m.`sta`=#sta#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="bizId">
+	             f.`bizId`=#bizId#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="faxStatus">
+             <isEqual  property="faxStatus" compareValue="SUCCESS">
+             	f.faxstatus='9'
+             </isEqual>
+             <isEqual  property="faxStatus" compareValue="FAIL">
+             	f.`faxStatus` IS NOT NULL  AND f.`faxStatus`!='0' AND f.`faxStatus`!='9'
+             </isEqual>
+             </isNotEmpty>
+			<isNotEmpty prepend="AND" property="hotelIdList">
+				m.hotelid in
+				<iterate property="hotelIdList" open="(" close=")" conjunction=",">
+					#hotelIdList[]#
+            	</iterate>
+			</isNotEmpty>
+			ORDER BY mo.`hotelCode`
+    </select>
+    
+    <select id="getFaxSendByTime" resultClass="faxSend">
+    	<![CDATA[
+    	select * from faxSend where sendTime >= #sendTime#  AND ( ( number=0 AND faxStatus IS NULL) OR (number=1 AND (faxStatus='0' OR faxStatus='1' OR faxStatus='3' OR faxStatus='4' OR faxStatus='5'))) AND resultCode='0' ORDER BY sendTime asc
+    	]]>
+    </select>
+    
+	<update id="updateFaxSend" parameterClass="faxSend">
+		UPDATE faxsend
+			SET 
+			  `faxNumber` = #faxNumber#,
+			  `sendTime` = #sendTime#,
+			  `faxType` = #faxType#,
+			  `faxContent` = #faxContent#,
+			  `bizId` = #bizId#,
+			  `msgId` = #msgId#,
+			  `verifyCode` = #verifyCode#,
+			  `resultCode` = #resultCode#,
+			  `resultMsg` = #resultMsg#,
+			  `faxStatus` = #faxStatus#,
+			  `number` = #number#,
+			  `faxMsg` = #faxMsg#
+			WHERE `faxSendId` = #faxSendId#
+	</update>
+   
+</sqlMap>

@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AdsMessageErrSQL">
+
+    <typeAlias alias="adsMessageErr" type="com.ccm.api.model.ads.AdsMessageErr"/>
+	<typeAlias alias="adsPushErrorCount" type="com.ccm.api.model.bdp.AdsPushErrorCount"/>
+	
+    <resultMap id="adsMessageResult" class="adsMessage">
+        <result property="adsId" column="adsId"/>
+        <result property="echoToken" column="echoToken"/>
+        <result property="content" column="content"/>
+        <result property="createdTime" column="createdTime" jdbcType="DATETIME"/>
+        <result property="status" column="status"/>
+        <result property="adsType" column="adsType"/>
+        <result property="errMsg" column="errMsg"/>
+        <result property="rquestTbData" column="rquestTbData"/>
+        <result property="chainCode" column="chainCode"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="roomTypeCode" column="roomTypeCode"/>
+        <result property="ratePlanCode" column="ratePlanCode"/>
+        <result property="targetGDS" column="targetGDS"/>
+        <result property="tbStatus" column="tbStatus"/>
+        <result property="lastRequestDate" column="lastRequestDate"/>
+        <result property="actionValue" column="actionValue"/>
+        <result property="actionDate" column="actionDate"/>
+     </resultMap>
+     
+     <resultMap id="adsCodeResult" class="adsMessage">
+        <result property="chainCode" column="chainCode"/>
+        <result property="hotelCode" column="hotelCode"/>
+        <result property="roomTypeCode" column="roomTypeCode"/>
+        <result property="targetGDS" column="targetGDS"/>
+     </resultMap>
+     
+    <insert id="addAdsMessageErr" parameterClass="adsMessage">
+    <![CDATA[
+        insert into adsmessage_err
+                (adsId,echoToken, content, createdTime,status, adsType,errMsg,rquestTbData,chainCode,hotelCode,targetGDS,lastRequestDate,roomTypeCode,ratePlanCode,tbStatus,msgType,actionValue,actionDate)
+        values (#adsId#,#echoToken#, #content#, #createdTime#,#status#,#adsType#,#errMsg#,#rquestTbData#,
+        	#chainCode#,
+        	#hotelCode#,
+        	#targetGDS#,
+        	#lastRequestDate#,
+        	#roomTypeCode#,
+        	#ratePlanCode#,
+        	#tbStatus#,#msgType#,#actionValue#,#actionDate#)
+    ]]>
+    </insert>
+
+    <update id="updateAdsMessageErr" parameterClass="Map">
+    <![CDATA[
+        update adsmessage_err SET
+            status    = #status#,
+            errMsg = #errMsg#
+        where adsId = #adsId#
+    ]]>
+    </update>
+
+	<select id="getAdsMessageErrByEchoTokenAndAdsType" resultMap="adsMessageResult" parameterClass="Map">
+        select * from adsmessage_err t1 where echoToken = #echoToken# and adsType = #adsType# order by createdTime desc limit 0,1
+    </select>
+
+    <select id="getAdsMessageErr" resultMap="adsMessageResult" parameterClass="java.lang.String">
+        select t1.*,'' as tbStatus  from adsmessage_err t1 where adsId=#adsId#
+    </select>
+    
+     <delete id="deleteAdsMessageErr" parameterClass="java.lang.String">
+    <![CDATA[
+        delete from adsmessage_err where adsId = #adsId#
+    ]]>
+    </delete>
+    
+   <select id="searchAdsMessageErr"  resultMap="adsMessageResult">
+		SELECT adsId,echoToken,'' as content,createdTime,status,adsType,errMsg,'' as rquestTbData,chainCode,hotelCode,roomTypeCode,targetGDS,lastRequestDate
+		, tbStatus ,ratePlanCode,actionValue,actionDate
+			from adsmessage_err t1 
+	  	where 1=1
+	  	
+	  	  <isNotEmpty prepend="AND" property="chainCodeList">
+				chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="channelCodeList">
+				targetGDS in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="adsTypeList">
+				adsType in
+				<iterate property="adsTypeList" open="(" close=")" conjunction=",">
+					#adsTypeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="roomTypeCodeList">
+				roomTypeCode in
+				<iterate property="roomTypeCodeList" open="(" close=")" conjunction=",">
+					#roomTypeCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="statusList">
+				status in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  
+           <isNotEmpty prepend="AND" property="status">
+              status   = #status# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+              tbStatus   = #tbStatus# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="adsType">
+              adsType   = #adsType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="targetGDS">
+              targetGDS = #targetGDS# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotels">
+	            <iterate property="hotels" open="(" close=")" conjunction="or">
+					hotelCode = #hotels[].hotelCode#
+	           	</iterate>
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="roomTypeCode">
+              roomTypeCode = #roomTypeCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="ratePlanCode">
+              ratePlanCode = #ratePlanCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="echoToken">
+              echoToken = #echoToken#
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="msgType">
+              msgType   = #msgType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="actionDate">
+              actionDate   = #actionDate# 
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="lastRequestDate">
+              lastRequestDate = #lastRequestDate# 
+           </isNotEmpty>
+        order by createdTime desc
+    </select>
+    
+    <select id="getAdsMessageErrFieldValue" resultClass="String"  remapResults="true" parameterClass="Map">
+    <![CDATA[
+         select $field$ from adsmessage_err where adsId = #adsId# and hotelCode=#hotelCode#
+         ]]>
+    </select>
+    
+    <select id="searchAdsMessageErrCount" resultClass="Integer">
+			SELECT count(1) count from adsmessage_err t1 
+  			where 1=1
+  			
+  		  <isNotEmpty prepend="AND" property="chainCodeList">
+				chainCode in
+				<iterate property="chainCodeList" open="(" close=")" conjunction=",">
+					#chainCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="channelCodeList">
+				targetGDS in
+				<iterate property="channelCodeList" open="(" close=")" conjunction=",">
+					#channelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="hotelCodeList">
+				hotelCode in
+				<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+					#hotelCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="adsTypeList">
+				adsType in
+				<iterate property="adsTypeList" open="(" close=")" conjunction=",">
+					#adsTypeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="roomTypeCodeList">
+				roomTypeCode in
+				<iterate property="roomTypeCodeList" open="(" close=")" conjunction=",">
+					#roomTypeCodeList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  <isNotEmpty prepend="AND" property="statusList">
+				status in
+				<iterate property="statusList" open="(" close=")" conjunction=",">
+					#statusList[]#
+            	</iterate>
+		  </isNotEmpty>
+		  
+           <isNotEmpty prepend="AND" property="status">
+              status   = #status# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+              tbStatus   = #tbStatus# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="adsType">
+              adsType   = #adsType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="targetGDS">
+              targetGDS = #targetGDS# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotelCode">
+              hotelCode = #hotelCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="hotels">
+	            <iterate property="hotels" open="(" close=")" conjunction="or">
+					hotelCode = #hotels[].hotelCode#
+	           	</iterate>
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="roomTypeCode">
+              roomTypeCode = #roomTypeCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="ratePlanCode">
+              ratePlanCode = #ratePlanCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="echoToken">
+              echoToken = #echoToken#
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="msgType">
+              msgType   = #msgType# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="actionDate">
+              actionDate   = #actionDate# 
+           </isNotEmpty>
+            <isNotEmpty prepend="AND" property="startDate">
+              createdTime <![CDATA[>= ]]> #startDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="endDate">
+              createdTime <![CDATA[<= ]]> #endDate# 
+           </isNotEmpty>
+      		<isNotEmpty prepend="AND" property="lastRequestDate">
+              lastRequestDate = #lastRequestDate# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="tbStatus">
+               tbStatus = #tbStatus# 
+           </isNotEmpty>
+    </select>
+  <select id="getAdsErrorForBdp" parameterClass="adsPushErrorCount" resultClass="adsPushErrorCount">
+  <![CDATA[
+	    SELECT hotelCode,
+	FLOOR(DATE_FORMAT(createdTIme,'%H')/6)+1 AS qtr,
+	  0 AS numberOfTimes
+	FROM
+	  adsmessage
+	  WHERE createdTime >=#lastDate# and createdTime < curdate()
+	  ]]> 
+	  and hotelCode in
+		<iterate property="hotelCodeList" open="(" close=")" conjunction=",">
+									#hotelCodeList[]#
+		</iterate>
+	   and status = 1 
+	<![CDATA[
+	GROUP BY hotelCode,FLOOR(DATE_FORMAT(createdTIme,'%H')/6)
+	]]>
+  </select> 
+</sqlMap>

@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RestrictionCalcSQL">
+    <typeAlias alias="restrictionCalc" type="com.ccm.api.model.ratePlan.RestrictionCalc"/>
+    <typeAlias alias="priceCalc" type="com.ccm.api.model.ratePlan.PriceCalc"/>
+    <typeAlias alias="roomStatusAndProductSwitch" type="com.ccm.api.model.ratePlan.RoomStatusAndProductSwitch"/> 
+    
+	<sql id="pageSqlRestrictionCalcSQL">
+   		 <isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+   		 </isNotEmpty>
+	</sql>
+
+    <insert id="addRestrictionCalc" parameterClass="restrictionCalc">
+        INSERT INTO restriction_calc
+            (restrictionCalcId, channelCode, chainCode, hotelCode, roomTypeCode, 
+            ratePlanCode, DATE,onOff)
+		VALUES (#restrictionCalcId#, 
+			REPLACE(REPLACE(#channelCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#hotelCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#roomTypeCode#,' ',''),'　',''), 
+			REPLACE(REPLACE(#ratePlanCode#,' ',''),'　',''), 
+			#date#,#onOff#)
+    </insert>
+    
+    <update id="updateRestrictionCalcOnOff" parameterClass="restrictionCalc">
+        UPDATE restriction_calc
+		SET  onOff = #onOff#
+		WHERE channelCode = REPLACE(REPLACE(#channelCode#,' ',''),'　','')
+		and chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　','')
+		and hotelCode = REPLACE(REPLACE(#hotelCode#,' ',''),'　','')
+		and roomTypeCode = REPLACE(REPLACE(#roomTypeCode#,' ',''),'　','')
+		and ratePlanCode = REPLACE(REPLACE(#ratePlanCode#,' ',''),'　','')
+		and DATE = #date#
+    </update>
+    
+    <select id="searchRestrictionCalc" resultClass="restrictionCalc">
+    	SELECT * from restriction_calc
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="hotelCode"  prepend="and">
+				hotelCode = #hotelCode#
+			</isNotEmpty>
+			<isNotEmpty property="roomTypeCode"  prepend="and">
+				roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty property="ratePlanCode"  prepend="and">
+				ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty property="date"  prepend="and">
+				date = #date#
+			</isNotEmpty>
+			<isNotEmpty property="channelCode"  prepend="and">
+				channelCode = #channelCode#
+			</isNotEmpty>
+			<isNotEmpty property="chainCode"  prepend="and">
+				chainCode = #chainCode#
+			</isNotEmpty>
+			<isNotEmpty property="onOff"  prepend="and">
+				onOff = #onOff#
+			</isNotEmpty>
+			<isNotEmpty property="roomTypeCodeList"  prepend="and">
+				roomTypeCode in
+				<iterate open="(" close=")" conjunction="," property="roomTypeCodeList">
+					#roomTypeCodeList[]# 
+		        </iterate>
+			</isNotEmpty>
+        </dynamic>
+    </select>
+    
+      <select id="getRestrictionCalcCountByObj" resultClass="Integer">
+    	<![CDATA[SELECT count(*) from restriction_calc
+	 	where hotelCode = #hotelCode#
+			and roomTypeCode = #roomTypeCode#
+			and ratePlanCode = #ratePlanCode#
+			and date >=   #startDate#
+	      	and date <= #endDate#
+			and channelCode = #channelCode#
+			and onOff = #onOff#]]>
+    </select>
+    
+    <select id="getRestrictionCalcByObj" resultClass="restrictionCalc">
+    	SELECT * from restriction_calc
+		<dynamic prepend="WHERE">
+			<isNotEmpty property="hotelCode"  prepend="and">
+				hotelCode = #hotelCode#
+			</isNotEmpty>
+			<isNotEmpty property="roomTypeCode"  prepend="and">
+				roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty property="ratePlanCode"  prepend="and">
+				ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+				date <![CDATA[  >= ]]>   #startDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="endDate">
+				date <![CDATA[  <= ]]> #endDate#
+	        </isNotEmpty>
+			<isNotEmpty property="channelCode"  prepend="and">
+				channelCode = #channelCode#
+			</isNotEmpty>
+			<isNotEmpty property="chainCode"  prepend="and">
+				chainCode = #chainCode#
+			</isNotEmpty>
+			<isNotEmpty property="onOff"  prepend="and">
+				onOff = #onOff#
+			</isNotEmpty>
+			<isNotEmpty property="roomTypeCodeList"  prepend="and">
+				roomTypeCode in
+				<iterate open="(" close=")" conjunction="," property="roomTypeCodeList">
+					#roomTypeCodeList[]# 
+		        </iterate>
+			</isNotEmpty>
+        </dynamic>
+    </select>
+    
+    <select id="searchRestrictionCalcOnOff" resultClass="restrictionCalc">
+    	SELECT DISTINCT pc.channelCode,pc.chainCode,pc.hotelCode,pc.ratePlanCode,pc.roomTypeCode,
+    		pc.DATE,IF(rc.`onOff`IS NULL,1,rc.`onOff`) AS onOff 
+    	FROM price_calc pc 
+    	LEFT JOIN mc.restriction_calc rc 
+    	ON rc.channelCode = pc.channelCode
+		and rc.chainCode = pc.chainCode
+		and rc.hotelCode = pc.hotelCode
+		and rc.ratePlanCode = pc.ratePlanCode
+		and rc.roomTypeCode = pc.roomTypeCode
+		and rc.DATE= pc.DATE
+		where pc.channelCode IN 
+			<iterate property="channelCodeArray" open="(" close=")" conjunction=",">
+				#channelCodeArray[]#
+	        </iterate>
+		AND pc.chainCode = #chainCode#
+		AND pc.hotelCode = #hotelCode#
+		AND pc.roomTypeCode IN 
+			<iterate property="roomTypeCodeArray" open="(" close=")" conjunction=",">
+				#roomTypeCodeArray[]#
+	        </iterate>
+		AND pc.ratePlanCode IN 
+			<iterate property="ratePlanCodeArray" open="(" close=")" conjunction=",">
+				#ratePlanCodeArray[]#
+	        </iterate>
+		AND pc.date <![CDATA[  >= ]]> #startDate#
+		AND pc.date <![CDATA[  <= ]]> #endDate#
+        ORDER BY pc.channelCode,pc.chainCode,pc.hotelCode,pc.ratePlanCode,pc.roomTypeCode,pc.DATE
+    </select>
+    
+    <!-- 查询开关房，推送使用 -->
+    <select id="searchRestrictionCalcOnOffForPush" resultClass="restrictionCalc">
+    SELECT distinct da.date, IF(a.`onOff`IS NULL,1,a.`onOff`) AS onOff FROM 
+		(
+	    	SELECT rc.DATE,onOff 
+	    		FROM restriction_calc rc 
+			where rc.channelCode =#channelCode#
+				AND rc.chainCode = #chainCode#
+				AND rc.hotelCode = #hotelCode#
+				AND rc.roomTypeCode = #roomTypeCode#
+				<isNotEmpty prepend="AND" property="ratePlanCode">
+				 rc.ratePlanCode = #ratePlanCode#
+				 </isNotEmpty>
+				AND rc.date <![CDATA[ >= ]]> #startDate#
+				AND rc.date <![CDATA[ <= ]]> #endDate#
+		)a RIGHT JOIN 
+		(SELECT * FROM DATE WHERE DATE <![CDATA[ >= ]]> #startDate# AND DATE <![CDATA[ <= ]]> #endDate#) da 
+		ON a.date = da.date
+    </select>
+    
+    <!-- 查询开关房，忽略房价日历 -->
+    <select id="searchRestrictionCalcOnOff2" resultClass="restrictionCalc">
+    	SELECT rc.channelCode,rc.chainCode,rc.hotelCode,rc.ratePlanCode,rc.roomTypeCode,
+    		rc.DATE,IF(rc.`onOff`IS NULL,1,rc.`onOff`) AS onOff 
+    	FROM restriction_calc rc 
+		where rc.channelCode IN 
+			<iterate property="channelCodeArray" open="(" close=")" conjunction=",">
+				#channelCodeArray[]#
+	        </iterate>
+		AND rc.chainCode = #chainCode#
+		AND rc.hotelCode = #hotelCode#
+		AND rc.roomTypeCode IN 
+			<iterate property="roomTypeCodeArray" open="(" close=")" conjunction=",">
+				#roomTypeCodeArray[]#
+	        </iterate>
+		AND rc.ratePlanCode IN 
+			<iterate property="ratePlanCodeArray" open="(" close=")" conjunction=",">
+				#ratePlanCodeArray[]#
+	        </iterate>
+	    <isNotEmpty prepend="AND" property="dateArray">
+				rc.date in
+			 <iterate property="dateArray" open="(" close=")" conjunction=",">
+				#dateArray[]#
+	        </iterate>
+		</isNotEmpty>
+			
+		AND rc.date <![CDATA[  >= ]]> #startDate#
+		AND rc.date <![CDATA[  <= ]]> #endDate#
+        ORDER BY rc.channelCode,rc.chainCode,rc.hotelCode,rc.ratePlanCode,rc.roomTypeCode,rc.DATE
+    </select>
+    
+    <select id="getRestrictionCalc" resultClass="restrictionCalc">
+    	SELECT * from restriction_calc rc 
+		WHERE rc.hotelCode = #hotelCode#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roomTypeCode">
+				rc.roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="ratePlanCode">
+				rc.ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="channelCode">
+				rc.channelCode = #channelCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="chainCode">
+				rc.chainCode = #chainCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="date">
+				rc.date = #date#
+	        </isNotEmpty>
+        </dynamic>
+        order by rc.channelCode,rc.chainCode,rc.hotelCode,rc.ratePlanCode,rc.roomTypeCode,rc.date
+    </select>
+    
+     <select id="searchRestrictionCalcAndRate" resultClass="priceCalc">
+    	SELECT pc.*,IF(rc.`onOff`IS NULL,1,rc.`onOff`) AS onOff 
+    	FROM price_calc pc
+    	LEFT JOIN mc.restriction_calc rc 
+    	ON rc.channelCode = pc.channelCode
+		and rc.chainCode = pc.chainCode
+		and rc.hotelCode = pc.hotelCode
+		and rc.ratePlanCode = pc.ratePlanCode
+		and rc.roomTypeCode = pc.roomTypeCode
+		and rc.DATE= pc.DATE
+		WHERE pc.hotelCode = #hotelCode# 
+		<dynamic prepend="AND">
+			<isNotEmpty property="channelCode" prepend="and">
+				pc.channelCode = #channelCode#
+			</isNotEmpty>
+			<isNotEmpty property="roomTypeCode" prepend="and">
+				pc.roomTypeCode = #roomTypeCode#
+			</isNotEmpty>
+			<isNotEmpty property="ratePlanCode" prepend="and">
+				pc.ratePlanCode = #ratePlanCode#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeCodeList">
+				pc.roomTypeCode in
+				<iterate property="roomTypeCodeList" open="(" close=")" conjunction=",">
+					#roomTypeCodeList[]#
+        		</iterate>
+			</isNotEmpty>
+	        <isNotEmpty prepend="AND" property="chainCode">
+				pc.chainCode = #chainCode#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="numberOfUnits">
+				pc.numberOfUnits = #numberOfUnits#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="startDate">
+				pc.date <![CDATA[  >= ]]>   #startDate#
+	        </isNotEmpty>
+	        <isNotEmpty prepend="AND" property="endDate">
+				pc.date <![CDATA[  <= ]]> #endDate#
+	        </isNotEmpty>
+	        <isEqual property="onOff" compareValue="1" prepend="and">
+				(rc.onOff IS NULL OR rc.onOff=1 )
+			</isEqual>
+			<isEqual property="onOff" compareValue="0" prepend="and">
+				rc.onOff=0
+			</isEqual>
+        </dynamic>
+        order by pc.channelCode,pc.chainCode,pc.hotelCode,pc.ratePlanCode,pc.roomTypeCode,pc.date
+    </select>
+    
+    <select id="searchRoomStatusAndProductSwitchs" resultClass="roomStatusAndProductSwitch">
+	    SELECT res.* FROM
+		  (
+		  <isNotEmpty property="includeRoomStatus">
+				SELECT c.`channelCode` ,r.`hotelCode`,h.`specialist`,r.`type` AS roomTypeCode,
+				    r.`rateCode` AS ratePlanCode,'1' AS TYPE,r.`date`
+				  FROM rsvtype r, hotel h, rsvtype_channel rc,channel c 
+				 WHERE r.`hotelCode` = h.`hotelCode` 
+				   AND r.`rsvtypeId` = rc.`rsvtypeId` 
+				   AND rc.`channelId` = c.`channelId`
+				   AND r.`delFlag` = 0 
+				   AND h.`delFlag` = 0 
+				   and c.`delFlag` = 0 
+				   AND rc.`freeSell` = 0
+				<isNotEmpty prepend="AND" property="hotelCodes">
+					h.`hotelCode` in
+					<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="channelCodes">
+					c.`channelCode` in
+					<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="roomTypeCodes">
+					r.`type` in
+					<iterate property="roomTypeCodes" open="(" close=")" conjunction=",">
+						#roomTypeCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="ratePlanCodes">
+					r.`rateCode` in
+					<iterate property="ratePlanCodes" open="(" close=")" conjunction=",">
+						#ratePlanCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            r.`date` >= #startDate#
+		          ]]>
+				</isNotEmpty>
+			    <isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        r.`date` < #endDate#
+			      ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+	      </isNotEmpty>
+
+		  <isNotEmpty property="isUnion">
+		  	UNION ALL 
+		  </isNotEmpty>
+
+		  <isNotEmpty property="includeProduct">
+			  SELECT rc.`channelCode`,rc.`hotelCode`,h.`specialist`,rc.`roomTypeCode`,
+			    rc.`ratePlanCode`,'2' AS TYPE,rc.`date`
+			  FROM restriction_calc rc,hotel h
+			  WHERE rc.`hotelCode` = h.`hotelCode` 
+			    AND h.`delFlag` = 0
+			    AND rc.`onOff` = 0
+			    <isNotEmpty prepend="AND" property="hotelCodes">
+					rc.`hotelCode` in
+					<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="channelCodes">
+					rc.`channelCode` in
+					<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="roomTypeCodes">
+					rc.`roomTypeCode` in
+					<iterate property="roomTypeCodes" open="(" close=")" conjunction=",">
+						#roomTypeCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="ratePlanCodes">
+					rc.`ratePlanCode` in
+					<iterate property="ratePlanCodes" open="(" close=")" conjunction=",">
+						#ratePlanCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            rc.`date` >= #startDate#
+		          ]]>
+				</isNotEmpty>
+			    <isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        rc.`date` < #endDate#
+			      ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+		  </isNotEmpty>
+		) res 
+    	ORDER BY res.channelCode,res.hotelCode,res.roomTypeCode,res.ratePlanCode,res.type,res.`date`
+    	<include refid="pageSqlRestrictionCalcSQL"/>
+    </select>
+    
+    
+    <select id="searchRoomStatusAndProductSwitchsCount" resultClass="Integer">
+	    SELECT count(*) FROM
+		  (
+		  <isNotEmpty property="includeRoomStatus">
+				SELECT c.`channelCode` ,r.`hotelCode`,h.`specialist`,r.`type` AS roomTypeCode,
+				    r.`rateCode` AS ratePlanCode,'1' AS TYPE,r.`date`
+				  FROM rsvtype r, hotel h, rsvtype_channel rc,channel c 
+				 WHERE r.`hotelCode` = h.`hotelCode` 
+				   AND r.`rsvtypeId` = rc.`rsvtypeId` 
+				   AND rc.`channelId` = c.`channelId`
+				   AND r.`delFlag` = 0 
+				   AND h.`delFlag` = 0 
+				   and c.`delFlag` = 0 
+				   AND rc.`freeSell` = 0
+				<isNotEmpty prepend="AND" property="hotelCodes">
+					h.`hotelCode` in
+					<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="channelCodes">
+					c.`channelCode` in
+					<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="roomTypeCodes">
+					r.`type` in
+					<iterate property="roomTypeCodes" open="(" close=")" conjunction=",">
+						#roomTypeCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="ratePlanCodes">
+					r.`rateCode` in
+					<iterate property="ratePlanCodes" open="(" close=")" conjunction=",">
+						#ratePlanCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            r.`date` >= #startDate#
+		          ]]>
+				</isNotEmpty>
+			    <isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        r.`date` < #endDate#
+			      ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+	      </isNotEmpty>
+
+		  <isNotEmpty property="isUnion">
+		  	UNION ALL 
+		  </isNotEmpty>
+
+		  <isNotEmpty property="includeProduct">
+			  SELECT rc.`channelCode`,rc.`hotelCode`,h.`specialist`,rc.`roomTypeCode`,
+			    rc.`ratePlanCode`,'2' AS TYPE,rc.date
+			  FROM restriction_calc rc,hotel h
+			  WHERE rc.`hotelCode` = h.`hotelCode` 
+			    AND h.`delFlag` = 0
+			    AND rc.`onOff` = 0
+			    <isNotEmpty prepend="AND" property="hotelCodes">
+					rc.`hotelCode` in
+					<iterate property="hotelCodes" open="(" close=")" conjunction=",">
+						#hotelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="channelCodes">
+					rc.`channelCode` in
+					<iterate property="channelCodes" open="(" close=")" conjunction=",">
+						#channelCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="roomTypeCodes">
+					rc.`roomTypeCode` in
+					<iterate property="roomTypeCodes" open="(" close=")" conjunction=",">
+						#roomTypeCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="ratePlanCodes">
+					rc.`ratePlanCode` in
+					<iterate property="ratePlanCodes" open="(" close=")" conjunction=",">
+						#ratePlanCodes[]#
+		            </iterate>
+		      	</isNotEmpty>
+		      	<isNotEmpty prepend="AND" property="startDate">
+		          <![CDATA[
+		            rc.`date` >= #startDate#
+		          ]]>
+				</isNotEmpty>
+			    <isNotEmpty prepend="AND" property="endDate">
+			      <![CDATA[
+			        rc.`date` < #endDate#
+			      ]]>
+				</isNotEmpty>
+				<isNotEmpty prepend="AND" property="specialist">
+					h.`specialist` = #specialist#
+				</isNotEmpty>
+		  </isNotEmpty>
+		) res 
+    </select>
+    
+</sqlMap>

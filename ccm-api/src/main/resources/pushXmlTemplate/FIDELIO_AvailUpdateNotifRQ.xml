@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GDSPublisherRequest UserID="$userId" Type="$type" Profile="$profile" Password="$password" Destination="$destination" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<FIDELIO_AvailUpdateNotifRQ xmlns="http://www.micros.com/2002A" echoToken="$echoToken" timeStamp="$timeStamp" version="$version">
+		<Properties>
+			<Property chainCode="$chainCode" hotelCode="$hotelCode">
+				<AvailUpdateSegments>
+					<AvailUpdateSegment roomTypeCode="$roomTypeCode" #if($rateCode)rateCode="$rateCode"#end #if($allRateCode)allRateCode="$allRateCode"#end actionCode="$actionCode" inventory="$inventory">
+						<TargetGDS>$targetGDS</TargetGDS>
+						<TimeSpan start="$start" end="$end" duration="$duration"/>
+					</AvailUpdateSegment>
+				</AvailUpdateSegments>
+			</Property>
+		</Properties>
+	</FIDELIO_AvailUpdateNotifRQ>
+</GDSPublisherRequest>

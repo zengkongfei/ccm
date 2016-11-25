@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="OnlineUser">
+	<typeAlias alias="onlineUser" type="com.ccm.api.model.ads.OnlineUser" />
+	
+	<insert id="addOnlineUser" parameterClass="onlineUser">
+	    <![CDATA[
+	        insert INTO onlineuser
+			            (onlineUserId, chainCode, userName, userId, isPush)
+			VALUES (#onlineUserId#, 
+				REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+				#userName#, #userId#, #isPush#);
+		]]>
+	</insert>
+	
+	<select id="getOnlineUsers" resultClass="onlineUser">
+        select * from onlineuser
+    </select>
+	
+	<select id="searchOnlineUser" resultClass="onlineUser">
+		select * FROM onlineuser 
+		<dynamic prepend="where">
+			<isNotEmpty prepend="AND" property="chainCode">
+              chainCode = #chainCode# 
+           </isNotEmpty>
+           <isNotEmpty prepend="AND" property="userName">
+              userName = #userName# 
+           </isNotEmpty>           
+           <isNotEmpty prepend="AND" property="userId">
+              userId = #userId# 
+           </isNotEmpty>
+        </dynamic>
+	</select>
+	
+	<update id="updateOnlineUser" parameterClass="onlineUser">
+		UPDATE onlineuser
+		SET chainCode = REPLACE(REPLACE(#chainCode#,' ',''),'　',''), 
+			userName = #userName#, userId = #userId#, isPush = #isPush#
+		WHERE onlineUserId = #onlineUserId#;
+    </update>
+</sqlMap>

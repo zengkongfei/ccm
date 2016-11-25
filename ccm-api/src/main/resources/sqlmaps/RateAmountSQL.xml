@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RateAmountSQL">
+	<typeAlias alias="rateAmount" type="com.ccm.api.model.ratePlan.RateAmount" />
+	
+	<insert id="addRateAmount" parameterClass="rateAmount">
+		INSERT INTO rate_amount
+            (rateAmountId, rateDetailId, numberOfUnits, baseAmount, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+		VALUES (#rateAmountId#, #rateDetailId#, #numberOfUnits#, #baseAmount#, #createdBy#, #createdTime#, #updatedBy#, #lastModifyTime#, #delFlag#)		
+	</insert>
+	
+	<insert id="addBatchRateAmounts" parameterClass="java.util.List">
+	    <![CDATA[
+	        insert into rate_amount
+	        		(rateAmountId, rateDetailId, numberOfUnits, baseAmount, createdBy, createdTime, updatedBy, lastModifyTime, delFlag)
+	        values
+	    ]]>
+		<iterate conjunction=",">
+	      <![CDATA[
+	          (
+	              #list[].rateAmountId#,
+	              #list[].rateDetailId#,
+	              #list[].numberOfUnits#,
+	              #list[].baseAmount#,
+	              #list[].createdBy#,
+	              #list[].createdTime#,
+	              #list[].updatedBy#,
+	              #list[].lastModifyTime#,
+	              #list[].delFlag#
+	          )
+	      ]]>
+		</iterate>
+	</insert>
+	
+	<select id="getRateAmount" resultClass="rateAmount">
+		SELECT * FROM rate_amount WHERE delFlag =0 and rateAmountId=#value#
+    </select>
+    
+    <select id="getRateAmountByRateDetailId" resultClass="rateAmount">
+		SELECT t1.* FROM rate_amount t1 WHERE delFlag =0 and rateDetailId=#value# order by numberofunits
+    </select>
+    
+    <delete id="deleteRateAmountByRateDetailId">
+	    DELETE
+			FROM rate_amount
+		WHERE rateDetailId = #rateDetailId#
+    </delete>
+    
+    <update id="deleteRateAmount">
+    	UPDATE rate_amount set delFlag=1 WHERE rateAmountId = #value#
+    </update>
+    
+    <update id="updateRateAmount" parameterClass="rateAmount">
+    	UPDATE rate_amount
+			SET rateAmountId = #rateAmountId#, rateDetailId = #rateDetailId#, numberOfUnits = #numberOfUnits#, baseAmount = #baseAmount#, createdBy = #createdBy#, createdTime = #createdTime#, updatedBy = #updatedBy#, lastModifyTime = #lastModifyTime#
+		WHERE rateAmountId = #rateAmountId#
+    </update>
+    
+     <!-- 
+           删除不存在detail中的rate_amount
+     -->
+    <delete id="deleteRateAmountNotExistsInDetail">
+    DELETE FROM rate_amount WHERE NOT EXISTS(SELECT 1 FROM rate_detail t2 WHERE rate_amount.rateDetailId=t2.rateDetailId)
+    </delete>
+    
+</sqlMap>

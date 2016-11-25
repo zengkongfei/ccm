@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="FaxSendTimeSQL">
+    <typeAlias alias="faxSendTime" type="com.ccm.api.model.fax.FaxSendTime"/>
+       
+    <sql id="pageSqlFaxSendTimeSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+    <insert id="addFaxSendTime" parameterClass="faxSendTime">
+    	INSERT INTO faxsendtime
+            (faxSendTimeId, hotelId,faxNumber,beginTime,endTime,
+             createdBy, createdTime, updatedBy,lastModifyTime,delFlag)
+		VALUES (#faxSendTimeId#, #hotelId#,#faxNumber#,#beginTime#,#endTime#,
+             #createdBy#, #createdTime#, #updatedBy#,#lastModifyTime#,#delFlag#);
+    </insert>
+    
+    <update id="updateFaxSendTime">
+    	UPDATE faxsendtime
+			SET hotelId = #hotelId#,
+			  faxNumber = #faxNumber#,
+			  beginTime = #beginTime#,
+			  endTime = #endTime#,
+			  updatedBy = #updatedBy#,
+			  lastModifyTime = #lastModifyTime#
+			WHERE faxSendTimeId = #faxSendTimeId#
+    </update>
+    
+     <update id="updateFaxSendTimeDelFlag">
+    	UPDATE faxsendtime
+		SET updatedBy = #updatedBy#,
+		  lastModifyTime = #lastModifyTime#,
+		  delFlag = #delFlag#
+		WHERE faxSendTimeId = #faxSendTimeId#
+    </update>
+    
+    <select id="getFaxSendTimes" resultClass="faxSendTime">
+    	select * from faxsendtime where delflag=0
+    </select>
+    
+    <select id="searchFaxSendTimeList" resultClass="faxSendTime" parameterClass="faxSendTime">
+    	select * from faxsendtime where delflag=0
+    	 <isNotEmpty prepend="and" property="faxSendTimeId"> 
+         	faxSendTimeId =#faxSendTimeId#
+         </isNotEmpty>
+         <isNotEmpty prepend="and" property="hotelId"> 
+         	hotelId =#hotelId#
+         </isNotEmpty>
+         <isNotEmpty prepend="and" property="faxNumber"> 
+         	faxNumber =#faxNumber#
+         </isNotEmpty>
+         <isNotEmpty prepend="and" property="beginTime"> 
+        	<![CDATA[ 
+	         	beginTime <= #beginTime#
+            ]]> 
+         </isNotEmpty> 
+         <isNotEmpty prepend="and" property="endTime"> 
+        	<![CDATA[ 
+	         	endTime > #endTime#
+            ]]>
+         </isNotEmpty> 
+          <isNotEmpty prepend="and" property="time"> 
+        	<![CDATA[ 
+	         beginTime <= #time# and endTime >= #time#
+            ]]>
+         </isNotEmpty> 
+            order by beginTime asc,endTime asc
+    </select>
+    
+   
+</sqlMap>

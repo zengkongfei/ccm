@@ -1,0 +1,249 @@
+<%@ include file="/common/taglibs.jsp"%>
+<%@ page language="java" errorPage="/error.jsp" pageEncoding="UTF-8" contentType="text/html;charset=utf-8"%>
+
+<SCRIPT LANGUAGE="javascript">
+	/**
+	 * @Description: 修改邮箱
+	 * @date 2012-2-20
+	 * @version 1.0
+	 * @update:[日期YYYY-MM-DD] [更改人姓名]
+	 */
+	function updataEmail(emialStr){
+		$("#spanEmial").hide();
+		$("#updateEmail").hide();
+		$("#email").val(emialStr).show();
+		$("#okEmail").show();
+	}
+
+	/**
+	 * 点击email的取消按钮
+	 */
+	function closeEmail(){
+		$("#spanEmial").show();
+		$("#updateEmail").show();
+		$("#email").hide();
+		$("#okEmail").hide();
+		$("#emailInfo").text("");
+	}
+
+	/**
+	 * 点击email的确定按钮
+	 */
+	function submitEmail(){
+		var email = $("#email").val().replace(/\s+/g,"");
+		if(email == ""){
+			return showMsg("#emailInfo","<fmt:message key='ccm.error.074'/>");
+		}else{
+			hideMsg("#emailInfo");
+		}
+
+		//var chackEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+		var chackEmail = /^([a-zA-Z0-9._-])+@([a-zA-Z0-9_-])+([\.]{1})+([a-zA-Z0-9_-])+/;
+		
+		if(!chackEmail.test(email)){
+			return showMsg("#emailInfo","<fmt:message key='ccm.error.075'/>");
+		}else{
+			hideMsg("#emailInfo");
+		}
+
+		if(confirm("<fmt:message key='ccm.error.076'/>?")){
+			$("#emailForm").submit();
+		}
+	}
+
+	/**
+	 * @Description: 修改密码
+	 * @date 2012-2-20
+	 * @version 1.0
+	 * @update:[日期YYYY-MM-DD] [更改人姓名]
+	 */
+	function updataPwd(pwdStr){
+		$("#updatePwd").hide();
+		$("#qiangPwd").hide();
+		$("#newPwd").show();
+		$("#okPwd").show();
+	}
+
+	/**
+	 * 点击修改密码的取消按钮
+	 */
+	function closePwd(){
+		$("#updatePwd").show();
+		$("#qiangPwd").show();
+		$("#newPwd").hide();
+		$("#okPwd").hide();
+		$("#pwdInfo").text("");
+		$("#oldPassword").val('');
+		$("#newPassword").val('');
+	}
+
+	/**
+	 * 点击修改密码的确认按钮
+	 */
+	function submitPwd(){
+		var oldPassword     = $("#oldPassword").val().replace(/\s+/g,"");     //原始密码
+		var newPassword     = $("#newPassword").val().replace(/\s+/g,""); //新密码
+		//var userPassword    = $("#password").val().replace(/\s+/g,"");    //数据库保存的密码
+
+		if(oldPassword == ""){
+			return showMsg("#pwdInfo","<fmt:message key='ccm.error.077'/>");
+		}else{
+			hideMsg("#pwdInfo");
+		}
+
+		
+		
+		if(newPassword == ""){
+			return showMsg("#pwdInfo","<fmt:message key='ccm.error.078'/>");
+		}else{
+			hideMsg("#pwdInfo");
+		}
+
+		if(newPassword.length < 7 || newPassword.length>20){
+			return showMsg("#pwdInfo","<fmt:message key='ccm.error.079'/>");
+		}else{
+			hideMsg("#pwdInfo");
+		}
+		
+		var pattern = /^[\x21-\x7e]+$/;
+		if(!pattern.test(newPassword)){
+			return showMsg("#pwdInfo","<fmt:message key='ccm.error.080'/>");
+		}else{
+			hideMsg("#pwdInfo");
+		}
+
+		if(confirm("<fmt:message key='ccm.error.081'/>?")){
+			
+			
+			
+			
+			$("#pwdForm").submit();
+		}
+	}
+
+	/**
+	 * 显示信息
+	 */
+	function showMsg(astr,bstr){
+		$(astr).text(bstr);
+		return false;
+	}
+
+	/**
+     * 清除信息
+     */
+	function hideMsg(astr){
+		$(astr).text("");
+	}
+
+	
+	function $$$(id){
+		return document.getElementById(id);
+	}
+
+	/**
+	 * 密码强度特效
+	 **/
+	function showPwd(txt){
+		$$$("divdi").style.backgroundColor="white";
+		$$$("divzhong").style.backgroundColor="white";
+		$$$("divgao").style.backgroundColor="white";
+		var reg1=/^.{7,}$/;
+		var reg2=/[-+=/.,'"~!@#$%^&*()<>?]/;
+		var txt 
+		if(txt!=""){
+			if(reg1.test(txt) && reg2.test(txt)){
+				$$$("divdi").style.backgroundColor="green";
+				$$$("divzhong").style.backgroundColor="green";
+				$$$("divgao").style.backgroundColor="green";
+			}else if(reg1.test(txt) || reg2.test(txt)){
+				$$$("divdi").style.backgroundColor="yellow";
+				$$$("divzhong").style.backgroundColor="yellow";
+			}else{
+				$$$("divdi").style.backgroundColor="red";
+			}
+		}
+	}
+
+	$(function(){
+		var userPwd = $("#userPwd").val().replace(/\s+/g,"");    //数据库保存的密码
+		showPwd(userPwd);
+	});
+	
+</script>
+
+<div class="CCMmainConter w1200">
+	<div class="fright"></div>
+	<div class="title_wp"><fmt:message key="ccm.AccountManagement"/></div>
+
+	<c:if test="${messageInfo != '' && messageInfo != null}">
+		<div class="remindtip" id="remindtip">
+			<span><fmt:message key="ccm.Channel.message.Attention"/>：${messageInfo}</span>
+			<div class="clearfix"></div>
+		</div>
+	</c:if>
+	<%@ include file="/common/messages.jsp"%>
+	<div class="fright"></div>
+	<div class="ccm_2wp clearfix">
+		<table class="ccm_right" width="90%" border="0" cellspacing="0" cellpadding="0">
+			<tr>
+				<th scope="row"><fmt:message key="login.Username"/>：</th>
+				<td>${b2bUser.username }</td>
+			</tr>
+			<form id="pwdForm" action="/user_changePwd.do" method="post">
+				<tr>
+					<th scope="row"><fmt:message key="login.Password"/>：</th>
+					<td>
+						<div id="qiangPwd">
+							<div style="display: inline;">
+								<div id="divdi" style="border: 1px green solid; float: left; width: 70px">
+									<center><fmt:message key="ccm.Low"/></center>
+								</div>
+								<div id="divzhong" style="border: 1px green solid; float: left; width: 70px">
+									<center><fmt:message key="ccm.Medium"/></center>
+								</div>
+								<div id="divgao" style="border: 1px green solid; float: left; width: 70px">
+									<center><fmt:message key="ccm.High"/></center>
+								</div>
+							</div>
+							（<fmt:message key="ccm.SafetyFactor"/>）
+						</div> <input id="userPwd" type="hidden" value="${b2bUser.password}">
+
+
+						<div id="newPwd" style="display: none">
+							<fmt:message key="ccm.error.077"/>：<input class="formnormal w120" type="password" id="oldPassword" name="b2bUser.confirmPassword"> <fmt:message key="ccm.error.078"/>: <input class="formnormal w120" type="password" id="newPassword" name="b2bUser.password"> <span class="infotext" id="pwdInfo"></span>
+						</div></td>
+					<td>
+						<div id="updatePwd">
+							<a href="#" onclick="javascript:updataPwd()"><span><fmt:message key="ccm.error.082"/></span>
+							</a>
+						</div>
+						<div id="okPwd" style="display: none">
+							<a class="searchbt" href="#" onclick="javascript:submitPwd()"><span><fmt:message key="common.button.OK"/></span>
+							</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="javascript:closePwd()"><span><fmt:message key="common.button.Cancel"/></span>
+							</a>
+						</div></td>
+				</tr>
+			</form>
+			<form id="emailForm" action="user_changeEmail.do" method="post">
+				<tr>
+					<th scope="row"><fmt:message key="common.Email"/>：</th>
+					<td><span id="spanEmial">${b2bUser.employee.email }</span> <input style="display: none" class="formnormal w240" name="b2bUser.employee.email" id="email"> <span class="infotext" id="emailInfo"></span></td>
+					<td>
+						<div id="updateEmail">
+							<a href="#" onclick="javascript:updataEmail('${b2bUser.employee.email }')"><span><fmt:message key="ccm.error.083"/></span>
+							</a>
+						</div>
+						<div id="okEmail" style="display: none">
+							<a class="searchbt" href="#" onclick="javascript:submitEmail()"><span><fmt:message key="common.button.OK"/></span>
+							</a> &nbsp;&nbsp;&nbsp;&nbsp;<a href="#" onclick="javascript:closeEmail()"><span><fmt:message key="common.button.Cancel"/></span>
+							</a>
+						</div></td>
+				</tr>
+			</form>
+		</table>
+
+	</div>
+
+	<div class="clearfix"></div>
+</div>

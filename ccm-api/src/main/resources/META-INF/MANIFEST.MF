@@ -1,0 +1,10 @@
+Specification-Title: App Name
+Specification-Version: ${pom.version} - ${maven.build.timestamp}
+Specification-Vendor: CCM API
+Implementation-Title: CCM API
+Implementation-Version: ${pom.version} - ${build.time}
+Implementation-Vendor: Shiji Information Technology (Shanghai) Co
+Built-By: ${user.name}
+Build-Jdk: ${java.version}
+Build-Time: ${maven.build.timestamp}
+Revision=${svn.revision}

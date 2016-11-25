@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+
+	<http pattern="/channel_xeSeWqZData.do*" security="none" />
+	<http pattern="/adsBeq_count.do" security="none" />
+	<http pattern="/imageCode*.do*" security="none" />
+	<http pattern="/css/**/**" security="none" />
+
+	<http pattern="/img/**/**" security="none" />
+	<http pattern="/favicon.ico" security="none" />
+
+	<http pattern="/js/**/**" security="none" />
+
+	<http pattern="/upload/**/**" security="none" />
+	<http pattern="/ckeditor/**/**" security="none" />
+	<http pattern="/swfupload/**/**" security="none" />
+
+	<http pattern="/picture*" security="none" />
+
+	<http pattern="/403.jsp" security="none" />
+	<http pattern="/404.jsp" security="none" />
+
+	<http pattern="/index.jsp" security="none" />
+
+	<http pattern="/login.jsp" security="none" />
+
+	<http pattern="/user_login.do*" security="none" />
+
+	<http pattern="/pages/*.jsp" security="none" />
+	<http pattern="/pages/**/*.jsp" security="none" />
+
+	<http pattern="/*ajax*.do*" security="none" />
+	<http pattern="/*_is*.do*" security="none" /><!-- 验证编码是否存在AJAX -->
+	<http pattern="/*_validate*.do*" security="none" /><!-- 验证编码是否存在AJAX -->
+
+
+	<http pattern="/common/dataAccessFailure.jsp" security="none" />
+	<http pattern="/error.jsp" security="none" />
+
+	<http pattern="/menu_hotels.do*" security="none" />
+
+	<http pattern="/remind_*.do*" security="none" />
+	<http pattern="/city_fetchCityCode.do*" security="none" />
+
+	<http pattern="/importBlock.do" security="none" />
+
+	<http pattern="/user_forgetPassword.do" security="none" />
+	<http pattern="/user_toResstPwd.do" security="none" />
+	<http pattern="/user_resetForgetPwd.do" security="none" />
+
+	<http pattern="/uniqueCode_uniqueCode.do" security="none" />
+	<http pattern="/uniqueCode_checkUniqueCode.do" security="none" />
+	
+	<http auto-config="false" use-expressions="true" entry-point-ref="authenticationProcessingFilterEntryPoint">
+		<intercept-url pattern="/**" access="authenticated" />
+		<logout logout-success-url="/login.jsp" />
+		<csrf disabled="true"/>
+		<remember-me user-service-ref="userManager" key="e37f4b31-0c45-11dd-bd0b-0800200c9a66" />
+		<custom-filter ref="loginFilter" position="FORM_LOGIN_FILTER" />
+		<custom-filter ref="myFilter" before="FILTER_SECURITY_INTERCEPTOR" />
+	</http>
+
+	<!-- 登录验证器 -->
+	<beans:bean id="loginFilter" class="com.ccm.mc.webapp.filter.MyUsernamePasswordAuthenticationFilter">
+		<!-- 处理登录的action -->
+		<beans:property name="filterProcessesUrl" value="/j_spring_security_check"></beans:property>
+		<!-- 验证成功后的处理 -->
+		<beans:property name="authenticationSuccessHandler" ref="loginSuccessManager"></beans:property>
+		<!-- 验证失败后的处理 -->
+		<beans:property name="authenticationFailureHandler" ref="simpleUrlAuthenticationFailureHandler"></beans:property>
+		<beans:property name="authenticationManager" ref="authenticationManager"></beans:property>
+		<!-- 注入DAO为了查询相应的用户 -->
+		<beans:property name="userDao" ref="userDao"></beans:property>
+		<beans:property name="userManager" ref="userManager"></beans:property>
+		<beans:property name="messageSource" ref="messageSource"></beans:property>
+	</beans:bean>
+	<beans:bean id="loginSuccessManager" class="com.ccm.api.service.security.LoginSuccessManager">
+		<beans:property name="alwaysUseDefaultTargetUrl" value="true"></beans:property>
+	</beans:bean>
+	<beans:bean id="simpleUrlAuthenticationFailureHandler" class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
+		<!-- 可以配置相应的跳转方式。属性forwardToDestination为true采用forward false为sendRedirect -->
+		<beans:property name="defaultFailureUrl" value="/login.jsp?error=true"></beans:property>
+	</beans:bean>
+
+	<!-- 一个自定义的filter，必须包含authenticationManager,accessDecisionManager,securityMetadataSource三个属性， 我们的所有控制将在这三个类中实现，解释详见具体配置 -->
+	<beans:bean id="myFilter" class="com.ccm.mc.webapp.filter.CustomSecurityFilter">
+		<beans:property name="authenticationManager" ref="authenticationManager" />
+		<beans:property name="accessDecisionManager" ref="myAccessDecisionManagerBean" />
+		<beans:property name="securityMetadataSource" ref="securityMetadataSource" />
+	</beans:bean>
+
+	<!-- 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
+	<authentication-manager alias="authenticationManager">
+		<!-- <authentication-provider user-service-ref="myUserDetailService"> 如果用户的密码采用加密的话，可以加点“盐” <password-encoder hash="md5" /> </authentication-provider> -->
+		<authentication-provider user-service-ref="userManager">
+			<password-encoder ref="passwordEncoder">
+				<salt-source ref="saltSource" />
+			</password-encoder>
+		
+		</authentication-provider>
+	</authentication-manager>
+
+	<!-- 访问决策器，决定某个用户具有的角色，是否有足够的权限去访问某个资源 -->
+	<beans:bean id="myAccessDecisionManagerBean" class="com.ccm.api.service.security.AccessDecisionManager">
+	</beans:bean>
+
+	<!-- 资源源数据定义，即定义某一资源可以被哪些角色访问 -->
+	<beans:bean id="securityMetadataSource" class="com.ccm.mc.webapp.filter.SecurityMetaDataSource" />
+
+	<!-- 未登录的切入点 -->
+	<beans:bean id="authenticationProcessingFilterEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+		<beans:constructor-arg name="loginFormUrl" value="/login.jsp" />
+	</beans:bean>
+
+	<global-method-security>
+		<protect-pointcut expression="execution(* *..service.*.UserManager.getUsers(..))" access="ROLE_ADMIN" />
+		<protect-pointcut expression="execution(* *..service.*.UserManager.removeUser(..))" access="ROLE_ADMIN,ROLE_COADMIN" />
+	</global-method-security>
+
+</beans:beans>

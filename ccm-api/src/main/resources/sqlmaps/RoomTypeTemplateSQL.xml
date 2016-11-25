@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="RoomTypeTemplateSQL">
+	<typeAlias alias="roomTypeTemplateVo" type="com.ccm.api.model.roomType.vo.RoomTypeTemplateVO" />
+	<typeAlias alias="roomTypeTemplate" type="com.ccm.api.model.roomType.RoomTypeTemplate" />
+	<typeAlias alias="roomTypeTemplateI18n" type="com.ccm.api.model.roomType.RoomTypeTemplateI18n" />
+				
+    <sql id="pageSqlRoomTypeTemplateSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addRoomTypeTemplate" parameterClass="roomTypeTemplate">
+		INSERT INTO room_type_template(roomTypeTemplateId,roomTypeTemplateCode,delFlag,createdBy,createdTime) 
+		VALUES(#roomTypeTemplateId#,
+			REPLACE(REPLACE(#roomTypeTemplateCode#,' ',''),'　',''),
+			#delFlag#,#createdBy#,#createdTime#);
+    </insert>
+
+	<insert id="addRoomTypeTemplateI18n" parameterClass="roomTypeTemplateI18n">
+		INSERT INTO room_type_template_i18n(roomTypeTemplateMId,roomTypeTemplateId,language,
+					roomTypeTemplateName,description,delFlag,createdBy,createdTime)
+		VALUES(#roomTypeTemplateMId#,#roomTypeTemplateId#,#language#,#roomTypeTemplateName#,
+					#description#,#delFlag#,#createdBy#,#createdTime#);
+    </insert>
+    
+    <update id="updateRoomTypeTemplate" parameterClass="roomTypeTemplate">
+		update room_type_template SET 
+		updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where roomTypeTemplateId = #roomTypeTemplateId#
+    </update>
+    
+    <update id="updateRoomTypeTemplateI18n" parameterClass="roomTypeTemplateI18n">
+		update room_type_template_i18n SET 
+		language = #language#
+		,roomTypeTemplateName = #roomTypeTemplateName#
+		,description = #description#
+		,updatedBy = #updatedBy#
+		,lastModifyTime = #lastModifyTime#
+		where roomTypeTemplateMId = #roomTypeTemplateMId#
+    </update>
+    
+
+	<update id="deleteRoomTypeTemplate" parameterClass="roomTypeTemplate">
+		update room_type_template r set 
+			r.delFlag = #delFlag# 
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+		where roomTypeTemplateId = #roomTypeTemplateId#
+	</update>
+	
+	<update id="deleteRoomTypeTemplateI18n" parameterClass="roomTypeTemplateI18n">
+		update room_type_template_i18n r set 
+			r.delFlag = #delFlag# 
+			,updatedBy = #updatedBy#
+			,lastModifyTime = #lastModifyTime#
+		where roomTypeTemplateMId = #roomTypeTemplateMId#
+	</update>
+	
+	<update id="deleteRoomTypeTemplateI18nByTempId" parameterClass="java.lang.String">
+    <![CDATA[
+        UPDATE room_type_template_i18n ri set ri.delFlag = 1  
+         WHERE roomTypeTemplateId = #roomTypeTemplateId#
+    ]]>
+	</update>
+	
+    <select id="getRoomTypeTemplateById" resultClass="roomTypeTemplateVo" parameterClass="Map">
+		SELECT * FROM `room_type_template` r left join `room_type_template_i18n` ri
+											 on r.`roomTypeTemplateId` = ri.`roomTypeTemplateId` 
+											 and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`roomTypeTemplateId` = #roomTypeTemplateId#
+    </select>
+    
+    <select id="getRoomTypeTemplateByCode" resultClass="roomTypeTemplateVo" parameterClass="Map">
+		SELECT * FROM `room_type_template` r left join `room_type_template_i18n` ri
+											 on r.`roomTypeTemplateId` = ri.`roomTypeTemplateId`
+											 and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		AND r.`roomTypeTemplateCode` = #roomTypeTemplateCode#
+    </select>
+    
+    <select id="searchRoomTypeTemplate" resultClass="roomTypeTemplateVo">
+		SELECT * FROM `room_type_template` r,`room_type_template_i18n` ri
+		WHERE r.`roomTypeTemplateId` = ri.`roomTypeTemplateId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roomTypeTemplateId">
+				r.roomTypeTemplateId = #roomTypeTemplateId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeTemplateCode">
+				r.roomTypeTemplateCode = #roomTypeTemplateCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeTemplateName">
+				ri.roomTypeTemplateName like CONCAT('%',#roomTypeTemplateName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+		order by r.roomTypeTemplateCode
+		<include refid="pageSqlRoomTypeTemplateSQL"/>
+	</select>
+
+	<select id="searchRoomTypeTemplateCount" resultClass="Integer">
+		SELECT count(*) FROM `room_type_template` r,`room_type_template_i18n` ri
+		WHERE r.`roomTypeTemplateId` = ri.`roomTypeTemplateId`
+		AND r.`delFlag` = 0
+		AND ri.`delFlag` = 0
+		AND ri.`language` = #language#
+		<dynamic prepend="AND">
+			<isNotEmpty prepend="AND" property="roomTypeTemplateId">
+				r.roomTypeTemplateId = #roomTypeTemplateId#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeTemplateCode">
+				r.roomTypeTemplateCode = #roomTypeTemplateCode#
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="roomTypeTemplateName">
+				ri.roomTypeTemplateName like CONCAT('%',#roomTypeTemplateName#,'%')
+	        </isNotEmpty>
+		</dynamic>
+	</select>
+    
+    <select id="getAllRoomTypeTemplate" resultClass="roomTypeTemplateVo" parameterClass="String">
+		SELECT * FROM `room_type_template` r left join `room_type_template_i18n` ri 
+											 on r.`roomTypeTemplateId` = ri.`roomTypeTemplateId`
+											 and ri.`delFlag` = 0 and ri.`language` = #language#
+		WHERE r.`delFlag` = 0
+		order by r.roomTypeTemplateCode
+	</select>
+    
+    <select id="getRoomTypeTemplateI18ns" resultClass="roomTypeTemplateI18n" parameterClass="Map">
+		select * from room_type_template_i18n ri 
+		        where ri.roomTypeTemplateId =#roomTypeTemplateId#
+		          AND ri.delFlag = 0
+		order by roomTypeTemplateMId
+	</select>
+	
+	<select id="getDontUseRoomTypeTemplate" resultClass="roomTypeTemplateVo" parameterClass="Map">
+		SELECT * FROM room_type_template r left join room_type_template_i18n ri
+										   on r.`roomTypeTemplateId` = ri.`roomTypeTemplateId`
+										   and ri.`delFlag` = 0 and ri.`language` = #language# 
+		WHERE r.delFlag = 0 
+		AND NOT EXISTS (
+		   SELECT 1 FROM room_type rt WHERE rt.hotelId = #hotelId# AND rt.delFlag = 0 
+		   			AND rt.roomTypeCode = r.roomTypeTemplateCode
+		)
+		order by r.roomTypeTemplateCode
+	</select>
+   
+</sqlMap>

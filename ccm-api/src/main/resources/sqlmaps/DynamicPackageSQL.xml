@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN" 
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="DynamicPackageSQL">
+
+	<typeAlias alias="dynamicPackage" type="com.ccm.api.model.channel.DynamicPackage" />
+	<typeAlias alias="packagevo" type="com.ccm.api.model.ratePlan.vo.PackageVO" />
+		
+    <sql id="pageSqlDynamicPackageSQL">
+    	<isNotEmpty property="skipResults">
+			limit #skipResults#, #maxResults#
+    	</isNotEmpty>
+	</sql>
+	
+	<insert id="addDynamicPackage" parameterClass="dynamicPackage">
+		INSERT INTO dynamic_package(dynamicPackageId, hotelId, channelId, packageId, createdTime, createdBy, delFlag)
+		VALUES (#dynamicPackageId#, #hotelId#, #channelId#, #packageId#, #createdTime#,#createdBy#,#delFlag#)
+	</insert>
+
+	<update id="updateDynamicPackageDelFlag">
+		update dynamic_package SET
+		delFlag = #delFlag#,
+		updatedBy = #updatedBy#,
+		lastModifyTime = #lastModifyTime#
+		where dynamicPackageId = #dynamicPackageId#
+    </update>
+
+	<update id="updateDynamicPackage" parameterClass="dynamicPackage">
+		UPDATE dynamic_package
+		<dynamic prepend="SET">
+			<isNotNull property="channelId" prepend=",">
+		        <![CDATA[  
+		        channelId = #channelId#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="packageId" prepend=",">
+		        <![CDATA[  
+		        packageId = #packageId#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="updatedBy" prepend=",">
+		        <![CDATA[  
+		        updatedBy = #updatedBy#  
+		        ]]>
+			</isNotNull>
+			<isNotNull property="lastModifyTime" prepend=",">
+		        <![CDATA[  
+		        lastModifyTime = #lastModifyTime#  
+		        ]]>
+			</isNotNull>
+		</dynamic>
+		WHERE dynamicPackageId = #dynamicPackageId#
+	</update>
+
+	<select id="getDynamicPackage" resultClass="dynamicPackage">
+    <![CDATA[
+        select * from dynamic_package where dynamicPackageId = #dynamicPackageId# and delFlag = 0
+    ]]>
+	</select>
+
+	<select id="getDynamicPackages" resultClass="dynamicPackage">
+    <![CDATA[
+        select * from dynamic_package where delFlag = 0 
+    ]]>
+	</select>
+
+	<select id="getDynamicPackagesByCPId" resultClass="dynamicPackage">
+    <![CDATA[
+        select * from dynamic_package where delFlag = 0 and hotelId=#hotelId# and channelId=#channelId# and packageId=#packageId#
+    ]]>
+	</select>
+
+	<select id="countDynamicPackage" resultClass="Integer">
+		SELECT count(*) FROM `dynamic_package` dp
+		left join channel c on c.channelId=dp.channelId and c.delFlag=0
+		left join package p on p.packageId=dp.packageId and p.delFlag=0
+		WHERE dp.`delFlag` = 0 and hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="channelIds">
+			c.channelId in
+			<iterate open="(" close=")" conjunction="," property="channelIds">
+				#channelIds[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageIds">
+			p.packageId in
+			<iterate open="(" close=")" conjunction="," property="packageIds">
+				#packageIds[]# 
+	        </iterate>
+		</isNotEmpty>
+	</select>
+
+	<select id="searchDynamicPackage" resultClass="dynamicPackage">
+		SELECT dp.dynamicPackageId,dp.channelId,dp.packageId,c.channelCode,p.packageCode,dp.createdTime FROM `dynamic_package` dp
+		left join channel c on c.channelId=dp.channelId and c.delFlag=0
+		left join package p on p.packageId=dp.packageId and p.delFlag=0
+		WHERE dp.`delFlag` = 0 and hotelId=#hotelId#
+		<isNotEmpty prepend="AND" property="channelIds">
+			c.channelId in
+			<iterate open="(" close=")" conjunction="," property="channelIds">
+				#channelIds[]# 
+	        </iterate>
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="packageIds">
+			p.packageId in
+			<iterate open="(" close=")" conjunction="," property="packageIds">
+				#packageIds[]# 
+	        </iterate>
+		</isNotEmpty>
+		<include refid="pageSqlDynamicPackageSQL"/>
+	</select>
+
+</sqlMap>
